@@ -12,9 +12,11 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
@@ -22,9 +24,12 @@ class BlogController extends AbstractController
 {
 
     private $htmlSanitizer;
+    private $csrfTokenManager;
 
-    public function __construct(HtmlSanitizerInterface  $htmlSanitizer) {
+
+    public function __construct(HtmlSanitizerInterface  $htmlSanitizer, CsrfTokenManagerInterface $csrfTokenManager) {
         $this->htmlSanitizer = $htmlSanitizer;
+        $this->csrfTokenManager = $csrfTokenManager;
     }
 
     
@@ -37,6 +42,14 @@ class BlogController extends AbstractController
     #[Route('blog/{slug}/comment/{id}/edit', name: 'app_article_editComment', methods: ['POST'], requirements: ['slug' => '[a-z0-9\-]+', 'id' => '\d+'])]
     public function add_editComment(string $slug, Request $request,  ?int $id = null, ?int $commentId = null, CommentRepository $commentRepository, ArticleRepository $articleRepository, EntityManagerInterface $entityManager, Security $security): JsonResponse
     {
+        // Récupère le jeton CSRF depuis les en-têtes
+        $csrfToken = $request->headers->get('X-CSRF-TOKEN');
+
+        // Vérifier la validité du jeton CSRF
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
+            return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
+        }
+        
         // Vérifie si l'utilisateur est connecté
         $user = $security->getUser();
         if (!$user) {
@@ -100,8 +113,17 @@ class BlogController extends AbstractController
     // ---------------------------------Suppression d'un commentaire article--------------------------------- //
     #[IsGranted('ROLE_USER')]
     #[Route('/blog/{slug}/comment/{id}/delete', name: 'app_article_deleteComment', methods: ['DELETE'], requirements: ['slug' => '[a-z0-9\-]+', 'id' => '\d+'])]
-    public function deleteComment(string $slug, int $id, ArticleRepository $articleRepository, EntityManagerInterface $entityManager, Security $security): JsonResponse
+    public function deleteComment(string $slug, int $id, Request $request, ArticleRepository $articleRepository, EntityManagerInterface $entityManager, Security $security): JsonResponse
     {
+
+        // Récupère le jeton CSRF depuis les en-têtes
+        $csrfToken = $request->headers->get('X-CSRF-TOKEN');
+
+        // Vérifier la validité du jeton CSRF
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
+            return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
+        }
+        
         // Récupère l'article associé au slug
         $article = $articleRepository->findOneBy(['slug' => $slug]);
         if (!$article) {

@@ -17,18 +17,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+
 
 class HomeController extends AbstractController
 {
     private $htmlSanitizer;
     private $pdfGenerator;
+    private $csrfTokenManager;
 
-    public function __construct(HtmlSanitizerInterface  $htmlSanitizer, PdfGenerator $pdfGenerator) {
+
+    public function __construct(HtmlSanitizerInterface  $htmlSanitizer, PdfGenerator $pdfGenerator, CsrfTokenManagerInterface $csrfTokenManager) {
         $this->htmlSanitizer = $htmlSanitizer;
         $this->pdfGenerator = $pdfGenerator;
+        $this->csrfTokenManager = $csrfTokenManager;
     }
 
 //________________________________________________________________APPOINTMENT______________________________________________________________
@@ -45,6 +51,14 @@ class HomeController extends AbstractController
         PdfGenerator $pdfGenerator
         ): Response
     {
+        // Récupère le jeton CSRF depuis les en-têtes
+        $csrfToken = $request->headers->get('X-CSRF-TOKEN');
+
+        // Vérifier la validité du jeton CSRF
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
+            return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
+        }
+
         $services = $serviceRepository->findAll();
         $categories = $categoryRepository->findAll();
 
@@ -155,7 +169,15 @@ class HomeController extends AbstractController
     // Récupère les créneaux horaires disponibles pour une date donnée
     #[Route('/available_rdv', name:'available_rdv', methods:['POST'])]
     public function getAvailableTimes(Request $request, AppointmentRepository $appointmentRepository): JsonResponse
-    {   
+{       
+        // Récupère le jeton CSRF depuis les en-têtes
+        $csrfToken = $request->headers->get('X-CSRF-TOKEN');
+    
+        // Vérifier la validité du jeton CSRF
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
+            return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
+        }
+
         // Crée un objet DateTime à partir de la date de début postée
         $startDate = new \DateTime($request->request->get('startDate'));
 

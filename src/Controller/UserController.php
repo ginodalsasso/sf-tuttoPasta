@@ -25,12 +25,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -45,12 +47,16 @@ class UserController extends AbstractController
 
     private $htmlSanitizer;
     private $pdfGenerator;
+    private $csrfTokenManager;
 
 
-    public function __construct(HtmlSanitizerInterface $htmlSanitizer, private EmailVerifier $emailVerifier, PdfGenerator $pdfGenerator)
+
+    public function __construct(HtmlSanitizerInterface $htmlSanitizer, private EmailVerifier $emailVerifier, PdfGenerator $pdfGenerator, CsrfTokenManagerInterface $csrfTokenManager)
     {
         $this->htmlSanitizer = $htmlSanitizer;
         $this->pdfGenerator = $pdfGenerator;
+        $this->csrfTokenManager = $csrfTokenManager;
+
     }
 
     #region REGISTER/LOGIN/LOGOUT
@@ -292,8 +298,16 @@ class UserController extends AbstractController
     // ---------------------------------Annulation d'un rendez vous sur le profil utilisateur--------------------------------- //
     #[Route('/profil/appointment/{id}/delete', name: 'app_cancel_appointment', methods: ['DELETE'], requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_USER')]
-    public function cancelAppointment(EntityManagerInterface $entityManager, int $id, Security $security, MailerInterface $mailer): JsonResponse
+    public function cancelAppointment(EntityManagerInterface $entityManager, int $id, Security $security, MailerInterface $mailer, Request $request,): JsonResponse
     {
+        // Récupère le jeton CSRF depuis les en-têtes
+        $csrfToken = $request->headers->get('X-CSRF-TOKEN');
+
+        // Vérifier la validité du jeton CSRF
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
+            return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
+        }
+        
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
 
@@ -301,6 +315,7 @@ class UserController extends AbstractController
         if (!$user instanceof UserInterface) {
             throw new AccessDeniedException('Accès refusé');
         }
+
 
         // Récupère le rendez-vous
         $appointment = $entityManager->getRepository(Appointment::class)->find($id);

@@ -7,6 +7,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token('') }}">
         <meta name="description" content="Découvrez les dernières actualités, astuces et projets de TuttoPasta, graphiste et webdesigneuse freelance.">
+        {# <meta http-equiv="Content-Security-Policy" content="
+            default-src 'self'; 
+            script-src 'self' https://accounts.google.com https://kit.fontawesome.com https://use.typekit.net; 
+            style-src 'self' https://use.typekit.net https://kit.fontawesome.com; 
+            img-src 'self' data:; 
+            font-src 'self' https://use.typekit.net https://kit.fontawesome.com data:; 
+            object-src 'none'; 
+            frame-src 'self' https://accounts.google.com;
+        "> #}
         <title>{% block title %}{% endblock %} - Graphiste/Webdesigner</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}

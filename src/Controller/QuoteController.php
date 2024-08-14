@@ -12,21 +12,26 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
-use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 
 
 
 class QuoteController extends AbstractController
 {
     private $pdfGenerator;
+    private $csrfTokenManager;
 
-    public function __construct(PdfGenerator $pdfGenerator) {
+
+    public function __construct(PdfGenerator $pdfGenerator, CsrfTokenManagerInterface $csrfTokenManager) {
         $this->pdfGenerator = $pdfGenerator;
+        $this->csrfTokenManager = $csrfTokenManager;
     }
 
 
@@ -176,8 +181,16 @@ class QuoteController extends AbstractController
     // ---------------------------------Suppression du devis PDF--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quote/{id}/delete', name: 'app_delete_quote', methods: ['DELETE'], requirements: ['id' => '\d+'])]
-    public function deleteQuote(EntityManagerInterface $entityManager, int $id, Security $security): JsonResponse
+    public function deleteQuote(Request $request, EntityManagerInterface $entityManager, int $id, Security $security): JsonResponse
     {
+        // Récupère le jeton CSRF depuis les en-têtes
+        $csrfToken = $request->headers->get('X-CSRF-TOKEN');
+
+        // Vérifier la validité du jeton CSRF
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
+            return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
+        }
+        
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
     
@@ -210,8 +223,16 @@ class QuoteController extends AbstractController
     // ---------------------------------Archivage du devis(Etat) PDF--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quote/{id}/archive', name: 'app_archive_quote', methods: ['POST'], requirements: ['id' => '\d+'])]
-    public function archiveQuote(EntityManagerInterface $entityManager, int $id, Security $security, PdfGenerator $pdfGenerator): JsonResponse
+    public function archiveQuote(Request $request, EntityManagerInterface $entityManager, int $id, Security $security, PdfGenerator $pdfGenerator): JsonResponse
     {
+        // Récupère le jeton CSRF depuis les en-têtes
+        $csrfToken = $request->headers->get('X-CSRF-TOKEN');
+
+        // Vérifier la validité du jeton CSRF
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
+            return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
+        }
+
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
     
@@ -233,7 +254,7 @@ class QuoteController extends AbstractController
         // Archive le PDF dans le dossier associé
         $pdfGenerator->generateAndArchivePdf($pdfGenerator, $quote, $reference);
         // Supprime le fichier PDF associé dans le dossier de stockage
-        $this->deleteQuote($entityManager, $id, $security);
+        $this->deleteQuote($request, $entityManager, $id, $security);
 
         // Persiste les modifications
         $entityManager->persist($quote);
@@ -247,8 +268,16 @@ class QuoteController extends AbstractController
     // ---------------------------------Transformation du devis en etat payé--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quote/{id}/completed', name: 'app_completed_quote', methods: ['POST'], requirements: ['id' => '\d+'])]
-    public function completedQuote(EntityManagerInterface $entityManager, int $id, Security $security): JsonResponse
+    public function completedQuote(Request $request, EntityManagerInterface $entityManager, int $id, Security $security): JsonResponse
     {
+        // Récupère le jeton CSRF depuis les en-têtes
+        $csrfToken = $request->headers->get('X-CSRF-TOKEN');
+
+        // Vérifier la validité du jeton CSRF
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
+            return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
+        }
+        
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
     
