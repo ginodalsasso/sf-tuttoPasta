@@ -7,30 +7,68 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token('') }}">
         <meta name="description" content="Découvrez les dernières actualités, astuces et projets de TuttoPasta, graphiste et webdesigneuse freelance.">
-        {# <meta http-equiv="Content-Security-Policy" content="
-            default-src 'self'; 
-            script-src 'self' https://accounts.google.com https://kit.fontawesome.com https://use.typekit.net; 
-            style-src 'self' https://use.typekit.net https://kit.fontawesome.com; 
-            img-src 'self' data:; 
-            font-src 'self' https://use.typekit.net https://kit.fontawesome.com data:; 
-            object-src 'none'; 
+        <meta http-equiv="Content-Security-Policy" content="
+            default-src 'self'; {# Par défaut, on autorise tout ce qui vient du même domaine #}
+            script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://accounts.google.com https://*.fontawesome.com https://use.typekit.net https://www.googletagmanager.com; {# On autorise les scripts provenant de notre domaine, de Google Analytics et de Google Sign-In #}
+            style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://use.typekit.net https://*.fontawesome.com;
+            img-src 'self' data: https://www.google-analytics.com https://*.fontawesome.com;
+            font-src 'self' https://use.typekit.net https://*.fontawesome.com data:;
+            object-src 'none';
             frame-src 'self' https://accounts.google.com;
-        "> #}
+            connect-src 'self' https://www.google-analytics.com https://*.fontawesome.com;
+            worker-src 'self' https://*.fontawesome.com blob:;
+        ">
         <title>{% block title %}{% endblock %} - Graphiste/Webdesigner</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('/css/flatpickr.css')}}">
             <link rel="stylesheet" href="{{ asset('/css/style.css')}}">
-            <link rel="stylesheet" href="https://use.typekit.net/tkf7imz.css">
+            <link rel="stylesheet" href="https://use.typekit.net/tkf7imz.css"> {# Typekit pour Area Police #}
         {% endblock %}
-        <script src="https://accounts.google.com/gsi/client" async></script>
-        <script src="{{ asset('/js/lib/jquery-3.7.1.min.js')}}"></script>
-        <script src="{{ asset('/js/lib/flatpickr.js')}}"></script>
-        <script src="{{ asset('/js/lib/flatpickr-fr.js')}}"></script>
-        <script src="https://kit.fontawesome.com/f3340c3342.js" crossorigin="anonymous"></script>
-        <script src="{{ asset('/js/script.js')}}"></script>
+        
+        <script src="https://accounts.google.com/gsi/client" async></script> {# Google Sign-In #}
+        <script src="{{ asset('/js/lib/jquery-3.7.1.min.js')}}"></script> {# jQuery #}
+        <script src="{{ asset('/js/lib/flatpickr.js')}}"></script> {# Flatpickr #}
+        <script src="{{ asset('/js/lib/flatpickr-fr.js')}}"></script> {# Flatpickr en français #}
+        <script src="https://kit.fontawesome.com/f3340c3342.js" crossorigin="anonymous"></script> {# Font Awesome #}
+        <script src="{{ asset('/js/script.js')}}"></script> 
 
-    </head>
+        <!-- Tarte au Citron Script -->
+        <script src="https://cdn.jsdelivr.net/npm/tarteaucitronjs@1.9.3/tarteaucitron.js"></script>
+        <script>
+            tarteaucitron.init({
+                "privacyUrl": "", // URL of your privacy policy
+                "hashtag": "#tarteaucitron", // Open the panel with this hashtag
+                "cookieName": "tarteaucitron", // Cookie name
+                "orientation": "bottom", // Banner position (top - bottom - middle - popup)
+                "groupServices": false, // Group services by category
+                "showAlertSmall": false, // Show the small banner on bottom right
+                "cookieslist": false, // Show the cookie list
+                "showIcon": true, // Show cookie icon to manage cookies
+                "iconPosition": "BottomRight", // Position of the icon between BottomRight, BottomLeft, TopRight and TopLeft
+                "adblocker": false, // Show a Warning if an adblocker is detected
+                "DenyAllCta" : true, // Show the deny all button
+                "AcceptAllCta" : true, // Show the accept all button
+                "highPrivacy": true, // HIGHLY RECOMMENDED Disable auto consent
+                "handleBrowserDNTRequest": false, // If Do Not Track == 1, disallow all
+                "removeCredit": false, // Remove credit link
+                "moreInfoLink": true, // Show more info link
+                "useExternalCss": false, // If false, the tarteaucitron.css file will be loaded
+                "useExternalJs": false, // If false, the tarteaucitron.js file will be loaded
+                "readmoreLink": "", // Change the default readmore link pointing to tarteaucitron.io
+                "mandatory": true // Show a message about mandatory cookies
+            });
+            </script>
+            <script>
+                // Google Analytics
+                tarteaucitron.user.gtagUa = '694190220787-elursji5hbf1qjjrtgg9g9mdhm11c68a.apps.googleusercontent.com';
+                tarteaucitron.user.gtagMore = function () { /* add here your optionnal gtag() */ };
+                (tarteaucitron.job = tarteaucitron.job || []).push('gtag');
+                
+                // Google Sign-In
+                (tarteaucitron.job = tarteaucitron.job || []).push('googlesignin');
+            </script>      
+        </head>
     {% endblock %}
 
     <body>
