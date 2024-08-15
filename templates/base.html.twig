@@ -7,19 +7,20 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token('') }}">
         <meta name="description" content="Découvrez les dernières actualités, astuces et projets de TuttoPasta, graphiste et webdesigneuse freelance.">
-        <meta http-equiv="Content-Security-Policy" content="
+        <!-- <meta http-equiv="Content-Security-Policy" content="
             default-src 'self'; {# Par défaut, on autorise tout ce qui vient du même domaine #}
             script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://accounts.google.com https://*.fontawesome.com https://use.typekit.net https://www.googletagmanager.com; {# On autorise les scripts provenant de notre domaine, de Google Analytics et de Google Sign-In #}
             style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://use.typekit.net https://*.fontawesome.com;
             img-src 'self' data: https://www.google-analytics.com https://*.fontawesome.com;
-            font-src 'self' https://use.typekit.net https://*.fontawesome.com data:;
+            font-src 'self' https://use.typekit.net https://*.fontawesome.com data: https://*.typekit.net;
             object-src 'none';
             frame-src 'self' https://accounts.google.com;
-            connect-src 'self' https://www.google-analytics.com https://*.fontawesome.com;
+            connect-src 'self' https://www.google-analytics.com https://*.fontawesome.com https://use.typekit.net;
             worker-src 'self' https://*.fontawesome.com blob:;
-        ">
+        "> -->
         <title>{% block title %}{% endblock %} - Graphiste/Webdesigner</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+        
         {% block stylesheets %}
             <link rel="stylesheet" href="{{ asset('/css/flatpickr.css')}}">
             <link rel="stylesheet" href="{{ asset('/css/style.css')}}">
@@ -138,9 +139,9 @@
                     <p>dev: Gino Dalsasso</p>
                 </div>
                 <div class="footer_rgpd">
-                    <a href="#">Mentions légales -</a>
+                    <a href="{{ path('app_mentions') }}">Mentions légales -</a>
                     <a href="#">Politique de confidentialité -</a> 
-                    <a href="#">CGU</a>
+                    <a href="{{ path('app_cgu') }}">CGU</a>
                 </div>
             </div>
         </footer>        

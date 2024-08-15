@@ -51,14 +51,6 @@ class HomeController extends AbstractController
         PdfGenerator $pdfGenerator
         ): Response
     {
-        // Récupère le jeton CSRF depuis les en-têtes
-        $csrfToken = $request->headers->get('X-CSRF-TOKEN');
-
-        // Vérifier la validité du jeton CSRF
-        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
-            return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
-        }
-
         $services = $serviceRepository->findAll();
         $categories = $categoryRepository->findAll();
 

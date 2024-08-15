@@ -216,15 +216,15 @@ class ViewsController extends AbstractController
             'articles' => $articles,
         ]);
     }
-
-
+    
+    
     // ---------------------------------Vue détail article--------------------------------- //
     #[Route('blog/{slug}', name: 'app_article', requirements: ['slug' => '[a-z0-9\-]*'])]
     public function articleShow(string $slug, ArticleRepository $articleRepository): Response
     {
         $article = $articleRepository->findOneBy(['slug' => $slug]);
         $articles = $articleRepository->findAll();
-
+        
         // Vérifie si l'article existe
         if (!$article) {
             throw new NotFoundHttpException('Aucun article trouvé');;
@@ -235,14 +235,28 @@ class ViewsController extends AbstractController
             throw new NotFoundHttpException('Aucun article trouvé');;
             return $this->redirectToRoute('app_blog');
         }
-
+        
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
-
+        
         return $this->render('blog/article.html.twig', [
             'articles' => $articles,
             'article' => $article,
             'form' => $form->createView(),
         ]);
+    }
+    
+    // ---------------------------------Vue CGU --------------------------------- //
+    #[Route('/cgu', name: 'app_cgu')]
+    public function showCGU (): Response
+    {
+        return $this->render('legal/cgu.html.twig');
+    }
+
+    // ---------------------------------Vue Mentions légales --------------------------------- //
+    #[Route('/mentions-legales', name: 'app_mentions')]
+    public function showMentions (): Response
+    {
+        return $this->render('legal/mentions.html.twig');
     }
 }
