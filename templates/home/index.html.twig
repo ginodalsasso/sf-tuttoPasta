@@ -58,7 +58,9 @@
             <div class="projects_h2">
                 <span class="stickers_green">Projets</span>
                 {{administrations[12].title|raw}}
+                <img src="{{ asset('/img/black_smile.svg')}}" alt="black smiley">
             </div>
+            <img src="" alt="">
             <ul class="project_list">
                 <hr>
                 {% for project in projects[:3] %}
@@ -95,6 +97,7 @@
                 <div class="services_h2">                    
                     <span class="stickers_blue">Services</span>
                     {{administrations[13].title|raw}}
+                    <img src="{{ asset('/img/white_smile.svg')}}" alt="white smiley">
                 </div>
                 <div class="service">
                     <div class="services_categories">
@@ -198,6 +201,7 @@
                 <div class="faq_h2">                    
                     <span class="stickers_green">FAQ</span>
                     {{administrations[19].title|raw}}
+                    <img src="{{ asset('/img/black_smile.svg')}}" alt="black smiley">
                 </div>
                 {% for administration in administrations|slice(20, 5) %}
                 <details id="faq">
