@@ -1,4 +1,60 @@
+
+
+gsap.registerPlugin(ScrollTrigger);
+
+const introSection = document.getElementById("introduction_section");
+
+// Positionne l'élément à gauche, en dehors de l'écran
+// gsap.set(introSection, { xPercent: -100 });
+
+// gsap.to(introSection, {
+//     xPercent: 0,
+//     duration: 1,
+//     scrollTrigger: {
+//         trigger: introSection, // Déclenche l'animation lorsque l'élément est visible
+//         toggleActions: "play none none none", // Déclenche l'animation lorsqu'on arrive à l'élément
+//         start: "top top", // Déclenche l'animation lorsque le haut de l'élément atteint le haut de la fenêtre
+//         end: "bottom top", // Déclenche l'animation lorsque le bas de l'élément atteint le haut de la fenêtre
+//         markers: true, // Affiche les marqueurs de déclenchement
+//         scrub: 1, // Permet de lier le défilement de la page à l'animation
+//         pin: true, // Fixe l'élément à l'écran
+//     }
+// })
+
+gsap.from(".guide_content .badges_guide", {
+    scrollTrigger: {
+        trigger: ".guide_content .badges_guide",
+        toggleActions: "restart none none reset",
+        start: "top 80%",
+    },
+    x: -100,  // Déplacement depuis la gauche
+    opacity: 0,
+    ease: "power3.out",  // Glissement fluide
+    duration: 1, 
+    stagger: 0.3 // Délai entre chaque élément
+});
+
+gsap.from(".expertise_cards .expertise_card", {
+    scrollTrigger: {
+        trigger: ".expertise_cards .expertise_card",
+        toggleActions: "restart none none reset",
+        start: "top 80%", 
+    },
+    x: -100,
+    opacity: 0,
+    scale: 0,
+    ease: "elastic.out(0.2, 0.5)",
+    duration: 1,
+    stagger: 0.5 // Délai entre chaque élément
+});
+
+
+
+
 $(document).ready(function () {
+
+
+
     //_______________________________GESTION DES COULEURS ALEATOIRES________________________________
     // Variable de couleur pour les H2 des cards articles
     var colors = [

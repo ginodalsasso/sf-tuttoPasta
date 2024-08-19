@@ -732,6 +732,7 @@ summary {
 #action_quote_buttons {
     display: flex;
     justify-content: space-between;
+    gap: 10px;
 }
 
 #action_quote_buttons i {
@@ -1522,7 +1523,7 @@ footer {
     }
 
     table thead {
-        position: absolute;
+        display: none;
     }
     
     table tr {
