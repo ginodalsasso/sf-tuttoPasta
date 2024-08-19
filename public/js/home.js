@@ -21,6 +21,7 @@ const introSection = document.getElementById("introduction_section");
 //     }
 // })
 
+
 gsap.from(".guide_content .badges_guide", {
     scrollTrigger: {
         trigger: ".guide_content .badges_guide",
@@ -49,12 +50,8 @@ gsap.from(".expertise_cards .expertise_card", {
 });
 
 
-
-
 $(document).ready(function () {
-
-
-
+    
     //_______________________________GESTION DES COULEURS ALEATOIRES________________________________
     // Variable de couleur pour les H2 des cards articles
     var colors = [
