@@ -34,7 +34,10 @@ class Contact
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-
+    #[Length(
+        min: 2,
+        max: 255,
+    )]
     #[Assert\NotBlank(message: "Le message ne peut pas être vide.")]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $subject = null;

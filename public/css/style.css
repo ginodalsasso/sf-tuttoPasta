@@ -1297,7 +1297,98 @@ footer {
     font-size: 14px;
 }
 
+/*_____________________________ECRANS 1280px_____________________________ */
+/*_____________________________ECRANS 1280px_____________________________ */
+/*_____________________________ECRANS 1280px_____________________________ */
+@media (max-width: 1280px) {
 
+    .burger-menu {
+        display: block;
+        text-align: end;
+        font-size: 40px;
+    }
+
+    .close_burger {
+        position: absolute;
+        top: 30px;
+        right: 30px;
+        font-size: 40px;
+        display: none;
+    }
+
+    .service {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 50px;
+    }
+
+    .faq_section,
+    #introduction_section,
+    .projects_h2,
+    .background-bottom h2,
+    .footer_collab,
+    .footer_social {
+        padding: 0 8%;
+    }
+
+    .footer_collab {
+        padding-top: 100px;
+    }
+
+    #appointment_btn_nav {
+        display: none;
+    }
+
+    #appointment_btn_burger,
+    .expertise_cards
+    {
+        display: block;
+    }
+
+    #header_container {
+        padding-left: 8%;
+        padding-right: 8%;
+    }
+
+    #nav_container {
+        position: fixed;
+        top: 0;
+        right: -100%; /* Position initiale en dehors de l'écran */
+        width: 80%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.868);
+        backdrop-filter: blur(10px);
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+        transition: right 0.3s ease;
+    }
+    
+    #nav_container.active {
+        right: 0; 
+        font-size: 24px;
+    }
+
+    #nav_container li {
+        margin: 40px 0;
+    }
+    #nav_container .full_button_white {
+        display: block;
+        margin-top: 100px;
+    }
+
+    #social_share_projects {
+        margin-left: 8%;
+    }
+
+    .article_content {
+        width: 100%;
+    }
+
+}
 
 /*_____________________________ECRANS 800px_____________________________ */
 /*_____________________________ECRANS 800px_____________________________ */
@@ -1452,89 +1543,4 @@ footer {
         font-weight: bold;
     }
 }
-/*_____________________________ECRANS 1280px_____________________________ */
-/*_____________________________ECRANS 1280px_____________________________ */
-/*_____________________________ECRANS 1280px_____________________________ */
-@media (max-width: 1280px) {
 
-    .burger-menu {
-        display: block;
-        text-align: end;
-        font-size: 40px;
-    }
-
-    .close_burger {
-        position: absolute;
-        top: 30px;
-        right: 30px;
-        font-size: 40px;
-        display: none;
-    }
-
-    .faq_section,
-    #introduction_section,
-    .projects_h2,
-    .background-bottom h2,
-    .footer_collab,
-    .footer_social {
-        padding: 0 8%;
-    }
-
-    .footer_collab {
-        padding-top: 100px;
-    }
-
-    #appointment_btn_nav {
-        display: none;
-    }
-
-    #appointment_btn_burger,
-    .expertise_cards
-    {
-        display: block;
-    }
-
-    #header_container {
-        padding-left: 8%;
-        padding-right: 8%;
-    }
-
-    #nav_container {
-        position: fixed;
-        top: 0;
-        right: -100%; /* Position initiale en dehors de l'écran */
-        width: 80%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.868);
-        backdrop-filter: blur(10px);
-        padding: 30px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        z-index: 100;
-        transition: right 0.3s ease;
-    }
-    
-    #nav_container.active {
-        right: 0; 
-        font-size: 24px;
-    }
-
-    #nav_container li {
-        margin: 40px 0;
-    }
-    #nav_container .full_button_white {
-        display: block;
-        margin-top: 100px;
-    }
-
-    #social_share_projects {
-        margin-left: 8%;
-    }
-
-    .article_content {
-        width: 100%;
-    }
-
-}

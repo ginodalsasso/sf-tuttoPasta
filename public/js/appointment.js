@@ -48,6 +48,13 @@ $(document).ready(function () {
             isValid = false;
         }
 
+        const firstname = $("#appointment_firstName").val().trim();
+        if (firstname === "" || firstname.length < 2 || firstname.length > 50) {
+            $("#firstName_error").text("Le prénom est invalide et doit contenir entre 2 et 50 caractères");
+            $("#appointment_firstName").addClass("input_invalid");
+            isValid = false;
+        }
+
         const email = $("#appointment_email").val().trim();
         if (email === "" || !validateEmail(email)) {
             $("#email_error").text("L'email est invalide !");

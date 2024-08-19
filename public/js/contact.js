@@ -14,7 +14,7 @@
 
         const name = $("#contact_form_name").val().trim();
         if (name === "" || name.length < 2 || name.length > 50) {
-            $("#name_error").text("Le nom est invalide et doit contenir entre 2 et 50 caractères");
+            $("#firstName_error").text("Le nom est invalide et doit contenir entre 2 et 50 caractères");
             $("#contact_form_name").addClass("input_invalid");
             isValid = false;
         }
@@ -23,6 +23,13 @@
         if (email === "" || !validateEmail(email)) {
             $("#email_error").text("L'email est invalide !");
             $("#contact_form_email").addClass("input_invalid");
+            isValid = false;
+        }
+
+        const subject = $("#contact_form_message").val();
+        if (subject === "" || subject.length < 10) {
+            $("#subject_error").text("Le subject est invalide et doit contenir au minimum 10 caractères");
+            $("#contact_form_subject").addClass("input_invalid");
             isValid = false;
         }
 
