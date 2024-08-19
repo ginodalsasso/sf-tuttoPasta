@@ -3,29 +3,48 @@
 gsap.registerPlugin(ScrollTrigger);
 
 const introSection = document.getElementById("introduction_section");
+const introImage = introSection.querySelector("img");
+const introContent = introSection.querySelector(".introduction_content");
 
-// Positionne l'élément à gauche, en dehors de l'écran
-// gsap.set(introSection, { xPercent: -100 });
+// Positionne l'image à gauche, en dehors de l'écran
+gsap.set(introImage, { xPercent: -100, opacity: 0 });
 
-// gsap.to(introSection, {
-//     xPercent: 0,
-//     duration: 1,
-//     scrollTrigger: {
-//         trigger: introSection, // Déclenche l'animation lorsque l'élément est visible
-//         toggleActions: "play none none none", // Déclenche l'animation lorsqu'on arrive à l'élément
-//         start: "top top", // Déclenche l'animation lorsque le haut de l'élément atteint le haut de la fenêtre
-//         end: "bottom top", // Déclenche l'animation lorsque le bas de l'élément atteint le haut de la fenêtre
-//         markers: true, // Affiche les marqueurs de déclenchement
-//         scrub: 1, // Permet de lier le défilement de la page à l'animation
-//         pin: true, // Fixe l'élément à l'écran
-//     }
-// })
+// Positionne le contenu à droite, en dehors de l'écran
+gsap.set(introContent, { xPercent: 100, opacity: 0 });
 
+// Animation pour faire apparaître l'image
+gsap.to(introImage, {
+    xPercent: 0,   // Ramène l'image à sa position d'origine
+    opacity: 1,    // Rend l'image visible
+    duration: 2,
+    ease: "power2.out", // animation fluide
+    delay: 0.2,
+    scrollTrigger: {
+        trigger: "#h1_page_title", // Déclenche l'animation 
+        start: "top top",
+        toggleActions: "play none none none", // Joue l'animation à l'arrivée
+    }
+});
 
+// Animation pour faire apparaître le contenu
+gsap.to(introContent, {
+    xPercent: 0,   // Ramène le contenu à sa position d'origine
+    opacity: 1,    // Rend le contenu visible
+    duration: 2, 
+    ease: "power2.out", // Easing pour une animation fluide
+    delay: 0.4,
+    scrollTrigger: {
+        trigger: "#h1_page_title", // Déclenche l'animation 
+        start: "top top",
+        toggleActions: "play none none none", // Joue l'animation à l'arrivée
+    }     
+});
+
+// Animation pour les éléments de la section "Guides"
 gsap.from(".guide_content .badges_guide", {
     scrollTrigger: {
         trigger: ".guide_content .badges_guide",
-        toggleActions: "restart none none reset",
+        toggleActions: "play none none none",
         start: "top 80%",
     },
     x: -100,  // Déplacement depuis la gauche
@@ -38,7 +57,7 @@ gsap.from(".guide_content .badges_guide", {
 gsap.from(".expertise_cards .expertise_card", {
     scrollTrigger: {
         trigger: ".expertise_cards .expertise_card",
-        toggleActions: "restart none none reset",
+        toggleActions: "play none none none",
         start: "top 80%", 
     },
     x: -100,
