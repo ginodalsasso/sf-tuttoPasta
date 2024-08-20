@@ -23,14 +23,17 @@ class CategoryCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('categoryName'),
+            TextField::new('categoryName')
+                ->setLabel('Nom de la catégorie'),
             TextEditorField::new('categoryContent')
+                ->setLabel('Description de la catégorie')
             ->setTrixEditorConfig([
                 'blockAttributes' => [
                     'default' => ['tagName' => 'p'],
                 ],
             ]),
-            AssociationField::new('projects'),
+            AssociationField::new('projects')
+                ->setLabel('Projets'),
             AssociationField::new('articles'),
             AssociationField::new('services'),
         ];

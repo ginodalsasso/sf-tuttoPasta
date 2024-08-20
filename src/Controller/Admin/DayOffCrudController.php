@@ -21,8 +21,8 @@ class DayOffCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            DateTimeField::new('dayOff'),
+            DateTimeField::new('dayOff')->setFormat('dd/MM/Y')
+                ->setLabel('Jour de congé'),
         ];
     }
 }

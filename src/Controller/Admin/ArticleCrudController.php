@@ -27,8 +27,10 @@ class ArticleCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('articleTitle'),
+            TextField::new('articleTitle')
+                ->setLabel('Titre'),
             TextEditorField::new('articleContent')
+                ->setLabel('Contenu')
                 ->setTrixEditorConfig([
                     'blockAttributes' => [
                         'default' => ['tagName' => 'p'],
@@ -37,7 +39,8 @@ class ArticleCrudController extends AbstractCrudController
                     ],
                 ])
                 ->setFormTypeOption('attr', ['class' => 'trix-content']),
-            DateTimeField::new('articleDate'),
+            DateTimeField::new('articleDate')->setFormat('dd/MM/Y à hh:mm')
+                ->setLabel('Date de publication'),
             TextField::new('slug'),
             AssociationField::new('categories')
                 ->setFormTypeOptions([
@@ -50,6 +53,7 @@ class ArticleCrudController extends AbstractCrudController
                     'multiple' => true,
                 ]),       
             AssociationField::new('comments')
+                ->setLabel('Commentaires')
                 ->setFormTypeOptions([
                     'by_reference' => false,
                     'multiple' => true,

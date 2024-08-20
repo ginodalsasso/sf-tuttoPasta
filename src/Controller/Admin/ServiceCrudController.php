@@ -22,6 +22,7 @@ class ServiceCrudController extends AbstractCrudController
     {
         return [
             TextEditorField::new('serviceName')
+            ->setLabel('Nom du service')
             ->setTrixEditorConfig([
                 'blockAttributes' => [
                     'default' => ['tagName' => 'p'],
@@ -29,13 +30,16 @@ class ServiceCrudController extends AbstractCrudController
                 ],
             ]),
             TextEditorField::new('serviceContent')
+            ->setLabel('Description du service')
             ->setTrixEditorConfig([
                 'blockAttributes' => [
                     'default' => ['tagName' => 'p']
                 ],
             ]),
-            NumberField::new('servicePrice'),
+            NumberField::new('servicePrice')
+            ->setLabel('Prix du service'),
             AssociationField::new('category')
+            ->setLabel('Catégorie')
         ];
     }
 }

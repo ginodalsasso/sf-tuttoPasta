@@ -21,9 +21,10 @@ class CommentCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            TextEditorField::new('commentContent'),
-            DateTimeField::new('commentDate'),
+            TextEditorField::new('commentContent')
+                ->setLabel('Contenu'),
+            DateTimeField::new('commentDate')
+                ->setLabel('Date de publication'),
             TextField::new('article'),
             TextField::new('user')
         ];
