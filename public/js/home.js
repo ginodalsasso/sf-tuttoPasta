@@ -99,6 +99,12 @@ $(document).ready(function () {
         "full_button_green",
     ];
 
+    // Couleur aléatoire pour chaque h3 de la section expertise_cards
+    $(".expertise_card h3").each(function (index) {
+        $(this).css("color", colors[index % colors.length]);
+
+    });
+
     // Couleur aléatoire pour chaque élément de la classe service_cards_header
     $(".service_cards").each(function (index) {
         var color = colors[index % colors.length];
