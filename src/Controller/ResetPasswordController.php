@@ -59,8 +59,8 @@ class ResetPasswordController extends AbstractController
     #[Route('/check-email', name: 'app_check_email')]
     public function checkEmail(): Response
     {
-        // Generate a fake token if the user does not exist or someone hit this page directly.
-        // This prevents exposing whether or not a user was found with the given email address or not
+        // Génère un faux token si aucun n'est présent en session
+        // Cela peut arriver si l'utilisateur arrive sur cette page directement
         if (null === ($resetToken = $this->getTokenObjectFromSession())) {
             $resetToken = $this->resetPasswordHelper->generateFakeResetToken();
         }
@@ -75,10 +75,10 @@ class ResetPasswordController extends AbstractController
      */
     #[Route('/reset/{token}', name: 'app_reset_password')]
     public function reset(Request $request, UserPasswordHasherInterface $passwordHasher, TranslatorInterface $translator, ?string $token = null): Response
-    {   // Si le token est présent dans l'URL, on le stocke en session et on redirige vers la page de changement de mot de passe
+    {  
+         // Si le token est présent dans l'URL, on le stocke en session et on redirige vers la page de changement de mot de passe
         if ($token) {
-            // We store the token in session and remove it from the URL, to avoid the URL being
-            // loaded in a browser and potentially leaking the token to 3rd party JavaScript.
+            // On stocke le token en session et on redirige vers la page de changement de mot de passe
             $this->storeTokenInSession($token);
 
             return $this->redirectToRoute('app_reset_password');
@@ -104,15 +104,15 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_forgot_password_request');
         }
 
-        // Lextoken est valide, on affiche le formulaire de changement de mot de passe
+        // Le token est valide, on affiche le formulaire de changement de mot de passe
         $form = $this->createForm(ChangePasswordFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // A password reset token should be used only once, remove it.
+            // Un mot de passe a déjà été demandé pour ce token, on le supprime
             $this->resetPasswordHelper->removeResetRequest($token);
 
-            // Encode(hash) the plain password, and set it.
+            // Encode le mot de passe et le sauvegarde
             $encodedPassword = $passwordHasher->hashPassword(
                 $user,
                 $form->get('plainPassword')->getData()

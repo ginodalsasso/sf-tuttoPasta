@@ -28,7 +28,11 @@
                 <div class="error_msg" id="password_error"></div>
 
                 <div class="agreeTerms_display">
-                    {{ form_row(registrationForm.agreeTerms) }}
+                    {# {{ form_row(registrationForm.agreeTerms) }} #}
+                    {{ form_row(registrationForm.agreeTerms, {
+                        label_html: true,
+                        label: 'J\'accepte les <a href="'~path('app_cgu')~'">termes et conditions d\'utilisation</a>'
+                    }) }}
                 </div>
 
                 <button type="submit" id="register_save" class="full_button_black">S'inscrire</button>

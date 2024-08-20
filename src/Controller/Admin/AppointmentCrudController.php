@@ -26,14 +26,18 @@ class AppointmentCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            TextField::new('name'),
-            EmailField::new('email'),
-            TextareaField::new('message'),
-            DateTimeField::new('startDate'),
-            DateTimeField::new('endDate'),
-            DateTimeField::new('createdAt'),
-            BooleanField::new('status'),
+            TextField::new('name')
+                ->setLabel('Nom'),
+            EmailField::new('email')
+                ->setLabel('E-mail'),
+            TextareaField::new('message')
+                ->setLabel('Message'),
+            DateTimeField::new('startDate')->setFormat('dd/MM/Y à hh:mm')
+                ->setLabel('Date de début'),
+            DateTimeField::new('endDate')->setFormat('dd/MM/Y à hh:mm')
+                ->setLabel('Date de fin'),
+            DateTimeField::new('createdAt')->setFormat('dd/MM/Y à hh:mm')
+                ->setLabel('Créé le'),
             AssociationField::new('services')
             ->setFormTypeOptions([
                 'by_reference' => false,

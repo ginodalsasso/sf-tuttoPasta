@@ -68,7 +68,6 @@ gsap.from(".expertise_cards .expertise_card", {
     stagger: 0.5 // Délai entre chaque élément
 });
 
-
 $(document).ready(function () {
     
     //_______________________________GESTION DES COULEURS ALEATOIRES________________________________
