@@ -28,9 +28,12 @@ class DashboardController extends AbstractDashboardController
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
-        $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        return $this->redirect($adminUrlGenerator->setController(AdministrationCrudController::class)->generateUrl());
-
+        // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
+        // return $this->redirect($adminUrlGenerator->setController(AdministrationCrudController::class)->generateUrl());
+        
+        // Rediriger vers la page d'accueil du tableau de bord personnalisé
+        return $this->render('admin/dashboard.html.twig', [
+        ]);
         // Option 2. You can make your dashboard redirect to different pages depending on the user
         //
         // if ('jane' === $this->getUser()->getUsername()) {
@@ -52,6 +55,8 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::section('Portfolio');
+        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+
             yield MenuItem::linkToUrl('Home', 'fas fa-home', $this -> generateUrl('app_home'));
             yield MenuItem::linkToCrud('Catégories', 'fas fa-th-list', Category::class);
             yield MenuItem::linkToCrud('Administration', 'fas fa-cogs', Administration::class);
@@ -68,7 +73,10 @@ class DashboardController extends AbstractDashboardController
             yield MenuItem::linkToCrud('Rendez-vous', 'fas fa-calendar-check', Appointment::class);
             yield MenuItem::linkToCrud('Jours de congés', 'fas fa-calendar-alt', DayOff::class);
             yield MenuItem::linkToCrud('Utilisateurs', 'fas fa-users', User::class);
-            yield MenuItem::linkToUrl('Devis', 'fa-regular fa-money-bills', $this -> generateUrl('app_quotes'));
+            yield MenuItem::linkToCrud('Quotes', 'fas fa-users', Quote::class);
+            yield MenuItem::linkToUrl('Gestion des devis', 'fas fa-regular fa-money-bills', $this -> generateUrl('app_quotes'));
 
     }
+
+
 }

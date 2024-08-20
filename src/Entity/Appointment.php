@@ -300,5 +300,9 @@ class Appointment
         return $this;
     }
 
+    public function __toString(): string
+    {
+        return $this->startDate->format('d/m/Y H:i') . ' - ' . $this->endDate->format('d/m/Y H:i');
+    }
 
 }

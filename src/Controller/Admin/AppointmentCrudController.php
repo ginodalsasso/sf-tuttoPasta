@@ -4,10 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\Appointment;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -38,6 +36,11 @@ class AppointmentCrudController extends AbstractCrudController
                 ->setLabel('Date de fin'),
             DateTimeField::new('createdAt')->setFormat('dd/MM/Y à hh:mm')
                 ->setLabel('Créé le'),
+            AssociationField::new('user')
+            ->setFormTypeOptions([
+                'by_reference' => false,
+                'multiple' => true,
+            ]),
             AssociationField::new('services')
             ->setFormTypeOptions([
                 'by_reference' => false,

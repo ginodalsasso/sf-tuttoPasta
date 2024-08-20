@@ -2,12 +2,9 @@
 
 namespace App\Controller\Admin;
 
-use DateTime;
 use App\Entity\Quote;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
@@ -22,7 +19,6 @@ class QuoteCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id')->hideOnForm(),
             TextField::new('reference'),
             DateTimeField::new('quoteDate'),
             TextField::new('customerName'),
@@ -33,12 +29,6 @@ class QuoteCrudController extends AbstractCrudController
                     'by_reference' => false,
                 ])
                 ->setCrudController(AppointmentCrudController::class),
-            AssociationField::new('appointments.services')
-                ->onlyOnDetail()
-                ->setFormTypeOptions([
-                    'by_reference' => false,
-                ])
-                ->setCrudController(ServiceCrudController::class),
         ];
     }
 }
