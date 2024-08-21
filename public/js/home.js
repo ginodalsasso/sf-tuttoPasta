@@ -9,8 +9,10 @@ const introContent = introSection.querySelector(".introduction_content");
 // Positionne l'image à gauche, en dehors de l'écran
 gsap.set(introImage, { xPercent: -100, opacity: 0 });
 
+
 // Positionne le contenu à droite, en dehors de l'écran
 gsap.set(introContent, { xPercent: 100, opacity: 0 });
+
 
 // Animation pour faire apparaître l'image
 gsap.to(introImage, {
@@ -26,6 +28,7 @@ gsap.to(introImage, {
     }
 });
 
+
 // Animation pour faire apparaître le contenu
 gsap.to(introContent, {
     xPercent: 0,   // Ramène le contenu à sa position d'origine
@@ -39,6 +42,7 @@ gsap.to(introContent, {
         toggleActions: "play none none none", // Joue l'animation à l'arrivée
     }     
 });
+
 
 // Animation pour les éléments de la section "Guides"
 gsap.from(".guide_content .badges_guide", {
@@ -54,6 +58,7 @@ gsap.from(".guide_content .badges_guide", {
     stagger: 0.3 // Délai entre chaque élément
 });
 
+
 gsap.from(".expertise_cards .expertise_card", {
     scrollTrigger: {
         trigger: ".expertise_cards .expertise_card",
@@ -68,6 +73,7 @@ gsap.from(".expertise_cards .expertise_card", {
     stagger: 0.5 // Délai entre chaque élément
 });
 
+
 $(document).ready(function () {
     
     //_______________________________GESTION DES COULEURS ALEATOIRES________________________________
@@ -78,12 +84,6 @@ $(document).ready(function () {
         "var(--blue-color)",
         "var(--green-color)",
     ];
-    
-    // Couleur aléatoire pour chaque élément de la classe .badges_guide i
-    $(".badges_guide i").each(function (index) {
-        $(this).css("color", colors[index % colors.length]);
-    });
-
 
     var stickerClasses = [
         "stickers_pink",
@@ -99,11 +99,19 @@ $(document).ready(function () {
         "full_button_green",
     ];
 
+
+    // Couleur aléatoire pour chaque élément de la classe .badges_guide i
+    $(".badges_guide i").each(function (index) {
+        $(this).css("color", colors[index % colors.length]);
+    });
+
+
     // Couleur aléatoire pour chaque h3 de la section expertise_cards
     $(".expertise_card h3").each(function (index) {
         $(this).css("color", colors[index % colors.length]);
 
     });
+
 
     // Couleur aléatoire pour chaque élément de la classe service_cards_header
     $(".service_cards").each(function (index) {

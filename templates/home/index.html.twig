@@ -15,7 +15,7 @@
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <main class="wrapper_home">
-        {# <div class="slider">
+        <div class="slider">
             <div class="logos_slider">
                 <img src="{{ asset('/img/AAA.svg') }}" alt="logo du projet aux armes d'Alsace">
                 <img src="{{ asset('/img/ClementBader.svg') }}" alt="logo du projet Clément Bader Massage">
@@ -28,7 +28,13 @@
                 <img src="{{ asset('/img/Ingrid.svg') }}" alt="logo du projet Ingrid">
                 <img src="{{ asset('/img/lucid.svg') }}" alt="logo du projet Lucid analytics">
             </div>
-        </div> #}
+            <div class="logos_slider">
+                <img src="{{ asset('/img/AAA.svg') }}" alt="logo du projet aux armes d'Alsace">
+                <img src="{{ asset('/img/ClementBader.svg') }}" alt="logo du projet Clément Bader Massage">
+                <img src="{{ asset('/img/Ingrid.svg') }}" alt="logo du projet Ingrid">
+                <img src="{{ asset('/img/lucid.svg') }}" alt="logo du projet Lucid analytics">
+            </div>
+        </div>
         <section id="introduction_section">
             <img src="{{administrations[18].title}}" alt="{{administrations[18].textContent}}">
             <div class="introduction_content">
@@ -230,7 +236,7 @@
             </article>
             <div class="guide_calltoaction">
                 {{administrations[25].title|raw}}
-                <a href="{{ path('app_appointment') }}"><button class="full_button_black_cta">Je prends contact</button></a>
+                <a href="{{ path('app_contact') }}"><button class="full_button_black_cta">Je prends contact</button></a>
             </div>
         </section>
 
