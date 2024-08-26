@@ -78,6 +78,17 @@ class RegistrationFormType extends AbstractType
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Confirmez votre mot de passe']
             ])
+            
+            //HoneyPot
+            ->add('firstname', TextType::class, [
+                'mapped' => false,
+                'required' => false,
+                'attr' => [
+                    'style' => 'display:none',
+                    'autocomplete' => 'off',
+                ],
+                'label' => false,
+            ])
 
             
             ->add('captcha', CaptchaType::class, [

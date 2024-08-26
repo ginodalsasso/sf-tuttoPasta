@@ -25,7 +25,7 @@ class ChallengeValidator extends ConstraintValidator
         }
 
         // Vérifie si la réponse au challenge est correcte en utilisant l'objet challenge
-        if (!$this->challenge->verify($value['challenge'], $value['answer'] ?? '')) {
+        if (!$this->challenge->verify($value['challenge'], $value['answer'] ?? '')) { 
             // Si la vérification échoue, construit et ajoute une violation à la contrainte
             $this->context->buildViolation($constraint->message)
                 ->addViolation();

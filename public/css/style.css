@@ -1485,7 +1485,8 @@ footer {
     .faq_section,
     #introduction_section,
     .footer_collab,
-    .footer_social {
+    .footer_social,
+    .article_content{
         padding: 0 8%;
 
     }
@@ -1515,7 +1516,8 @@ footer {
     .project_container,
     .project_header,
     .project_gallery,
-    .article_list {
+    .article_list,
+    .comment_head {
         display: block;
     }
 
@@ -1560,7 +1562,8 @@ footer {
     #quote_services,
     #appointment_services,
     .form-group,
-    #available-rdv {
+    #available-rdv,
+    #comment_commentContent {
         width: 70vw;
     }
 

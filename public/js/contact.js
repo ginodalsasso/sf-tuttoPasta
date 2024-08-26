@@ -27,8 +27,8 @@
         }
 
         const subject = $("#contact_form_message").val();
-        if (subject === "" || subject.length < 10) {
-            $("#subject_error").text("Le subject est invalide et doit contenir au minimum 10 caractères");
+        if (subject === "" || subject.length < 5) {
+            $("#subject_error").text("Le subject est invalide et doit contenir au minimum 5 caractères");
             $("#contact_form_subject").addClass("input_invalid");
             isValid = false;
         }

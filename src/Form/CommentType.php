@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class CommentType extends AbstractType
@@ -31,7 +32,16 @@ class CommentType extends AbstractType
                     'placeholder' => 'Votre message',
                     'autocomplete' => 'off',
                     ]
-            ]);    
+            ])
+            ->add('firstname', TextType::class, [
+                'mapped' => false,
+                'required' => false,
+                'attr' => [
+                    'style' => 'display:none',
+                    'autocomplete' => 'off',
+                ],
+                'label' => false,
+            ]); 
     }
 
     public function configureOptions(OptionsResolver $resolver): void

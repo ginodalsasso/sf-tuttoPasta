@@ -69,6 +69,15 @@ class HomeController extends AbstractController
         }
         // Vérifie si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // HoneyPot 
+            $honeypotValue = $form->get('firstname')->getData();
+
+            if (!empty($honeypotValue)) {
+                // Le champ a été rempli, probablement un bot
+                return $this->redirectToRoute('app_home');
+            }
+            
             // Récupère les données du formulaire
             $appointment = $form->getData();
 

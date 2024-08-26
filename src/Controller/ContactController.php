@@ -39,6 +39,15 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // HoneyPot 
+            $honeypotValue = $form->get('firstname')->getData();
+
+            if (!empty($honeypotValue)) {
+                // Le champ a été rempli, probablement un bot
+                return $this->redirectToRoute('app_home');
+            }
+
             $contact = $form->getData();
 
             // Sanitize les champs du formulaire
@@ -58,13 +67,13 @@ class ContactController extends AbstractController
                 return $this->redirectToRoute('app_appointment');
             }
 
-             //Vérifie si un utilisateur est connecté
-             $user = $security->getUser();
+            //Vérifie si un utilisateur est connecté
+            $user = $security->getUser();
 
-             // Si un utilisateur est connecté, associe ses informations au contact
-             if ($user) {
-                 $contact->setUser($user);
-             }
+            // Si un utilisateur est connecté, associe ses informations au contact
+            if ($user) {
+                $contact->setUser($user);
+            }
 
             $entityManager->persist($contact);
             $entityManager->flush();

@@ -85,6 +85,17 @@ class ContactFormType extends AbstractType
                     ]),
                 ],
             ])
+            
+            //HoneyPot
+            ->add('firstname', TextType::class, [
+                'mapped' => false,
+                'required' => false,
+                'attr' => [
+                    'style' => 'display:none',
+                    'autocomplete' => 'off',
+                ],
+                'label' => false,
+            ])
 
             ->add('save', SubmitType::class, [
                 'label' => 'Envoyer',

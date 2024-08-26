@@ -81,7 +81,15 @@ class BlogController extends AbstractController
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            
+
+            // HoneyPot 
+            $honeypotValue = $form->get('firstname')->getData();
+    
+            if (!empty($honeypotValue)) {
+                // Le champ a été rempli, probablement un bot
+                return $this->redirectToRoute('app_home');
+            }
+
             // Sanitize le contenu du commentaire
             $sanitizedCommentContent = $this->htmlSanitizer->sanitize($comment->getCommentContent());
             // Enregistre le contenu du commentaire

@@ -72,6 +72,15 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // HoneyPot 
+            $honeypotValue = $form->get('firstname')->getData();
+
+            if (!empty($honeypotValue)) {
+                // Le champ a été rempli, probablement un bot
+                return $this->redirectToRoute('app_home');
+            }
+
             // Sanitize les entrées utilisateur
             $user->setUsername($this->htmlSanitizer->sanitize($user->getUsername()));
 
@@ -108,8 +117,8 @@ class UserController extends AbstractController
                     ->htmlTemplate('emails/confirmation_email.html.twig')
             );
 
-            return  $this->redirectToRoute('app_login');
             $this->addFlash('success', 'Un email de confirmation vous a été envoyé, pour confirmer votre compte');
+            return  $this->redirectToRoute('app_login');
         }
 
         return $this->render('user/register.html.twig', [
