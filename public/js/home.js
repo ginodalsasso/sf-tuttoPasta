@@ -9,10 +9,8 @@ const introContent = introSection.querySelector(".introduction_content");
 // Positionne l'image à gauche, en dehors de l'écran
 gsap.set(introImage, { xPercent: -100, opacity: 0 });
 
-
 // Positionne le contenu à droite, en dehors de l'écran
 gsap.set(introContent, { xPercent: 100, opacity: 0 });
-
 
 // Animation pour faire apparaître l'image
 gsap.to(introImage, {
