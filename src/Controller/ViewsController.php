@@ -10,7 +10,7 @@ use App\Form\ServiceType;
 use App\Form\UserFormType;
 use App\Form\EditPasswordType;
 use App\Services\PdfGenerator;
-use Symfony\UX\Turbo\TurboBundle;
+use App\Services\MistralService;
 use App\Repository\QuoteRepository;
 use App\Repository\ArticleRepository;
 use App\Repository\ProjectRepository;
@@ -268,5 +268,29 @@ class ViewsController extends AbstractController
     {
         return $this->render('legal/cgv.html.twig');
     }
+
+
+    #[Route('/chat', name: 'app_chat')]
+    public function showChat(Request $request, MistralService $mistralService): Response
+    {
+        $form = $this->createForm(ChatType::class);
+        $form->handleRequest($request);
+
+        $response = null; // Initialisation de la variable
+
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $response = $mistralService->getResponse($data['message']);
+            // dd($response);
+        }
+
+        return $this->render('home/chat.html.twig', [
+            'form' => $form->createView(),
+            'response' => $response,
+        ]);
+    }
+
+
 
 }

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chat Tutto Pasta{% endblock %}
+
+{% block page_title %}Chat{% endblock %}
+
+{% block body %}
+    {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
+    <main class="wrapper">
+        {{ form_start(form) }}
+            {{ form_row(form.message) }}
+            {{ form_row(form.submit) }}
+        {{ form_end(form) }}
+
+        {% if response %}
+            <div class="response">
+                <p>{{ response }}</p>
+            </div>
+        {% endif %}
+    </main>
+{% endblock %}
