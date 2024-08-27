@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\ChatType;
 use App\Entity\Comment;
 use App\Entity\Project;
 use App\Form\CommentType;
@@ -9,6 +10,7 @@ use App\Form\ServiceType;
 use App\Form\UserFormType;
 use App\Form\EditPasswordType;
 use App\Services\PdfGenerator;
+use Symfony\UX\Turbo\TurboBundle;
 use App\Repository\QuoteRepository;
 use App\Repository\ArticleRepository;
 use App\Repository\ProjectRepository;
@@ -161,7 +163,7 @@ class ViewsController extends AbstractController
     // ---------------------------------Vue liste projets--------------------------------- //
     #[Route('/projects', name: 'app_projectList')]
     public function listProjectsShow(ProjectRepository $projectRepository, ProjectImgRepository $projectImgRepository, CategoryRepository $categoryRepository): Response
-    {  
+    {
         $projects = $projectRepository->findAll();
         $projectImgs = $projectImgRepository->findAll();
         $categories = $categoryRepository->findAll();
@@ -216,15 +218,15 @@ class ViewsController extends AbstractController
             'articles' => $articles,
         ]);
     }
-    
-    
+
+
     // ---------------------------------Vue détail article--------------------------------- //
     #[Route('blog/{slug}', name: 'app_article', requirements: ['slug' => '[a-z0-9\-]*'])]
     public function articleShow(string $slug, ArticleRepository $articleRepository): Response
     {
         $article = $articleRepository->findOneBy(['slug' => $slug]);
         $articles = $articleRepository->findAll();
-        
+
         // Vérifie si l'article existe
         if (!$article) {
             throw new NotFoundHttpException('Aucun article trouvé');;
@@ -235,35 +237,36 @@ class ViewsController extends AbstractController
             throw new NotFoundHttpException('Aucun article trouvé');;
             return $this->redirectToRoute('app_blog');
         }
-        
+
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
-        
+
         return $this->render('blog/article.html.twig', [
             'articles' => $articles,
             'article' => $article,
             'form' => $form->createView(),
         ]);
     }
-    
+
     // ---------------------------------Vue CGU --------------------------------- //
     #[Route('/cgu', name: 'app_cgu')]
-    public function showCGU (): Response
+    public function showCGU(): Response
     {
         return $this->render('legal/cgu.html.twig');
     }
 
     // ---------------------------------Vue Mentions légales --------------------------------- //
     #[Route('/mentions-legales', name: 'app_mentions')]
-    public function showMentions (): Response
+    public function showMentions(): Response
     {
         return $this->render('legal/mentions.html.twig');
     }
 
     // ---------------------------------CGV --------------------------------- //
     #[Route('/cgv', name: 'app_cgv')]
-    public function showCGV (): Response
+    public function showCGV(): Response
     {
         return $this->render('legal/cgv.html.twig');
     }
+
 }
