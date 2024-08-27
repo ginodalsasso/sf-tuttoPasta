@@ -6,11 +6,6 @@
     </url>
 
     <url>
-        <loc>https://127.0.0.1:8000/site-map</loc>
-        <priority>0.8</priority>
-    </url>
-
-    <url>
         <loc>http://127.0.0.1:8000/home</loc>
         <priority>1.0</priority>
     </url>

@@ -56,7 +56,6 @@ class UserController extends AbstractController
         $this->htmlSanitizer = $htmlSanitizer;
         $this->pdfGenerator = $pdfGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
-
     }
 
     #region REGISTER/LOGIN/LOGOUT
@@ -95,7 +94,9 @@ class UserController extends AbstractController
             }
             // Hashage du mot de passe
             $user->setPassword(
-                $userPasswordHasher->hashPassword(
+                // Utilisation de l'interface UserPasswordHasherInterface pour hasher le mot de passe
+                // hashPassword prend en paramètre l'entité User et le mot de passe en clair
+                $userPasswordHasher->hashPassword( 
                     $user,
                     $form->get('plainPassword')->getData()
                 )
@@ -236,16 +237,16 @@ class UserController extends AbstractController
     // --------------------------------- Suppression d'un compte utilisateur--------------------------------- //
     #[Route('/delete_account', name: 'app_delete_account')]
     #[IsGranted('ROLE_USER')]
-    public function deleteAccount( 
-        EntityManagerInterface $entityManager, 
-        TokenStorageInterface $tokenStorage, 
-        CommentRepository $commentRepository, 
-        ContactRepository $contactRepository, 
-        AppointmentRepository $appointmentRepository, 
-        MailerInterface $mailer, 
-        QuoteRepository $quoteRepository, 
+    public function deleteAccount(
+        EntityManagerInterface $entityManager,
+        TokenStorageInterface $tokenStorage,
+        CommentRepository $commentRepository,
+        ContactRepository $contactRepository,
+        AppointmentRepository $appointmentRepository,
+        MailerInterface $mailer,
+        QuoteRepository $quoteRepository,
         PdfGenerator $pdfGenerator
-        ): RedirectResponse {
+    ): RedirectResponse {
         // Récupère l'utilisateur actuellement connecté
         $user = $this->getUser();
 
@@ -261,7 +262,7 @@ class UserController extends AbstractController
             $comment->setUsername('Utilisateur supprimé');
             $entityManager->persist($comment);
         }
-        
+
         // Récupére et rends l'user associé au contact null
         $contacts = $contactRepository->findBy(['user' => $user]);
         foreach ($contacts as $contact) {
@@ -316,7 +317,7 @@ class UserController extends AbstractController
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
             return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
         }
-        
+
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
 

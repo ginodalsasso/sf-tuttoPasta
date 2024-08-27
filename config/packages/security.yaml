@@ -65,6 +65,6 @@ when@test:
             # reduces the work factor to the lowest possible values.
             Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
                 algorithm: auto
-                cost: 4 # Lowest possible value for bcrypt
-                time_cost: 3 # Lowest possible value for argon
-                memory_cost: 10 # Lowest possible value for argon
+                cost: 4 # Le cout du hashage de mot de passe
+                time_cost: 3 # Le temps de hashage
+                memory_cost: 10 # La mémoire utilisée

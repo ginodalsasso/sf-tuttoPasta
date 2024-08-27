@@ -19,19 +19,19 @@ class PdfGenerator
     // Définition des dépendances
     public function __construct(Environment $twig, ParameterBagInterface $params){
 
-        $this->domPdf = new Dompdf();
+        $this->domPdf = new Dompdf(); // Crée une nouvelle instance de Dompdf
 
-        $pdfOptions = new Options();
+        $pdfOptions = new Options(); // Crée une nouvelle instance de Options
 
-        $pdfOptions->set('defaultFont', 'Arial');
+        $pdfOptions->set('defaultFont', 'Arial'); // Définit la police par défaut
 
-        $this->domPdf->setPaper('A4', 'portrait');
+        $this->domPdf->setPaper('A4', 'portrait'); // Définit le format de la page
 
-        $this->domPdf->setOptions($pdfOptions);
+        $this->domPdf->setOptions($pdfOptions); // Applique les options
 
-        $this->twig = $twig;
+        $this->twig = $twig; // Injecte le moteur de rendu Twig
 
-        $this->params = $params;
+        $this->params = $params; // Injecte les paramètres de l'application
     }
 
 
@@ -69,14 +69,14 @@ class PdfGenerator
 
         // Crée un nouveau devis
         $quote = new Quote();
-        $reference = 'DEVIS-' . uniqid();
+        $reference = 'DEVIS-' . uniqid(); // Génère une référence unique
         $quote->setReference($reference);
-        $quote->setQuoteDate(new \DateTime());
+        $quote->setQuoteDate(new \DateTime()); // Définit la date du devis
         $quote->setCustomerName($appointment->getName());
         $quote->setCustomerFirstName($appointment->getFirstName());
         $quote->setCustomerEmail($appointment->getEmail());
-        $quote->setStatus(0);
-        $quote->setState(Quote::STATE_PENDING);
+        $quote->setStatus(0); 
+        $quote->setState(Quote::STATE_PENDING); // Définit l'état du devis
 
         // Associe le rendez-vous au devis
         $quote->setAppointments($appointment);
@@ -89,7 +89,6 @@ class PdfGenerator
         }
 
         // Calcul du prix total des services selectionnés
-        // $totalPrice = $quote->calculateTotal($services);
         $quote->setTotalTTC($totalPrice);
 
         return $quote;
@@ -100,8 +99,9 @@ class PdfGenerator
     public function generateAndStorePdf(PdfGenerator $pdfGenerator, Quote $quote, string $reference): string
     {
         $imagePath = $this->params->get('kernel.project_dir') . '/public/img/logo_black.svg';
-        $imageData = base64_encode(file_get_contents($imagePath));
+        $imageData = base64_encode(file_get_contents($imagePath)); // Convertit l'image en base64
 
+        // Génère un fichier PDF à partir du template Twig
         $html = $this->twig->render('admin/quote.html.twig', [
             'quote' => $quote,
             'appointment' => $quote->getAppointments(),
@@ -109,12 +109,12 @@ class PdfGenerator
 
 
         ]);
-        // Générer le contenu PDF
+        // Génère le contenu PDF
         $pdfContent = $pdfGenerator->generatePDF($html);
         
-        // Définir le chemin de stockage du PDF
+        // Définit le chemin de stockage du PDF
         $pdfDirectory = $this->params->get('kernel.project_dir') . '/public/uploads/pdf/';
-        // Générer un nom de fichier unique
+        // Génère un nom de fichier unique
         $pdfFilename = $reference . '.pdf';
         // Chemin complet du fichier PDF
         $pdfFilepath = $pdfDirectory . $pdfFilename;
@@ -122,9 +122,9 @@ class PdfGenerator
         // Sauvegarde le PDF sur le système de fichiers
         file_put_contents($pdfFilepath, $pdfContent);
     
-        // Stocker le lien du PDF dans l'entité Quote
+        // Stocke le lien du PDF dans l'entité Quote
         $quote->setPdfContent('/uploads/pdf/' . $pdfFilename);
-        // Mettre à jour l'entité Quote
+        // Mets à jour l'entité Quote
         return $quote->getPdfContent();
     }
 
@@ -141,12 +141,12 @@ class PdfGenerator
             'logo' => $imageData,
 
         ]);
-        // Générer le contenu PDF
+        // Génère le contenu PDF
         $pdfContent = $pdfGenerator->generatePDF($html);
 
-        // Définir le chemin de stockage du PDF
+        // Définit le chemin de stockage du PDF
         $pdfDirectory = $this->params->get('kernel.project_dir') . '/public/uploads/pdf/archive/';
-        // Générer un nom de fichier unique
+        // Génère un nom de fichier unique
         $pdfFilename = $reference . '.pdf';
         // Chemin complet du fichier PDF
         $pdfFilepath = $pdfDirectory . $pdfFilename;
@@ -154,9 +154,9 @@ class PdfGenerator
         // Sauvegarde le PDF sur le système de fichiers
         file_put_contents($pdfFilepath, $pdfContent);
 
-        // Stocker le lien du PDF dans l'entité Quote
+        // Stocke le lien du PDF dans l'entité Quote
         $quote->setPdfContent('/uploads/pdf/' . $pdfFilename);
-        // Mettre à jour l'entité Quote
+        // Mets à jour l'entité Quote
         return $quote->getPdfContent();
     }
 

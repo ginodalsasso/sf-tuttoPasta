@@ -259,4 +259,11 @@ class ViewsController extends AbstractController
     {
         return $this->render('legal/mentions.html.twig');
     }
+
+    // ---------------------------------CGV --------------------------------- //
+    #[Route('/cgv', name: 'app_cgv')]
+    public function showCGV (): Response
+    {
+        return $this->render('legal/cgv.html.twig');
+    }
 }

@@ -142,25 +142,24 @@ function initFlatpickr() {
 //___________________________________INPUT HEURE RDV_______________________________________
 // Détecte les changements de la date de début
 function getSelectedDate() {
-
-    $startDate.on("change", function () {
-        const selectedDate = $startDate.val();
+    $startDate.on("change", function () { // Détecte les changements de la date de début
+        const selectedDate = $startDate.val(); // Récupère la date sélectionnée
         $.ajax({
             url: available_rdv_ajax,
-            contentType: "application/x-www-form-urlencoded",
+            contentType: "application/x-www-form-urlencoded", // Envoie les données en tant que formulaire
             method: "POST",
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'X-CSRF-TOKEN': csrfToken
             },
             data: {
-                startDate: selectedDate,
+                startDate: selectedDate, // Envoie la date sélectionnée
             },
             success: function (data) {
-                if (Array.isArray(data.availabilities)) {
-                    $availableRdv.empty();
-                    const allSlots = data.availabilities[0];
-                    $.each(allSlots, function (index, slot) {
+                if (Array.isArray(data.availabilities)) { // Vérifie si les données sont un tableau
+                    $availableRdv.empty(); // Vide le contenu de la liste des créneaux horaires
+                    const allSlots = data.availabilities[0]; // Récupère les créneaux horaires
+                    $.each(allSlots, function (index, slot) { // Parcours les créneaux horaires
                         const $label = $("<label>");
                         const $input = $("<input>", {
                             type: "radio",
@@ -168,8 +167,8 @@ function getSelectedDate() {
                             value: slot,
                             class: "radioSlots",
                         });
-                        $label.append($input).append(document.createTextNode(formatTime(slot)));
-                        $availableRdv.append($label);
+                        $label.append($input).append(document.createTextNode(formatTime(slot))); // Ajoute le créneau horaire au label
+                        $availableRdv.append($label); // Ajoute le label à la liste des créneaux horaires
                     });
                 } else {
                     console.error("Format de données invalide !");

@@ -73,6 +73,25 @@ gsap.from(".expertise_cards .expertise_card", {
 
 
 $(document).ready(function () {
+
+    
+    // gsap.registerPlugin(TextPlugin);
+
+    // // Récupère dynamiquement l'élément h1 par son ID
+    // var h1Element = document.querySelector("h1[id]"); // Sélectionne le premier <h1> avec un attribut 'id'
+
+    // // Crée une timeline GSAP avec les paramètres par défaut
+    // var tl = gsap.timeline({
+    //     defaults: {duration: 2, ease: "none"}});
+
+    // // Applique l'effet scrambleText au h1 en utilisant son texte actuel
+    // tl.to(h1Element, {
+    //     duration: 3,
+    //     text: {
+    //         value: h1Element.innerHTML,
+    //         scramble: { chars: "lowerCase", speed: 0.5 }
+    //     }
+    // });
     
     //_______________________________GESTION DES COULEURS ALEATOIRES________________________________
     // Variable de couleur pour les H2 des cards articles
