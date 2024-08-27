@@ -7,15 +7,14 @@
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <main class="wrapper">
-        {{ form_start(form) }}
-            {{ form_row(form.message) }}
+        {{ form_start(form, {'attr': {'id': 'chat_form'}, 'action': path('app_chat')}) }}
+        {{ form_row(form.message, {'attr': {'id': 'chat_message'}}) }} {# Ajout de l'ID pour le champ de message #}
             {{ form_row(form.submit) }}
         {{ form_end(form) }}
 
-        {% if response %}
-            <div class="response">
-                <p>{{ response }}</p>
-            </div>
-        {% endif %}
+        <div class="response"></div> {# afficher la réponse #}
     </main>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('/js/chat.js')}}"></script>
 {% endblock %}

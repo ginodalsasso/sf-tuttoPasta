@@ -23,6 +23,7 @@ use App\Repository\AdministrationRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -275,22 +276,20 @@ class ViewsController extends AbstractController
     {
         $form = $this->createForm(ChatType::class);
         $form->handleRequest($request);
-
-        $response = null; // Initialisation de la variable
-
-
-        if($form->isSubmitted() && $form->isValid()) {
+    
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $response = $mistralService->getResponse($data['message']);
             // dd($response);
+    
+                return new JsonResponse(['response' => $response]);
+        
         }
-
+    
         return $this->render('home/chat.html.twig', [
             'form' => $form->createView(),
-            'response' => $response,
+            // 'response' => $response ?? null,
         ]);
     }
-
-
-
+    
 }
