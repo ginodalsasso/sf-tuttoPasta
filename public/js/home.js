@@ -72,27 +72,20 @@ gsap.from(".expertise_cards .expertise_card", {
 });
 
 
+gsap.from(".service .service_cards", {
+    scrollTrigger: {
+        trigger: ".services_h2",
+        toggleActions: "play none none none",
+        start: "top top",
+    },
+    y: 200,  // Déplacement depuis la gauche
+    opacity: 0,
+    ease: "power3.out",  // Glissement fluide
+    duration: 1, 
+    stagger: 0.5 // Délai entre chaque élément
+});
+
 $(document).ready(function () {
-
-    
-    // gsap.registerPlugin(TextPlugin);
-
-    // // Récupère dynamiquement l'élément h1 par son ID
-    // var h1Element = document.querySelector("h1[id]"); // Sélectionne le premier <h1> avec un attribut 'id'
-
-    // // Crée une timeline GSAP avec les paramètres par défaut
-    // var tl = gsap.timeline({
-    //     defaults: {duration: 2, ease: "none"}});
-
-    // // Applique l'effet scrambleText au h1 en utilisant son texte actuel
-    // tl.to(h1Element, {
-    //     duration: 3,
-    //     text: {
-    //         value: h1Element.innerHTML,
-    //         scramble: { chars: "lowerCase", speed: 0.5 }
-    //     }
-    // });
-    
     //_______________________________GESTION DES COULEURS ALEATOIRES________________________________
     // Variable de couleur pour les H2 des cards articles
     var colors = [
@@ -122,7 +115,6 @@ $(document).ready(function () {
         $(this).css("color", colors[index % colors.length]);
     });
 
-
     // Couleur aléatoire pour chaque h3 de la section expertise_cards
     $(".expertise_card h3").each(function (index) {
         $(this).css("color", colors[index % colors.length]);
@@ -141,7 +133,6 @@ $(document).ready(function () {
         $(this).find(".stickers_price").addClass(stickerClass); // Ajoute la classe de sticker
         $(this).find(".service_button").addClass(buttonClass); // Ajoute la classe de button
     });
-
 
 
     //_______________________________GESTION DES OFFRES DE PRIX (SERVICES)________________________________
@@ -199,6 +190,22 @@ $(document).ready(function () {
             });
         });
     });
+
+    dataEtat = $('.quotes_table td ').attr('data-etat');
+    tdStyle= $('.quotes_table td ');
+
+    if(dataEtat == 'En attente') {
+        tdStyle.css('background-color', 'yellow');
+    } else if (dataEtat == 'En cours') {
+        tdStyle.css('background-color', 'blue');
+    } else if (dataEtat == 'Payé') {
+        tdStyle.css('background-color', 'green');
+    } else {
+        tdStyle.css('background-color', 'grey');
+    }
+
+
+
 
     //_______________________________GESTION DES CHECKBOXES ET LABELS SUR LE FORMULAIRE D'OFFRES________________________________
     // Fonction pour gérer le changement d'état des checkboxes
