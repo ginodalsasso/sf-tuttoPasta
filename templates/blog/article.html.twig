@@ -117,7 +117,7 @@
     {#--------------------------------------- Section Autres articles ----------------------------------------#}
     <section>
         <ul class="article_list">
-            {% for article in articles|slice(2) %}
+            {% for article in articles %}
             <li class="article_items">
                 <a href="{{ path('app_article', { 'slug': article.slug }) }}">
                         <article class="article_card">

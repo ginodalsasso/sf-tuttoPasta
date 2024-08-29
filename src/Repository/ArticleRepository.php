@@ -16,6 +16,18 @@ class ArticleRepository extends ServiceEntityRepository
         parent::__construct($registry, Article::class);
     }
 
+    // Méthode permettant de récupérer des articles aléatoires
+        public function findRandomArticles($currentSlug, $limit = 2) // Par défaut, on récupère 2 articles
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.slug != :currentSlug')
+            ->setParameter('currentSlug', $currentSlug) // On exclut l'article actuel
+            ->orderBy('RAND()') // Utilise la fonction RAND() pour un ordre aléatoire
+            ->setMaxResults($limit) // Limite le nombre de résultats
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Article[] Returns an array of Article objects
     //     */

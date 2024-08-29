@@ -227,6 +227,8 @@ class ViewsController extends AbstractController
     {
         $article = $articleRepository->findOneBy(['slug' => $slug]);
         $articles = $articleRepository->findAll();
+        // Récupération des articles aléatoires
+        $randomArticles = $articleRepository->findRandomArticles($slug);
 
         // Vérifie si l'article existe
         if (!$article) {
@@ -243,7 +245,9 @@ class ViewsController extends AbstractController
         $form = $this->createForm(CommentType::class, $comment);
 
         return $this->render('blog/article.html.twig', [
-            'articles' => $articles,
+            // 'articles' => $articles,
+
+            'articles' => $randomArticles,
             'article' => $article,
             'form' => $form->createView(),
         ]);
