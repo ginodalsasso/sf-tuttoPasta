@@ -118,8 +118,8 @@
     <section>
         <ul class="article_list">
             {% for article in articles %}
-            <li class="article_items">
-                <a href="{{ path('app_article', { 'slug': article.slug }) }}">
+                <li class="article_items">
+                    <a href="{{ path('app_article', { 'slug': article.slug }) }}">
                         <article class="article_card">
                             <h2 class="article_card_title">{{ article.articleTitle }}</h2>
                             <p>{{ article.date }}</p>

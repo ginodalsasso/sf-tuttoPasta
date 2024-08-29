@@ -17,12 +17,12 @@ class ArticleRepository extends ServiceEntityRepository
     }
 
     // Méthode permettant de récupérer des articles aléatoires
-        public function findRandomArticles($currentSlug, $limit = 2) // Par défaut, on récupère 2 articles
+    public function findRandomArticles($currentSlug, $limit = 2)
     {
         return $this->createQueryBuilder('a')
-            ->where('a.slug != :currentSlug')
-            ->setParameter('currentSlug', $currentSlug) // On exclut l'article actuel
-            ->orderBy('RAND()') // Utilise la fonction RAND() pour un ordre aléatoire
+            ->where('a.slug != :currentSlug') // Exclut l'article actuel
+            ->setParameter('currentSlug', $currentSlug)
+            ->orderBy('RAND()') // Utilise la fonction RAND() de MySQL pour mélanger les résultats
             ->setMaxResults($limit) // Limite le nombre de résultats
             ->getQuery()
             ->getResult();
