@@ -128,7 +128,8 @@ class HomeController extends AbstractController
                     $entityManager->persist($quote);
                     $entityManager->flush();
 
-                    $this->sendConfirmationEmail($mailer, $emailAddress, $startDate);
+                    $this->sendConfirmationEmailTo($mailer, $emailAddress, $startDate);
+                    $this->sendConfirmationEmailFrom($mailer, $emailAddress, $startDate);
 
                     // Ajoute un message de succès et redirige vers la page d'accueil
                     $this->addFlash('success', 'Votre rendez-vous a été enregistré avec succès. Un email de confirmation vous a été envoyé.');
@@ -150,8 +151,8 @@ class HomeController extends AbstractController
     }
 
 
-    // Gestion de l'envoi de confiration de prise de RDV
-    private function sendConfirmationEmail(MailerInterface $mailer, string $emailAddress, \DateTime $startDate): void
+    // Gestion de l'envoi de confiration de prise de RDV pour le client
+    private function sendConfirmationEmailTo(MailerInterface $mailer, string $emailAddress, \DateTime $startDate): void
     {
         $emailContent = $this->renderView('emails/appointment_confirmation.html.twig', [
             'appointmentDate' => $startDate->format('d/m/Y à H:i')
@@ -161,6 +162,22 @@ class HomeController extends AbstractController
             ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
             ->to($emailAddress)
             ->subject('Confirmation de votre rendez-vous')
+            ->html($emailContent);
+
+        $mailer->send($email);
+    }
+
+    // Gestion de l'envoi de confiration de prise de RDV pour tuttoPasta
+    private function sendConfirmationEmailFrom(MailerInterface $mailer, string $emailAddress, \DateTime $startDate): void
+    {
+        $emailContent = $this->renderView('emails/appointment_confirmation.html.twig', [
+            'appointmentDate' => $startDate->format('d/m/Y à H:i')
+        ]);
+
+        $email = (new TemplatedEmail())
+            ->from(new Address($emailAddress))
+            ->to(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
+            ->subject('Nouveau Rendez vous')
             ->html($emailContent);
 
         $mailer->send($email);
@@ -205,6 +222,7 @@ class HomeController extends AbstractController
         foreach ($dayoffs as $dayoff) {
             $dayoffDates[] = $dayoff->format('Y-m-d');
         }
+
         // Retourne les dates de congé sous forme de réponse JSON
         return new JsonResponse([
             'dayoffDates' => $dayoffDates,

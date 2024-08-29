@@ -58,10 +58,7 @@ class UserController extends AbstractController
         $this->csrfTokenManager = $csrfTokenManager;
     }
 
-    #region REGISTER/LOGIN/LOGOUT
     //_____________________________________________________________REGISTER/LOGIN/LOGOUT_____________________________________________________________
-    //____________________________________________________________________________________________________________________________
-    //____________________________________________________________________________________________________________________
     // ---------------------------------Méthode d'inscription--------------------------------- //
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, ChallengeInterface $challenge): Response
@@ -312,7 +309,6 @@ class UserController extends AbstractController
     {
         // Récupère le jeton CSRF depuis les en-têtes
         $csrfToken = $request->headers->get('X-CSRF-TOKEN');
-
         // Vérifier la validité du jeton CSRF
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
             return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
@@ -320,16 +316,13 @@ class UserController extends AbstractController
 
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
-
         // Vérifie si l'utilisateur est valide
         if (!$user instanceof UserInterface) {
             throw new AccessDeniedException('Accès refusé');
         }
 
-
         // Récupère le rendez-vous
         $appointment = $entityManager->getRepository(Appointment::class)->find($id);
-
         // Vérifie si le rendez-vous existe et si l'utilisateur est autorisé à le supprimer
         if (!$appointment || !($user === $appointment->getUser() || $this->isGranted('ROLE_ADMIN'))) {
             return new JsonResponse(['success' => false, 'message' => 'Rendez-vous non trouvé ou vous n\'avez pas les droits pour le supprimer.'], 403);
@@ -337,14 +330,17 @@ class UserController extends AbstractController
 
         // Récupère le devis associé au rendez-vous
         $quote = $appointment->getQuote();
-
+        // Vérifie si le devis existe et si le fichier PDF est présent
         if ($quote) {
-            // Supprime le fichier PDF associé
-            $pdfPath = $this->getParameter('kernel.project_dir') . '/public' . $quote->getPdfContent();
-            if (file_exists($pdfPath)) {
+            // Récupère le chemin absolu du fichier PDF
+            $pdfPath = realpath($this->getParameter('kernel.project_dir') . '/var/uploads/pdf/' . $quote->getPdfContent());
+            $expectedDirectory = realpath($this->getParameter('kernel.project_dir') . '/var/uploads/pdf/');
+            // realpath:  obtenir le chemin absolu et vérifier que le fichier est dans le répertoire sécurisé prévu
+
+            // Suppression sécurisée du fichier PDF
+            if ($pdfPath && str_starts_with($pdfPath, $expectedDirectory) && file_exists($pdfPath)) {
                 unlink($pdfPath);
             }
-            // Supprime le devis de la base de données
             $entityManager->remove($quote);
         }
 

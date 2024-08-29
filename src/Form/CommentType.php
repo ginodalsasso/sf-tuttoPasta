@@ -26,7 +26,7 @@ class CommentType extends AbstractType
                         'minMessage' => 'Votre commentaire doit contenir au minimum {{ limit }} caractères',
                     ]),
                 ],
-                'label' => false,
+                'label' => 'Laisser un commentaire',
                 'required' => true,
                 'attr' => [
                     'placeholder' => 'Votre message',

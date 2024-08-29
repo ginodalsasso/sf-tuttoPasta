@@ -55,9 +55,17 @@
         {% if not app.user %}   
             <a id="comment_join_btn" class="full_button_black" href="{{ path('app_register') }}">Inscrit toi et joins la conversation</a>
         {% else %}
-            <span>Laisser un commentaire</span>
-            {{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST', 'attr': {'id': 'comment_form'}}) }}
-                {{ form_row(form.commentContent) }} 
+        {{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST', 'attr': {'id': 'comment_form'}}) }}
+            {{ form_label(form.commentContent) }}
+                <div id="comment_constraints_message">
+                    <p>Veuillez respecter les contraintes suivantes lors de la rédaction de votre commentaire :</p>
+                    <ul>
+                        <li>Le commentaire doit contenir au minimum <strong>5 caractères</strong>.</li>
+                        <li>Évitez les propos injurieux, insultants ou inappropriés.</li>
+                        <li>Assurez-vous de rester dans le sujet de l'article pour une meilleure expérience de discussion.</li>
+                    </ul>
+                </div>
+            {{ form_widget(form.commentContent) }} 
                 <div class="error_msg" id="message_error"></div>
             
                 {{ form_errors(form) }}
@@ -81,7 +89,7 @@
                     <div class="comment_head">
                         {# <p>{{ comment.user.username }}</p> #}
                         {% if comment.user %}
-                            {{ comment.user.username|capitalize }}
+                            <p>{{ comment.user.username|capitalize }}</p>
                         {% else %}
                             {{ comment.username }}
                         {% endif %}
@@ -94,8 +102,8 @@
                     {# Suppression ou édition si utilisateur connecté = auteur ou admin #}
                     {% if is_granted('ROLE_ADMIN') or (app.user and comment.user == app.user) %}
                     <div class="comment_actions">
-                        <a href="#" class="edit_comment" data-id="{{ comment.id }}"><img src="{{ asset('/img/editer.png')}}" height="18" alt="icône d'édition"></a>
-                        <a href="#" class="delete_comment" data-id="{{ comment.id }}"><img src="{{ asset('/img/annuler.png')}}" height="18" alt="icône d'annulation"></a>
+                        <a href="#" class="edit_comment" title="Editer mon message" data-id="{{ comment.id }}"><img src="{{ asset('/img/editer.png')}}" height="18" alt="icône d'édition"></a>
+                        <a href="#" class="delete_comment" title="Suprimer mon message" data-id="{{ comment.id }}"><img src="{{ asset('/img/annuler.png')}}" height="18" alt="icône d'annulation"></a>
                     </div>
                     {% endif %}
                 </div>

@@ -13,7 +13,7 @@ class DayOffRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, DayOff::class);
+        parent::__construct($registry, DayOff::class); 
     }
 
     public function findAllDayoffs(): array
@@ -25,6 +25,7 @@ class DayOffRepository extends ServiceEntityRepository
 
         // Doctrine retourne des tableaux associatifs quand on utilise select()
         return array_map(function ($result) {
+            // retourne la valeur de la clé 'dayOff'
             return $result['dayOff'];
         }, $results);
     }

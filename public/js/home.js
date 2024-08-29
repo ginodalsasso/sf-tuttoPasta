@@ -191,20 +191,6 @@ $(document).ready(function () {
         });
     });
 
-    dataEtat = $('.quotes_table td ').attr('data-etat');
-    tdStyle= $('.quotes_table td ');
-
-    if(dataEtat == 'En attente') {
-        tdStyle.css('background-color', 'yellow');
-    } else if (dataEtat == 'En cours') {
-        tdStyle.css('background-color', 'blue');
-    } else if (dataEtat == 'Payé') {
-        tdStyle.css('background-color', 'green');
-    } else {
-        tdStyle.css('background-color', 'grey');
-    }
-
-
 
 
     //_______________________________GESTION DES CHECKBOXES ET LABELS SUR LE FORMULAIRE D'OFFRES________________________________

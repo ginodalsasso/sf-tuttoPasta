@@ -30,7 +30,23 @@ $(document).ready(function() {
     });
 });
     
+// selectionner les td avec l'attribut data-etat
+$('.quotes_table td[data-etat]').each(function() {
+    // Récupère la valeur de l'attribut data-etat
+    var dataEtat = $(this).attr('data-etat');
     
+    // Apply styles based on the data-etat value
+    if (dataEtat === 'En attente') {
+        $(this).css('background-color', '#fbfb8f');
+    } else if (dataEtat === 'En cours') {
+        $(this).css('background-color', '#6C6CFF');
+    } else if (dataEtat === 'Payé') {
+        $(this).css('background-color', '#27B474');
+    } else {
+        $(this).css('background-color', '#b6b6b6');
+    }
+});
+
 //___________________________________Suppression devis_______________________________________
 function deleteQuote(quoteId, csrfToken) {
     var url = `/admin/quote/${quoteId}/delete`;

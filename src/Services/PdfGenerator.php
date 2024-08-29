@@ -17,7 +17,8 @@ class PdfGenerator
     private $params;
 
     // Définition des dépendances
-    public function __construct(Environment $twig, ParameterBagInterface $params){
+    public function __construct(Environment $twig, ParameterBagInterface $params)
+    {
 
         $this->domPdf = new Dompdf(); // Crée une nouvelle instance de Dompdf
 
@@ -40,9 +41,9 @@ class PdfGenerator
     {
         $this->domPdf->loadHtml($html);
         $this->domPdf->render();
-        
+
         $pdfContent = $this->domPdf->output();
-        
+
         return new Response(
             $pdfContent,
             Response::HTTP_OK,
@@ -75,7 +76,7 @@ class PdfGenerator
         $quote->setCustomerName($appointment->getName());
         $quote->setCustomerFirstName($appointment->getFirstName());
         $quote->setCustomerEmail($appointment->getEmail());
-        $quote->setStatus(0); 
+        $quote->setStatus(0);
         $quote->setState(Quote::STATE_PENDING); // Définit l'état du devis
 
         // Associe le rendez-vous au devis
@@ -99,63 +100,70 @@ class PdfGenerator
     public function generateAndStorePdf(PdfGenerator $pdfGenerator, Quote $quote, string $reference): string
     {
         $imagePath = $this->params->get('kernel.project_dir') . '/public/img/logo_black.svg';
-        $imageData = base64_encode(file_get_contents($imagePath)); // Convertit l'image en base64
+        $imageData = base64_encode(file_get_contents($imagePath));
 
         // Génère un fichier PDF à partir du template Twig
         $html = $this->twig->render('admin/quote.html.twig', [
             'quote' => $quote,
             'appointment' => $quote->getAppointments(),
             'logo' => $imageData,
-
-
         ]);
-        // Génère le contenu PDF
+
         $pdfContent = $pdfGenerator->generatePDF($html);
-        
-        // Définit le chemin de stockage du PDF
-        $pdfDirectory = $this->params->get('kernel.project_dir') . '/public/uploads/pdf/';
-        // Génère un nom de fichier unique
-        $pdfFilename = $reference . '.pdf';
-        // Chemin complet du fichier PDF
+
+        // Utilisation d'un répertoire sécurisé non accessible publiquement
+        $pdfDirectory = $this->params->get('kernel.project_dir') . '/var/uploads/pdf/';
+        if (!file_exists($pdfDirectory)) {
+            mkdir($pdfDirectory, 0750, true); // Création du dossier avec des permissions sécurisées
+        }
+
+        // Nettoyage du nom de fichier pour éviter path Injection
+        $safeReference = preg_replace('/[^a-zA-Z0-9_\-]/', '', $reference);
+        $pdfFilename = $safeReference . '.pdf';
         $pdfFilepath = $pdfDirectory . $pdfFilename;
-    
-        // Sauvegarde le PDF sur le système de fichiers
+
         file_put_contents($pdfFilepath, $pdfContent);
-    
-        // Stocke le lien du PDF dans l'entité Quote
+
+        // Enregistre le chemin relatif sécurisé
         $quote->setPdfContent('/uploads/pdf/' . $pdfFilename);
-        // Mets à jour l'entité Quote
+
         return $quote->getPdfContent();
     }
 
 
-    // ---------------------------------Archivage et stockage du PDF--------------------------------- //
+// ---------------------------------Archivage et stockage du PDF--------------------------------- //
     public function generateAndArchivePdf(PdfGenerator $pdfGenerator, Quote $quote, string $reference): string
     {
         $imagePath = $this->params->get('kernel.project_dir') . '/public/img/logo_black.svg';
         $imageData = base64_encode(file_get_contents($imagePath));
 
+        // Génère un fichier PDF à partir du template Twig
         $html = $this->twig->render('admin/quote.html.twig', [
             'quote' => $quote,
             'appointment' => $quote->getAppointments(),
             'logo' => $imageData,
-
         ]);
+
         // Génère le contenu PDF
         $pdfContent = $pdfGenerator->generatePDF($html);
 
-        // Définit le chemin de stockage du PDF
-        $pdfDirectory = $this->params->get('kernel.project_dir') . '/public/uploads/pdf/archive/';
-        // Génère un nom de fichier unique
-        $pdfFilename = $reference . '.pdf';
-        // Chemin complet du fichier PDF
+        // Utilisation d'un répertoire sécurisé non accessible publiquement
+        $pdfDirectory = $this->params->get('kernel.project_dir') . '/var/uploads/pdf/archive/';
+        if (!file_exists($pdfDirectory)) {
+            mkdir($pdfDirectory, 0750, true); // Crée le répertoire avec des permissions sécurisées
+        }
+
+        // Nettoyage du nom de fichier pour éviter path Injection
+        $safeReference = preg_replace('/[^a-zA-Z0-9_\-]/', '', $reference);
+        $pdfFilename = $safeReference . '.pdf';
         $pdfFilepath = $pdfDirectory . $pdfFilename;
 
-        // Sauvegarde le PDF sur le système de fichiers
+        // Sauvegarde le PDF sur le système de fichiers avec un contrôle de permission sécurisé
         file_put_contents($pdfFilepath, $pdfContent);
 
-        // Stocke le lien du PDF dans l'entité Quote
-        $quote->setPdfContent('/uploads/pdf/' . $pdfFilename);
+        // Stocke le chemin relatif sécurisé pour le PDF
+        $quote->setPdfContent('/uploads/pdf/archive/' . $pdfFilename);
+
         // Mets à jour l'entité Quote
         return $quote->getPdfContent();
     }
@@ -177,7 +185,7 @@ class PdfGenerator
         $this->domPdf->render();
         // Renvoie le PDF en réponse HTTP
         $pdfContent = $this->domPdf->output();
-        
+
         return new Response(
             $pdfContent,
             Response::HTTP_OK,

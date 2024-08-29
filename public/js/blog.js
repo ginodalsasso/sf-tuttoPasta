@@ -67,7 +67,7 @@ $(document).ready(function() {
     });
 
     // Formulaire d'édition d'un commentaire
-    $('.edit_comment').on('click', function(e) {
+    $(document).on('click', '.edit_comment', function(e) {
         e.preventDefault();
         var commentId = $(this).data('id'); // Récupère l'ID du commentaire à éditer
         var commentContent = $(this).closest('.comment').find('.comment_content p').text().trim(); // Récupère le contenu du commentaire à éditer
@@ -79,8 +79,8 @@ $(document).ready(function() {
                 <textarea name="comment[commentContent]" class="data" id="edit_commentContent">${commentContent}</textarea>
                 <div class="error_msg" id="editMessage_error"></div>
                 <input type="hidden" name="comment[_token]" value="${csrfToken}">
-                <button type="button" class="cancel_edit stickers_white">Annuler</button>
-                <button id="editCommentMessage" class="stickers_black" type="submit">Mettre à jour</button>
+                <button type="button" class="cancel_edit full_button_white">Annuler</button>
+                <button id="editCommentMessage" class="full_button_black" type="submit">Mettre à jour</button>
             </form>
         `;
         $(this).closest('.comment').find('.comment_content').html(editForm); // Remplace le contenu du commentaire par le formulaire d'édition

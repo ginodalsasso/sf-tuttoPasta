@@ -21,6 +21,7 @@
     --h4-fontsize-mobile: 20px;
 
     --font-size: 18px;
+
     --font-family: "Area Normal Regular", sans-serif;
 }
 
@@ -288,6 +289,7 @@ a{
     font-weight: 600;
     display: inline-block;
     text-transform: uppercase;
+
 }
 
 .stickers_black,
@@ -1201,17 +1203,8 @@ summary {
     padding: 20px;
 }
 
-#comment_form, .edit_comment_form  {
-    text-align: center;
-}
-
 .comment {
     margin: 10px 0 20px 0;
-}
-
-.comment_head{
-    display: flex;
-    justify-content: space-between;
 }
 
 .comment_head p::first-letter {
@@ -1222,8 +1215,13 @@ summary {
     font-weight: 600;
 }
 
+.comment_head p:nth-child(2) {
+    font-size : 14px;
+}
+
 .comment_content {
     word-wrap: break-word;
+    margin: 20px 0;
 }
 
 .comment_actions {
@@ -1233,8 +1231,14 @@ summary {
 #comment_commentContent{
     width: 50vw;
     height: 15vh;
-    margin-bottom: 10px;
     resize: none;
+}
+
+#comment_form label {
+    display: block;
+    font-size: clamp(var(--h3-fontsize-mobile), 8vw, var(--h3-fontsize));
+    font-weight: 600;
+    margin-bottom: 30px;
 }
 
 .cancel_edit,
@@ -1251,6 +1255,19 @@ summary {
         display: block;
         margin: 0 auto;
         width: fit-content;
+}
+
+#comment_constraints_message {
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+#comment_constraints_message p:first-child {
+    font-weight: 600;
+}
+
+#comment_constraints_message li {
+    list-style-type: "- ";
 }
 
 /*=============== FOOTER ===============*/

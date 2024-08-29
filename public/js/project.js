@@ -15,18 +15,6 @@ ScrollTrigger.create({
     pinSpacing: false
 });
 
-// // Pin les images jusqu'à la galerie
-// imagesTop.forEach(imgTop => {
-//     ScrollTrigger.create({
-//         trigger: imgTop,
-//         start: "top top", 
-//         endTrigger: ".project_gallery",
-//         end: "top 330px",
-//         pin: true,
-//         pinSpacing: false
-//     });
-// });
-
 // Configuration initiale des images (position hors écran)
 imagesBottom.forEach((imgBottom, index) => {
     if (index === 0) {

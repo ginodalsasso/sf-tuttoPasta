@@ -271,6 +271,7 @@ class ViewsController extends AbstractController
     }
 
 
+    // ---------------------------------Vue Chat --------------------------------- //
     #[Route('/chat', name: 'app_chat')]
     public function showChat(Request $request, MistralService $mistralService): Response
     {
@@ -288,7 +289,6 @@ class ViewsController extends AbstractController
     
         return $this->render('home/chat.html.twig', [
             'form' => $form->createView(),
-            // 'response' => $response ?? null,
         ]);
     }
     

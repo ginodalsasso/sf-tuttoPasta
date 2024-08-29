@@ -51,8 +51,8 @@ class AppointmentRepository extends ServiceEntityRepository
         for ($time = clone $startTime; $time < $endTime; $time->add($interval)) {
             $slot = $time->format('Y-m-d H:i:s');
 
-            // Si le créneau n'est pas déjà réservé, on l'ajoute aux créneaux disponibles
-            if (!in_array($slot, $bookedSlots)) {
+            // Si le créneau n'est pas déjà réservé, on l'ajoute aux créneaux disponibles 
+            if (!in_array($slot, $bookedSlots)) { 
                 $slots[] = $slot;
             }
         }

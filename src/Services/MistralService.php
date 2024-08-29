@@ -32,10 +32,10 @@ class MistralService
     {
         // Appel à l'API Mistral pour créer une complétion de chat
         $response = $this->mistral->createChatCompletion([
-            'model' => 'mistral-tiny',
+            'model' => 'mistral-tiny', // Modèle de langage à utiliser
             'messages' => [
                 [
-                    'role' => 'user',
+                    'role' => 'user', 
                     'content' => $message
                 ],
             ],
@@ -45,6 +45,7 @@ class MistralService
         if ($response->getStatusCode() === 200) {
             // Récupère le contenu de la réponse
             $responseObj = json_decode($response->getBody()->getContents(), true);
+            // Si la réponse est vide, on retourne un message par défaut
             return $responseObj['choices'][0]['message']['content'] ?? 'Pas de réponse'; // Je parcours la réponse pour récupérer le contenu du message
         } else {
             return "Error: " . $response->getStatusCode();
