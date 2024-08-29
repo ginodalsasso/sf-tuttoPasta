@@ -229,7 +229,6 @@ class ViewsController extends AbstractController
         $articles = $articleRepository->findAll();
         // Récupération des articles aléatoires
         $randomArticles = $articleRepository->findRandomArticles($slug);
-        dd($randomArticles);
 
         // Vérifie si l'article existe
         if (!$article) {

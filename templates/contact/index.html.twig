@@ -8,31 +8,29 @@
 {% block body %}
 {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <main class="wrapper_appointment">
-        <div class="form_display">
-            {{ form_start(form) }}
-                <div class="form_container">
-                    <div class="form-group">
-                        {{ form_row(form.name) }}
-                        <div class="error_msg" id="firstName_error"></div>
-                    </div>
-                    <div class="form-group">
-                        {{ form_row(form.email) }}
-                        <div class="error_msg" id="email_error"></div>
-                    </div>
-                    <div class="form-group">
-                        {{ form_row(form.subject) }}
-                        <div class="error_msg" id="subject_error"></div>
-                    </div>
-                    <div class="form-group">
-                        {{ form_row(form.message) }}
-                        <div class="error_msg" id="message_error"></div>
-                    </div>
-                    {{ form_row(form.save, {'attr': {'class': 'full_button_black_cta'}}) }}
+        {{ form_start(form) }}
+            <div class="form_container">
+                <div class="form-group">
+                    {{ form_row(form.name) }}
+                    <div class="error_msg" id="firstName_error"></div>
                 </div>
+                <div class="form-group">
+                    {{ form_row(form.email) }}
+                    <div class="error_msg" id="email_error"></div>
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.subject) }}
+                    <div class="error_msg" id="subject_error"></div>
+                </div>
+                <div class="form-group">
+                    {{ form_row(form.message) }}
+                    <div class="error_msg" id="message_error"></div>
+                </div>
+                {{ form_row(form.save, {'attr': {'class': 'full_button_black_cta'}}) }}
+                <p id="constraints_message">Merci de nous contacter ! <br>Remplissez les champs requis (*) avec des informations claires pour une réponse rapide. <br>Vérifiez vos coordonnées et soyez précis dans votre message. <br>Vos données seront traitées en toute confidentialité.</p>
+            </div>
 
-            {{ form_end(form) }}
-
-        </div>
+        {{ form_end(form) }}
     </main>
 
 {% endblock %}

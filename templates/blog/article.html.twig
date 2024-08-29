@@ -57,7 +57,7 @@
         {% else %}
         {{ form_start(form, {'action': path('app_article_addComment', {'slug': article.slug}), 'method': 'POST', 'attr': {'id': 'comment_form'}}) }}
             {{ form_label(form.commentContent) }}
-                <div id="comment_constraints_message">
+                <div id="constraints_message">
                     <p>Veuillez respecter les contraintes suivantes lors de la rédaction de votre commentaire :</p>
                     <ul>
                         <li>Le commentaire doit contenir au minimum <strong>5 caractères</strong>.</li>

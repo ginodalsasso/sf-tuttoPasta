@@ -73,7 +73,8 @@ class AppointmentType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'autocomplete' => 'off',
-                    'class' => 'data'
+                    'class' => 'data',
+                    'placeholder' => "email@exemple.com",
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -91,7 +92,9 @@ class AppointmentType extends AbstractType
                 'required' => true,
                 'attr' => [
                     'autocomplete' => 'off',
-                    "class" => "data"
+                    "class" => "data",
+                    'placeholder' => "Veuillez saisir votre message ici...",
+
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -106,11 +109,12 @@ class AppointmentType extends AbstractType
 
 
             ->add('startDate', DateType::class, [
-                'label' => "Rendez-vous",
+                'label' => "Séléctionnez une date",
                 'required' => true,
                 'widget' => 'single_text',
                 'attr' => [
-                    'class' => 'data flatpickr'
+                    'class' => 'data flatpickr',
+                    'placeholder' => "Cliquez ici pour séléctionner une date",
                 ],
                 'constraints'=>[
                     new GreaterThanOrEqual([
@@ -123,6 +127,7 @@ class AppointmentType extends AbstractType
 
             ->add('services', EntityType::class, [
                 'class' => Service::class,
+                'label' => "Séléctionnez un ou plusieurs services",
                 'choice_label' => 'serviceName', 
                 'multiple' => true,
                 'expanded' => true, // true pour checkboxes
