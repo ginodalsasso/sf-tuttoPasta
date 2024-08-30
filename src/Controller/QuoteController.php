@@ -70,22 +70,19 @@ class QuoteController extends AbstractController
         foreach ($quotes as $quote) {
             // Récupérer l'utilisateur lié au devis par l'email
             $user = $userRepository->findOneBy(['email' => $quote->getCustomerEmail()]);
-    
+            // Ajoute le devis et l'utilisateur à un tableau
             $quoteWithUsers[] = [
                 'quote' => $quote,
                 'user' => $user,
             ];
-        
         }
-
+        
         return $this->render('admin/quote_list.html.twig', [
-            // 'quotes' => $quotes,
             'quoteWithUsers' => $quoteWithUsers,
-
         ]);
     }
-
-
+        
+        
     // ---------------------------------Formulaire d'Edition du devis PDF--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quote/edit/{id}', name: 'quote_edit')]

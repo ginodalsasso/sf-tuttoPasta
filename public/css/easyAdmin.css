@@ -1,0 +1,47 @@
+
+h2 {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.appointments_table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.appointments_table th, 
+.appointments_table td {
+    border-bottom: 1px solid #7c7c7c;
+    padding: 10px;
+    text-align: left;
+}
+
+.appointments_table tr:hover {
+    background-color: #202020;
+}
+/*_____________________________ECRANS 800px_____________________________ */
+@media (max-width: 800px) {
+    table thead {
+        display: none;
+    }
+
+    table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: 40px;
+    }
+
+    table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        text-align: right !important;
+    }
+
+    table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+    }
+
+}

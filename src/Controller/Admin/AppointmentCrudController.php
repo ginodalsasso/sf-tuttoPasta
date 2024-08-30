@@ -55,6 +55,12 @@ class AppointmentCrudController extends AbstractCrudController
                 'multiple' => true,
             ])
             ->setLabel('Services'),
+            AssociationField::new('quote')
+            ->setFormTypeOptions([
+                'by_reference' => false,
+                'multiple' => true,
+            ])
+            ->setLabel('Devis'),
 
         ];
     }

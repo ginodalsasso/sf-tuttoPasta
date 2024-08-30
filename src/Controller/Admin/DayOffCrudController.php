@@ -3,11 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\DayOff;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 #[IsGranted('ROLE_ADMIN')]
@@ -21,7 +18,7 @@ class DayOffCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            DateTimeField::new('dayOff')->setFormat('dd/MM/Y')
+            DateField::new('dayOff')->setFormat('dd/MM/Y')
                 ->setLabel('Jour de congé'),
         ];
     }

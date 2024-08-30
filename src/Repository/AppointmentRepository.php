@@ -80,6 +80,16 @@ class AppointmentRepository extends ServiceEntityRepository
     // WHERE a.user_id = :user_id
     // ORDER BY a.startDate DESC;
 
+    // Requête pour récupérer les derniers RDV 
+    public function findLatestAppointments(int $limit = 3)
+    {
+        return $this->createQueryBuilder('a')
+            ->orderBy('a.startDate', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    public function findOneBySomeField($value): ?Appointment
     //    {
     //        return $this->createQueryBuilder('a')

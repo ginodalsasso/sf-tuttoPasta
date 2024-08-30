@@ -1,8 +1,32 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
 {% block content %}
-    <div class="container">
-        <h1>Dashboard</h1>
+<div class="container">
+    <h1>Dashboard</h1>
+    <h2>Les trois derniers rendez-vous</h2>
+    <table class="appointments_table">
+        <thead>
+            <tr>
+                <th>Date de début</th>
+                <th>Date de fin</th>
+                <th>Message</th>
+                <th>Client</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set sorted_appointments = appointments|sort((a, b) => b.startDate <=> a.startDate) %}
+            {% for appointment in sorted_appointments %}
+                <tr id="appointment-{{ appointment.id }}">
+                    <td data-label="Date de début">{{ appointment.startDate|date('d-m-Y H:i') }}</td>
+                    <td data-label="Date de fin">{{ appointment.endDate|date('d-m-Y H:i') }}</td>
+                    <td data-label="Message">{{ appointment.message }}</td>
+                    <td data-label="Client">{{ appointment.name }}</td>
+                    <td data-label="Email">{{ appointment.email }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
-    </div>
 {% endblock %}
