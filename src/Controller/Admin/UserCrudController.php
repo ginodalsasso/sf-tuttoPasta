@@ -20,14 +20,17 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            EmailField::new('email'),
-            TextField::new('username'),
+            EmailField::new('email')
+                ->setLabel('E-mail'),
+            TextField::new('username')
+                ->setLabel('Nom d\'utilisateur'),
             AssociationField::new('appointments')
                 ->setFormTypeOptions([
                     'by_reference' => false,
                     
                 ])
-                ->setCrudController(AppointmentCrudController::class),
+                ->setCrudController(AppointmentCrudController::class)
+                ->setLabel('Rendez-vous'),
 
         ];
     }

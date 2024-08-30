@@ -6,7 +6,7 @@
 
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
-    <main class="wrapper">
+    <main class="wrapper_forms">
         {% for flash_error in app.flashes('verify_email_error') %}
             <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
         {% endfor %}
@@ -27,6 +27,8 @@
                 {{ form_row(registrationForm.plainPassword, { label: 'Password' }) }}
                 <div class="error_msg" id="password_error"></div>
 
+                {{ form_row(registrationForm.captcha) }}
+
                 <div class="agreeTerms_display">
                     {# {{ form_row(registrationForm.agreeTerms) }} #}
                     {{ form_row(registrationForm.agreeTerms, {
@@ -36,6 +38,14 @@
                 </div>
 
                 <button type="submit" id="register_save" class="full_button_black">S'inscrire</button>
+                <p id="constraints_message">
+                    - Remplissez tous les champs requis (*) avec des informations précises pour garantir une inscription réussie. <br>
+                    - Choisissez un pseudo approprié. <br>
+                    - Assurez-vous que votre adresse e-mail est correcte pour confirmer votre compte. <br>
+                    - Votre mot de passe doit contenir au moins 13 caractères, incluant une majuscule, une minuscule, un chiffre, et un caractère spécial (#?!@$%^&*-). <br>
+                    - Lisez et acceptez les termes et conditions pour finaliser votre inscription. <br>
+                    - Vos données seront traitées en toute confidentialité.
+                </p>
             </div>
         {{ form_end(registrationForm) }}
     </main>

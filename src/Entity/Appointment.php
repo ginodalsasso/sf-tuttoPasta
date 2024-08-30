@@ -66,7 +66,7 @@ class Appointment
     //Callback permet de créer une contrainte personalisée
     #[Assert\Callback([Appointment::class, "notWeekend"])]
     #[Assert\When(
-        expression: 'this.getEndDate() != null',
+        expression: 'this.getEndDate() != null', // Vérifie si la date de fin est renseignée
         constraints: [
             new Assert\LessThan(
                 propertyPath: 'endDate',

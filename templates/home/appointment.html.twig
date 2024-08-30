@@ -6,7 +6,7 @@
 
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
-    <main class="wrapper_appointment">
+    <main class="wrapper_forms">
         <div class="form_display">
             {{ form_start(form) }}
                 <div class="form_container">
@@ -38,6 +38,12 @@
                         <div id="available-rdv"></div>
                     </div>
                     {{ form_row(form.save, {'attr': {'class': 'full_button_black_cta'}}) }}
+                    <p id="constraints_message">
+                        *Merci d'avoir pris rendez-vous ! <br>
+                        - Remplissez les champs requis (*) avec des informations claires pour une réponse rapide. <br>
+                        - Vérifiez vos coordonnées et soyez précis dans votre message. <br>
+                        - Vos données seront traitées en toute confidentialité.
+                    </p>
                     <div id="discover_services">
                         <a href="#services_section">
                             <p>Découvrir les services</p>

@@ -49,7 +49,7 @@ body {
 
 .wrapper,
 .wrapper_project_list,
-.wrapper_appointment
+.wrapper_forms
 {
     color: var(--black-color);
     background-color: var(--white-color);
@@ -73,7 +73,6 @@ body {
 /*=============== MAIN WIDTH ===============*/
 
 #header_content,
-.wrapper,
 #project_container,
 .project_container,
 .services_h2,
@@ -176,6 +175,7 @@ a{
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    border-radius: 5px;
 }
 
 .full_button_black_cta, .full_button_white_cta {
@@ -267,6 +267,8 @@ a{
 .stickers_red,
 .stickers_green,
 .stickers_pink {
+    border-radius: 5px;
+
     padding: 8px 10px;
     font-weight: 600;
     display: inline-block;
@@ -577,6 +579,7 @@ p {
 .service_cards {
     background-color: var(--white-color);
     color: var(--black-color);
+    border-radius: 5px;
     padding: 30px;
     height: 100%;
     display: flex;
@@ -624,6 +627,7 @@ p {
 #site_services p:last-child {
     background-color: var(--white-color);
     color: var(--black-color);
+    border-radius: 5px;
     padding: 1rem;
     width: 50%;
     margin-top: -80px;
@@ -747,14 +751,14 @@ summary {
 .appointments_table td,
 .quotes_table th, 
 .quotes_table td {
-    border: 1px solid #ccc;
+    border: 1px solid #bcbcbc;
     padding: 10px;
     text-align: left;
 }
 
 .appointments_table th,
 .quotes_table th {
-    background-color: #f2f2f2;
+    background-color: #dadada;
 }
 
 .appointments_table a i {
@@ -906,7 +910,7 @@ summary {
     padding: 10px;
     font-size: 16px;
     margin-bottom: 1px;
-    border-radius: 0;
+    border-radius: 5px;
     border: 2px solid #000000;
 }
 
@@ -943,6 +947,7 @@ summary {
     padding: 10px 20px;
     margin-right: 5px;
     border: 2px solid #000000;
+    border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -972,6 +977,9 @@ summary {
 #discover_services {
     text-align: center;
     margin-top: 8%;
+    font-weight: 600;
+    display: inline-block;
+    animation: vibrate 1s infinite linear;
 }
 
 #discover_services a {
@@ -981,6 +989,14 @@ summary {
         color: var(--blue-color);
     }
 }
+
+@keyframes vibrate {
+    0% { transform: translate(0); }
+    25% { transform: translate(2px); }
+    50% { transform: translate(-2px); }
+    75% { transform: translate(2px); }
+    100% { transform: translate(0); }
+  }
 
 .services_content h2 {
     text-align: center;
@@ -1252,6 +1268,9 @@ summary {
 #constraints_message {
     font-size: 16px;
     margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid var(--black-color);
+    border-radius: 5px;
 }
 
 #constraints_message p:first-child {
@@ -1259,7 +1278,7 @@ summary {
 }
 
 #constraints_message li {
-    list-style-type: "- ";
+    list-style-type: none;
 }
 
 /*=============== FOOTER ===============*/
@@ -1569,6 +1588,10 @@ footer {
         margin-top: 20px;
     }
 
+    .form_container{
+        margin: unset;
+    }
+
     .form_container input[type=text],
     .form_container input[type=password],
     .form_container input[type=email], 
@@ -1580,7 +1603,7 @@ footer {
     .form-group,
     #available-rdv,
     #comment_commentContent {
-        width: 70vw;
+        width: 90vw;
     }
 
     .background-bottom img:last-of-type{

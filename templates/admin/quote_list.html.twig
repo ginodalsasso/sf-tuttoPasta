@@ -15,35 +15,39 @@
                         <th>Date</th>
                         <th>Nom</th>
                         <th>Email</th>
+                        <th>Utilisateur</th>
                         <th>Etat</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% set sorted_quotes = quotes|sort((a, b) => b.quoteDate <=> a.quoteDate) %}
-                    {% for quote in sorted_quotes %}
-                        <tr id="quote-{{ quote.id }}">
-                            <td data-label="Référence">{{ quote.reference }}
-                                <a href="{{ path('quote_pdf', { 'id': quote.id }) }}" title="Aperçu"> {# Lien vers la génération du PDF #}
+                    {% set sorted_quotes = quoteWithUsers|sort((a, b) => b.quote.quoteDate <=> a.quote.quoteDate) %}
+                    {% for item in sorted_quotes %}
+                        <tr id="quote-{{ item.quote.id }}">
+                            <td data-label="Référence">{{ item.quote.reference }}
+                                <a href="{{ path('quote_pdf', { 'id': item.quote.id }) }}" title="Aperçu"> {# Lien vers la génération du PDF #}
                                     <i class="fa-solid fa-eye"></i>
                                 </a>
                             </td>
-                            <td data-label="Date">{{ quote.quoteDate|date('d-m-Y') }}</td>
-                            <td data-label="Nom">{{ quote.customerName }}</td>
-                            <td data-label="Email">{{ quote.customerEmail }}</td>
-                            <td data-label="Etat" data-etat="{{quote.state}}">{{ quote.state }}</td>
+                            <td data-label="Date">{{ item.quote.quoteDate|date('d-m-Y') }}</td>
+                            <td data-label="Nom">{{ item.quote.customerName }}</td>
+                            <td data-label="Email">{{ item.quote.customerEmail }}</td>
+                            <td data-label="Utilisateur">
+                                {{ item.user ? item.user.username : 'Aucun utilisateur' }}
+                            </td>
+                            <td data-label="Etat" data-etat="{{ item.quote.state }}">{{ item.quote.state }}</td>
                             <td data-label="Actions" id="action_quote_buttons">
 
-                                <a href="{{ path('quote_edit', { 'id': quote.id }) }}" title="Editer"> {# Lien vers l'édition du PDF #}
+                                <a href="{{ path('quote_edit', { 'id': item.quote.id }) }}" title="Editer"> {# Lien vers l'édition du PDF #}
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </a>
-                                <a href="#" class="archive_quote" data-id="{{ quote.id }}" title="Archiver"> {# Lien vers l'archivage du PDF #}
+                                <a href="#" class="archive_quote" data-id="{{ item.quote.id }}" title="Archiver"> {# Lien vers l'archivage du PDF #}
                                     <i class="fa-solid fa-box-archive"></i>
                                 </a>
-                                <a href="#" class="completed_quote" data-id="{{ quote.id }}" title="Terminé"> {# Lien vers l'archivage du PDF #}
+                                <a href="#" class="completed_quote" data-id="{{ item.quote.id }}" title="Terminé"> {# Lien vers l'archivage du PDF #}
                                     <i class="fa-solid fa-check"></i>
                                 </a>
-                                <a href="#" class="delete_quote" data-id="{{ quote.id }}" title="Supprimer"> {# Lien vers la suppression du PDF #}
+                                <a href="#" class="delete_quote" data-id="{{ item.quote.id }}" title="Supprimer"> {# Lien vers la suppression du PDF #}
                                     <i class="fa-solid fa-x"></i>
                                 </a>
                             </td>

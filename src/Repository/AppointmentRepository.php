@@ -75,6 +75,11 @@ class AppointmentRepository extends ServiceEntityRepository
         ;
     }
 
+    // SELECT *
+    // FROM appointment a
+    // WHERE a.user_id = :user_id
+    // ORDER BY a.startDate DESC;
+
     //    public function findOneBySomeField($value): ?Appointment
     //    {
     //        return $this->createQueryBuilder('a')

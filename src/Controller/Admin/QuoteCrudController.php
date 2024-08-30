@@ -19,16 +19,23 @@ class QuoteCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            TextField::new('reference'),
-            DateTimeField::new('quoteDate'),
-            TextField::new('customerName'),
-            TextField::new('customerFirstName'),
-            TextField::new('customerEmail'),
+            TextField::new('reference')
+            ->setLabel('Référence'),
+            DateTimeField::new('quoteDate')
+            ->setLabel('Date du devis'),
+            TextField::new('customerName')
+            ->setLabel('Nom du client'),
+            TextField::new('customerFirstName')
+            ->setLabel('Prénom du client'),
+            TextField::new('customerEmail')
+            ->setLabel('E-mail du client'),        
             AssociationField::new('appointments')
                 ->setFormTypeOptions([
                     'by_reference' => false,
                 ])
-                ->setCrudController(AppointmentCrudController::class),
+                ->setCrudController(AppointmentCrudController::class)
+                ->setLabel('Rendez-vous'),
         ];
     }
+    
 }

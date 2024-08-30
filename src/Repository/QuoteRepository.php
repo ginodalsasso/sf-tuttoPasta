@@ -35,7 +35,7 @@ class QuoteRepository extends ServiceEntityRepository
     //    /**
     //     * @return Quote[] Returns an array of Quotes objects
     //     */
-    // Requête pour récupérer les RDV user
+    // Requête pour récupérer les devis par utilisateur
     public function findByUser(User $user): array
     {
         return $this->createQueryBuilder('q')
@@ -46,6 +46,19 @@ class QuoteRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    // Requête pour récupérer le user par le devis
+    public function findUserByQuote(Quote $quote): ?User
+    {
+        return $this->createQueryBuilder('q')
+            ->innerJoin('q.appointments', 'a')
+            ->andWhere('q.id = :quote')
+            ->setParameter('quote', $quote->getId())
+            ->select('user') 
+            ->addSelect('a.user')
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     //    public function findOneBySomeField($value): ?Quote

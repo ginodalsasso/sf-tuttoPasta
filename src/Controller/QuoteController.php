@@ -6,6 +6,7 @@ use App\Entity\Quote;
 use App\Entity\Service;
 use App\Form\QuoteType;
 use App\Services\PdfGenerator;
+use App\Repository\UserRepository;
 use App\Repository\QuoteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -62,12 +63,25 @@ class QuoteController extends AbstractController
     // ---------------------------------Vue LISTE DES DEVIS--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quotes', name: 'app_quotes')]
-    public function listQuotesShow (QuoteRepository $quoteRepository): Response
+    public function listQuotesShow (QuoteRepository $quoteRepository, UserRepository $userRepository): Response
     {
         $quotes = $quoteRepository->findAll();
+        $quoteWithUsers = [];
+        foreach ($quotes as $quote) {
+            // Récupérer l'utilisateur lié au devis par l'email
+            $user = $userRepository->findOneBy(['email' => $quote->getCustomerEmail()]);
+    
+            $quoteWithUsers[] = [
+                'quote' => $quote,
+                'user' => $user,
+            ];
+        
+        }
 
         return $this->render('admin/quote_list.html.twig', [
-            'quotes' => $quotes,
+            // 'quotes' => $quotes,
+            'quoteWithUsers' => $quoteWithUsers,
+
         ]);
     }
 

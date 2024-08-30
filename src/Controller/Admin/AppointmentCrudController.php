@@ -11,6 +11,8 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 
 #[IsGranted('ROLE_ADMIN')]
 class AppointmentCrudController extends AbstractCrudController
@@ -20,6 +22,11 @@ class AppointmentCrudController extends AbstractCrudController
         return Appointment::class;
     }
 
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::DETAIL);
+    }
     
     public function configureFields(string $pageName): iterable
     {
@@ -38,14 +45,17 @@ class AppointmentCrudController extends AbstractCrudController
                 ->setLabel('Créé le'),
             AssociationField::new('user')
             ->setFormTypeOptions([
-                'by_reference' => false,
-                'multiple' => true,
-            ]),
+                'by_reference' => true,
+                'multiple' => false,
+            ])
+            ->setLabel('Utilisateur'),
             AssociationField::new('services')
             ->setFormTypeOptions([
                 'by_reference' => false,
                 'multiple' => true,
-            ]),
+            ])
+            ->setLabel('Services'),
+
         ];
     }
 

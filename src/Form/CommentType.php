@@ -29,7 +29,7 @@ class CommentType extends AbstractType
                 'label' => 'Laisser un commentaire',
                 'required' => true,
                 'attr' => [
-                    'placeholder' => 'Votre message',
+                    'placeholder' => 'Veuillez saisir votre commentaire ici...',
                     'autocomplete' => 'off',
                     ]
             ])

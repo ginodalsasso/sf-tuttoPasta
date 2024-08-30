@@ -7,7 +7,7 @@
 
 {% block body %}
 {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
-    <main class="wrapper_appointment">
+    <main class="wrapper_forms">
         {{ form_start(form) }}
             <div class="form_container">
                 <div class="form-group">
@@ -27,7 +27,12 @@
                     <div class="error_msg" id="message_error"></div>
                 </div>
                 {{ form_row(form.save, {'attr': {'class': 'full_button_black_cta'}}) }}
-                <p id="constraints_message">Merci de nous contacter ! <br>Remplissez les champs requis (*) avec des informations claires pour une réponse rapide. <br>Vérifiez vos coordonnées et soyez précis dans votre message. <br>Vos données seront traitées en toute confidentialité.</p>
+                <p id="constraints_message">
+                    *Merci de nous contacter ! <br>
+                    Remplissez les champs requis (*) avec des informations claires pour une réponse rapide. <br>
+                    Vérifiez vos coordonnées et soyez précis dans votre message. <br>
+                    Vos données seront traitées en toute confidentialité.
+                </p>
             </div>
 
         {{ form_end(form) }}
