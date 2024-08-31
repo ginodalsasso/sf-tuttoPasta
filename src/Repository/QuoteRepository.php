@@ -60,13 +60,25 @@ class QuoteRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
-    
+
     // Requête pour récupérer les devis par statut
     public function countQuotesByState(): array
     {
         $qb = $this->createQueryBuilder('q')
             ->select('q.state, COUNT(q.id) as count')
             ->groupBy('q.state');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    // Requête pour récupérer le total TTC par mois
+    public function getTotalTTCByMonth(): array
+    {
+        $qb = $this->createQueryBuilder('q')
+            ->select('YEAR(q.quoteDate) as year, MONTH(q.quoteDate) as month, SUM(q.totalTTC) as totalTTC')
+            ->groupBy('year, month')
+            ->orderBy('year', 'ASC')
+            ->addOrderBy('month', 'ASC');
 
         return $qb->getQuery()->getResult();
     }

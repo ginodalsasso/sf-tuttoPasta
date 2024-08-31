@@ -32,17 +32,16 @@ h2, h3 {
     margin-top: 30px;
 }
 
-#quotes_chart, #monthlyAppointment_chart{
-    width: 40% !important;
-    height: auto !important;
+.canvas_items{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
 
 
-
-
-/*_____________________________ECRANS 800px_____________________________ */
-@media (max-width: 800px) {
+/*_____________________________@media_____________________________ */
+@media (max-width: 1280px) {
 
     h2 {
         margin-top: 30px;
@@ -73,6 +72,11 @@ h2, h3 {
     #canvas_display {
         display: block;
         margin-top: unset;
+    }
+
+    
+    .canvas_items{
+        margin-bottom: 50PX;
     }
 
     
