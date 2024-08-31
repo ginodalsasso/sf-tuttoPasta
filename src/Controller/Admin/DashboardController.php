@@ -41,6 +41,9 @@ class DashboardController extends AbstractDashboardController
     {
         // Récupère les 3 derniers rendez-vous
         $latestAppointments = $this->appointmentRepository->findLatestAppointments();
+
+        $appointmentsByMonth = $this->appointmentRepository->countAppointmentsByMonth();
+        // dd($appointmentsByMonth);
     
         // Récupère le nombre de devis par statut
         $quotesByState = $this->quoteRepository->countQuotesByState();
@@ -48,6 +51,7 @@ class DashboardController extends AbstractDashboardController
         return $this->render('admin/dashboard.html.twig', [
             'appointments' => $latestAppointments,
             'quotesByStateJson' => json_encode($quotesByState),
+            'appointmentsByMonthJson' => json_encode($appointmentsByMonth),
         ]);
     }
 

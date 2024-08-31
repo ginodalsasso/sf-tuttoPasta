@@ -30,29 +30,36 @@
         </tbody>
     </table>
 
-    <div>
+    <h2>Statistiques</h2>
+    <div id="canvas_display">
         <canvas
-            id="quotes_chart"
-            data-quotesbystate='{{ quotesByStateJson|e('html_attr') }}'
+        id="quotes_chart"
+        data-quotesbystate='{{ quotesByStateJson|e('html_attr') }}'
         ></canvas>
+        <h3>Devis par status</h3>
+        
+        <canvas
+        id="monthlyAppointment_chart"
+        data-monthly-appointment='{{ appointmentsByMonthJson|e('html_attr') }}'
+        ></canvas>
+        <h3>Rendez-vous par mois</h3>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        const ctx = document.getElementById('quotes_chart'); // Récupère le canvas
-        const quotesByState = JSON.parse(ctx.dataset.quotesbystate); // Récupère les données
-        const labels = quotesByState.map(item => item.state); // Récupère les labels
-        console.log(quotesByState)
-        const data = quotesByState.map(item => item.count); // Récupère les données
-    
-        new Chart(ctx, {
+        const quotes_chart = document.getElementById('quotes_chart'); // Récupère le canvas
+        const quotesByState = JSON.parse(quotes_chart.dataset.quotesbystate); // Récupère les données
+        const labelsQuotes = quotesByState.map(item => item.state); // Récupère les labels
+        const dataQuotes = quotesByState.map(item => item.count); // Récupère les données
+
+        new Chart(quotes_chart, {
             type: 'polarArea',
             data: {
-                labels: labels,
+                labels: labelsQuotes,
                 datasets: [{
                     label: 'Nombre de devis',
-                    data: data,
+                    data: dataQuotes,
                     backgroundColor: [
                         '#b6b6b6',
                         '#27B474',
@@ -63,6 +70,50 @@
                 }]
             },
             options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        const monthlyAppointment_chart = document.getElementById('monthlyAppointment_chart'); // Récupère le canvas
+        const monthlyAppointment = JSON.parse(monthlyAppointment_chart.dataset.monthlyAppointment); // Récupère les données
+
+        const monthNames = [
+            "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+            "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+        ];
+        
+        const labelsAppointment = monthlyAppointment.map(item => monthNames[item.month - 1]); // Convertit les numéros de mois en noms de mois
+
+        console.log(labelsAppointment);
+        const dataAppointment = monthlyAppointment.map(item => item.count); // Récupère les données
+
+        new Chart(monthlyAppointment_chart, {
+            type: 'bar',
+            data: {
+                labels: labelsAppointment,
+                datasets: [{
+                    label: 'Nombre de devis',
+                    data: dataAppointment,
+                    backgroundColor: [
+                        '#b6b6b6',
+                        '#27B474',
+                        '#fbfb8f',
+                        '#6C6CFF',
+                    ],
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: {
+                        display: true,    // Active la légende
+                        position: 'bottom' // Positionne la légende en bas du graphique
+                    }
+                },
                 scales: {
                     y: {
                         beginAtZero: true

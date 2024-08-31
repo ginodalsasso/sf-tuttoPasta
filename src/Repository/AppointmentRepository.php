@@ -90,6 +90,18 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    // Requête pour récupérer les RDV par mois
+    public function countAppointmentsByMonth(): array
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->select('YEAR(a.startDate) as year, MONTH(a.startDate) as month, COUNT(a.id) as count')
+            ->groupBy('year, month')
+            ->orderBy('year', 'ASC')
+            ->addOrderBy('month', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+
     //    public function findOneBySomeField($value): ?Appointment
     //    {
     //        return $this->createQueryBuilder('a')

@@ -1,6 +1,9 @@
 
 h2 {
-    margin-top: 20px;
+    margin-top: 50px;
+}
+
+h2, h3 {
     text-align: center;
 }
 
@@ -22,8 +25,15 @@ h2 {
 }
 
 /* chart JS */
-#quotes_chart{
-    width: 30vw !important;
+
+#canvas_display {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+}
+
+#quotes_chart, #monthlyAppointment_chart{
+    width: 40% !important;
     height: auto !important;
 }
 
@@ -33,6 +43,11 @@ h2 {
 
 /*_____________________________ECRANS 800px_____________________________ */
 @media (max-width: 800px) {
+
+    h2 {
+        margin-top: 30px;
+    }
+
     table thead {
         display: none;
     }
@@ -53,6 +68,18 @@ h2 {
         content: attr(data-label);
         float: left;
         font-weight: bold;
+    }
+
+    #canvas_display {
+        display: block;
+        margin-top: unset;
+    }
+
+    
+    #quotes_chart, #monthlyAppointment_chart{
+        width: 100% !important;
+        height: auto !important;
+        margin-top: 50px;
     }
 
 }
