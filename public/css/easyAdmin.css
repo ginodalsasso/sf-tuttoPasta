@@ -20,6 +20,17 @@ h2 {
 .appointments_table tr:hover {
     background-color: #202020;
 }
+
+/* chart JS */
+#quotes_chart{
+    width: 30vw !important;
+    height: auto !important;
+}
+
+
+
+
+
 /*_____________________________ECRANS 800px_____________________________ */
 @media (max-width: 800px) {
     table thead {

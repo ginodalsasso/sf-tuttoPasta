@@ -60,6 +60,16 @@ class QuoteRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+    
+    // Requête pour récupérer les devis par statut
+    public function countQuotesByState(): array
+    {
+        $qb = $this->createQueryBuilder('q')
+            ->select('q.state, COUNT(q.id) as count')
+            ->groupBy('q.state');
+
+        return $qb->getQuery()->getResult();
+    }
 
     //    public function findOneBySomeField($value): ?Quote
     //    {

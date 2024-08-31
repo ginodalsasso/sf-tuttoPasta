@@ -13,23 +13,27 @@ use App\Entity\Category;
 use App\Entity\ProjectImg;
 use App\Entity\Appointment;
 use App\Entity\Administration;
+use App\Repository\QuoteRepository;
 use App\Repository\AppointmentRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 
 #[IsGranted('ROLE_ADMIN')]
 class DashboardController extends AbstractDashboardController
 {
     private $appointmentRepository;
+    private $quoteRepository;
 
-    public function __construct(AppointmentRepository $appointmentRepository)
+    public function __construct(AppointmentRepository $appointmentRepository, QuoteRepository $quoteRepository)
     {
         $this->appointmentRepository = $appointmentRepository;
+        $this->quoteRepository = $quoteRepository;
     }
 
     #[Route('/admin', name: 'admin')]
@@ -37,12 +41,18 @@ class DashboardController extends AbstractDashboardController
     {
         // Récupère les 3 derniers rendez-vous
         $latestAppointments = $this->appointmentRepository->findLatestAppointments();
-
-        // Passer les rendez-vous et les éléments du menu à la vue du tableau de bord
+    
+        // Récupère le nombre de devis par statut
+        $quotesByState = $this->quoteRepository->countQuotesByState();
+    
         return $this->render('admin/dashboard.html.twig', [
             'appointments' => $latestAppointments,
+            'quotesByStateJson' => json_encode($quotesByState),
         ]);
     }
+
+
+
 
     public function configureAssets(): Assets
     {
