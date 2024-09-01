@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -35,6 +36,9 @@ class UserCrudController extends AbstractCrudController
                 ->setLabel('E-mail'),
             TextField::new('username')
                 ->setLabel('Nom d\'utilisateur'),
+            BooleanField::new('isBanned')
+            ->setLabel('Restreindre l\'accès'),
+
             CollectionField::new('appointments')
             ->setEntryType(AppointmentType::class)
             ->allowAdd(true) // Permet l'ajout de rendez-vous

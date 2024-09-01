@@ -77,6 +77,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Contact::class, mappedBy: 'user')]
     private Collection $contacts;
 
+    #[ORM\Column]
+    private ?bool $isBanned = false;
+
     
     // ---------------------------------CONSTRUCT--------------------------------- //
 
@@ -86,6 +89,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         //initialise la date et l'heure de la création de compte user lors de la création de l'objet
         $timezone = new \DateTimeZone('Europe/Paris');
+        $this->isBanned = false;
         $this->accountDate = new \DateTime('now', $timezone);
         $this->appointments = new ArrayCollection();
         $this->contacts = new ArrayCollection();
@@ -309,6 +313,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $contact->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isBanned(): ?bool
+    {
+        return $this->isBanned;
+    }
+
+    public function setIsBanned(bool $isBanned): static
+    {
+        $this->isBanned = $isBanned;
 
         return $this;
     }

@@ -33,7 +33,8 @@ class RegistrationFormType extends AbstractType
 
             ->add('email', EmailType::class,[
                 'attr' => [
-                    'class' => 'data'
+                    'class' => 'data',
+                    'placeholder' => "email@exemple.com",
                 ],
             ])
 

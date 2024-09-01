@@ -13,19 +13,20 @@
             </tr>
         </thead>
         <tbody>
-            {% set sorted_appointments = appointments|sort((a, b) => b.startDate
-            <=> a.startDate) %} {% for appointment in sorted_appointments %}
-            <tr id="appointment-{{ appointment.id }}">
-                <td data-label="Date de début">
-                    {{ appointment.startDate|date('d-m-Y H:i') }}
-                </td>
-                <td data-label="Date de fin">
-                    {{ appointment.endDate|date('d-m-Y H:i') }}
-                </td>
-                <td data-label="Message">{{ appointment.message }}</td>
-                <td data-label="Client">{{ appointment.name }}</td>
-                <td data-label="Email">{{ appointment.email }}</td>
-            </tr>
+            {% set sorted_appointments = appointments|sort((a, b) => b.startDate <=> a.startDate) %} {# Tri des rendez-vous par date de début #}
+            
+            {% for appointment in sorted_appointments %}
+                <tr id="appointment-{{ appointment.id }}">
+                    <td data-label="Date de début">
+                        {{ appointment.startDate|date('d-m-Y H:i') }}
+                    </td>
+                    <td data-label="Date de fin">
+                        {{ appointment.endDate|date('d-m-Y H:i') }}
+                    </td>
+                    <td data-label="Message">{{ appointment.message }}</td>
+                    <td data-label="Client">{{ appointment.name }}</td>
+                    <td data-label="Email">{{ appointment.email }}</td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>
@@ -65,7 +66,7 @@
         const dataQuotes = quotesByState.map(item => item.count); // Récupère les données
 
         new Chart(quotes_chart, {
-            type: 'polarArea',
+            type: 'doughnut',
             data: {
                 labels: labelsQuotes,
                 datasets: [{
@@ -83,7 +84,7 @@
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true 
                     }
                 }
             }
@@ -114,7 +115,6 @@
                         '#fbfb8f',
                         '#6C6CFF',
                     ],
-                    hoverOffset: 4
                 }]
             },
             options: {
@@ -124,12 +124,8 @@
                         position: 'bottom' // Positionne la légende en bas du graphique
                     }
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
             }
+            
         });
 
         // Graphique des bénéfices mensuels
@@ -145,17 +141,9 @@
                 datasets: [{
                     label: 'Total TTC par mois',
                     data: dataTotalTTC,
-                    tension: 0.1,
-                    hoverOffset: 4
+                    borderColor: '#27B474',
                 }]
             },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
         });
     </script>
 

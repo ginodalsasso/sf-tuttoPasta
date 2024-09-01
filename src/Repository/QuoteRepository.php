@@ -48,6 +48,13 @@ class QuoteRepository extends ServiceEntityRepository
         ;
     }
 
+    // SELECT q.*
+    // FROM appointment a
+    // INNER JOIN quote q ON a.id = q.appointments_id
+    // WHERE a.user_id = :user
+    // ORDER BY q.quote_date DESC;
+
+
     // Requête pour récupérer le user par le devis
     public function findUserByQuote(Quote $quote): ?User
     {
@@ -60,6 +67,7 @@ class QuoteRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
 
     // Requête pour récupérer les devis par statut
     public function countQuotesByState(): array

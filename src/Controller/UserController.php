@@ -101,6 +101,8 @@ class UserController extends AbstractController
             // Ajoute le rôle ROLE_USER
             $user->setRoles(['ROLE_USER']);
 
+            // $user->setBanned(false);
+
             $entityManager->persist($user);
             $entityManager->flush();
 
