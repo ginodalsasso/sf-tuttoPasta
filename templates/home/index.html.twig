@@ -224,7 +224,7 @@
                     {{administrations[19].title|raw}}
                     <img src="{{ asset('/img/black_smile.svg')}}" alt="black smiley">
                 </div>
-                {% for administration in administrations|slice(20, 5) %}
+                {% for administration in administrations|slice(20, 6) %}
                 <details id="faq">
                     <summary>
                         <i class="fa-solid fa-arrow-right"></i> {{ administration.title|raw }}<br>
@@ -235,7 +235,7 @@
                 {% endfor %}
             </article>
             <div class="guide_calltoaction">
-                {{administrations[25].title|raw}}
+                {{administrations[26].title|raw}}
                 <a href="{{ path('app_contact') }}"><button class="full_button_black_cta">Je prends contact</button></a>
             </div>
         </section>

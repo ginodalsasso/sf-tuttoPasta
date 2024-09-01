@@ -29,8 +29,6 @@ function escapeHtml(unsafe) {
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
 }
 
 
@@ -63,4 +61,31 @@ $(document).ready(function() {
         }
         lastScrollTop = scrollTop;
     });
+
+    
+
+    // Scroll to top
+    window.onscroll = function () { scrollFunction() };
+
+    function scrollFunction() {
+        var mybutton = document.getElementById("scrollToTopButton");
+
+        // Si l'utilisateur a scrollé de 20px ou plus, affiche le bouton
+        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+            mybutton.style.opacity = 1;
+            mybutton.style.visibility = "visible";
+        // Sinon, cache le bouton
+        } else {
+            mybutton.style.opacity = 0;
+            mybutton.style.visibility = "hidden";
+        }
+    }
+
+    document.getElementById("scrollToTopButton").addEventListener("click", topFunction);
+
+    // Quand l'utilisateur clique sur le bouton, scroll jusqu'en haut de la page
+    function topFunction() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }
 });

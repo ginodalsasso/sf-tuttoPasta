@@ -44,3 +44,8 @@ services:
         arguments: ['@router']
         tags:
             - { name: 'kernel.event_listener', event: 'kernel.exception', method: 'onKernelException' }
+
+    App\Service\HtmlSanitizer:
+        arguments:
+            - '@html_sanitizer.default'
+            - { allow: ['<b>', '<i>', '<u>', '<a>'], encoding: 'UTF-8', extra_allowed_entities: ['apos', '#39', 'quot', '#34'] }

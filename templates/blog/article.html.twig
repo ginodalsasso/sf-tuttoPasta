@@ -98,7 +98,7 @@
                         <p>{{ comment.commentDate|date("d/m/Y à H:i") }}</p>
                     </div>
                     <div class="comment_content">
-                        <p>{{ comment.commentContent }}</p>
+                        <p>{{ comment.commentContent|raw }}</p>
                     </div>
 
                     {# Suppression ou édition si utilisateur connecté = auteur ou admin #}

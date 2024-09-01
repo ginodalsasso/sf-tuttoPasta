@@ -56,7 +56,7 @@ gsap.from(".guide_content .badges_guide", {
     stagger: 0.3 // Délai entre chaque élément
 });
 
-
+// Animation pour les éléments de la section "Expertise"
 gsap.from(".expertise_cards .expertise_card", {
     scrollTrigger: {
         trigger: ".expertise_cards .expertise_card",
@@ -71,18 +71,18 @@ gsap.from(".expertise_cards .expertise_card", {
     stagger: 0.5 // Délai entre chaque élément
 });
 
-
+// Animation pour les éléments de la section "Services"
 gsap.from(".service .service_cards", {
     scrollTrigger: {
         trigger: ".services_h2",
         toggleActions: "play none none none",
-        start: "top top",
+        start: "bottom bottom",
     },
     y: 200,  // Déplacement depuis la gauche
     opacity: 0,
     ease: "power3.out",  // Glissement fluide
     duration: 1, 
-    stagger: 0.5 // Délai entre chaque élément
+    stagger: 2 // Délai entre chaque élément
 });
 
 $(document).ready(function () {

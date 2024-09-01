@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -15,8 +16,18 @@ use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 
 class EditPasswordType extends AbstractType
 {
+    private $security;
+    
+    public function __construct(Security $security){
+        $this->security = $security;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $user = $this->security->getUser();
+
+        if($user && $user->isGoogleUser() == false){
+
         $builder
             ->add('oldPassword', PasswordType::class, [
                 'label' => 'Ancien mot de passe',
@@ -69,6 +80,7 @@ class EditPasswordType extends AbstractType
                 'mapped' => false,
             ])
         ;
+            }
     }
 
     public function configureOptions(OptionsResolver $resolver): void

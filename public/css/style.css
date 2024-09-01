@@ -42,7 +42,7 @@ body {
     color: var(--white-color);
     font-size: var(--font-size);
     font-family: var(--font-family);
-    user-select: none;
+    /* user-select: none; */
 
 }
 
@@ -466,6 +466,36 @@ p {
     line-height: 1.2;
 }
 
+/* Scroll button */
+#scrollToTopButton {
+    display: block;
+    z-index: 99;
+    transition: background-color 0.3s, opacity 0.5s, visibility 0.5s;
+    opacity: 0;
+    visibility: hidden;
+    position: fixed;
+    bottom: 30px;
+    left: 20px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    width: 50px;
+    height: 50px;
+    padding: 8px;
+    background-color: var(--green-color);
+}
+
+#scrollToTopButton i {
+    color: white;
+}
+
+#scrollToTopButton:hover,
+#scrollToTopButton:focus,
+#scrollToTopButton:focus-within {
+    cursor: pointer;
+    background-color: var(--blue-color);
+}
+
 /*=============== ERRORS ===============*/
 #error_content {
     display: flex;
@@ -565,6 +595,10 @@ p {
 #service_services_site_internet,
 #service_services_presta_a_la_carte  {
     margin-bottom: 1rem;
+}
+
+.guide_calltoaction {
+    margin-top: 30px;
 }
 
 .badges_guide {
@@ -976,7 +1010,7 @@ summary {
 
 #discover_services {
     text-align: center;
-    margin-top: 8%;
+    margin-top: 20px;
     font-weight: 600;
     display: inline-block;
     animation: vibrate 1s infinite linear;
@@ -1530,6 +1564,10 @@ footer {
     .badges_guide,
     .services_categories {
         padding: 20px 0;
+    }
+
+    .services_categories p:first-of-type {
+        width: 50%;
     }
 
     .btn_offerPrice {
