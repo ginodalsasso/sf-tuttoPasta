@@ -51,12 +51,12 @@ $(document).ready(function() {
         }
     });
     
+    let originalContent = ''; // Variable pour stocker le contenu original du commentaire
 
-    // Gestion de l'annulation de l'édition
     $(document).on('click', '.cancel_edit', function() {
-        location.reload();
+        // Restaure le contenu original du commentaire sans recharger la page
+        $(this).closest('.comment').find('.comment_content').html(originalContent);
     });
-
 
     // // Gestion de la suppression de commentaire
     $('.delete_comment').on('click', function(e) {
@@ -70,10 +70,12 @@ $(document).ready(function() {
     $(document).on('click', '.edit_comment', function(e) {
         e.preventDefault();
         var commentId = $(this).data('id'); // Récupère l'ID du commentaire à éditer
-        var commentContent = $(this).closest('.comment').find('.comment_content p').text().trim(); // Récupère le contenu du commentaire à éditer
+        var commentElement = $(this).closest('.comment').find('.comment_content');
+        originalContent = commentElement.html().trim(); // Sauvegarde le contenu original
+        var commentContent = commentElement.find('p').text().trim(); // Récupère le texte du commentaire à éditer
         var slug = $(this).closest('.comment').data('slug'); // Récupère le slug de l'article
         var csrfToken = $('#comment_form').find('input[name="comment[_token]"]').val(); // Récupère le token CSRF du formulaire d'ajout
-    
+
         var editForm = `
             <form class="edit_comment_form" action="/blog/${slug}/comment/${commentId}/edit" method="POST" data-id="${commentId}">
                 <textarea name="comment[commentContent]" class="data" id="edit_commentContent">${commentContent}</textarea>
@@ -83,9 +85,8 @@ $(document).ready(function() {
                 <button id="editCommentMessage" class="full_button_black" type="submit">Mettre à jour</button>
             </form>
         `;
-        $(this).closest('.comment').find('.comment_content').html(editForm); // Remplace le contenu du commentaire par le formulaire d'édition
+        commentElement.html(editForm); // Remplace le contenu du commentaire par le formulaire d'édition
     });
-    
     // Variable de couleur pour les H2 des cards articles
     var colors = ['var(--pink-color)', 'var(--red-color)', 'var(--blue-color)', 'var(--green-color)'];
     $('.article_card_title').each(function(index) {

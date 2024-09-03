@@ -55,6 +55,10 @@ class BlogController extends AbstractController
         if (!$user) {
             return new JsonResponse(['error' => 'Utilisateur non connecté.'], Response::HTTP_UNAUTHORIZED);
         }
+
+        if ($user->isBanned()) {
+            return new JsonResponse(['error' => 'Vous avez été banni.'], Response::HTTP_FORBIDDEN);
+        }
         
         // Recherche de l'article correspondant au slug fourni
         $article = $articleRepository->findOneBy(['slug' => $slug]);

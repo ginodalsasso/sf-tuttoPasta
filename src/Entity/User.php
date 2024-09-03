@@ -86,13 +86,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->comments = new ArrayCollection();
-
         //initialise la date et l'heure de la création de compte user lors de la création de l'objet
         $timezone = new \DateTimeZone('Europe/Paris');
-        $this->isBanned = false;
-        $this->accountDate = new \DateTime('now', $timezone);
-        $this->appointments = new ArrayCollection();
-        $this->contacts = new ArrayCollection();
+        $this->isBanned = false; //par défaut, l'utilisateur n'est pas banni
+        $this->accountDate = new \DateTime('now', $timezone); //date et heure actuelle
+        $this->appointments = new ArrayCollection(); //initialise la collection d'appointments
+        $this->contacts = new ArrayCollection(); //initialise la collection de contacts 
     }
 
     // ---------------------------------GETTERS AND SETTERS--------------------------------- //

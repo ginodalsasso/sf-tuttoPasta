@@ -62,30 +62,32 @@ $(document).ready(function() {
         lastScrollTop = scrollTop;
     });
 
-    
-
     // Scroll to top
-    window.onscroll = function () { scrollFunction() };
+    $('#scrollToTopButton').css({
+        'opacity': '0',
+        'visibility': 'hidden'
+    });
 
-    function scrollFunction() {
-        var mybutton = document.getElementById("scrollToTopButton");
-
+    $(window).scroll(function() {
         // Si l'utilisateur a scrollé de 20px ou plus, affiche le bouton
-        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-            mybutton.style.opacity = 1;
-            mybutton.style.visibility = "visible";
+        if ($(this).scrollTop() > 20) {
+            $('#scrollToTopButton').css({
+                'opacity': '1',
+                'visibility': 'visible'
+            });
         // Sinon, cache le bouton
-        } else {
-            mybutton.style.opacity = 0;
-            mybutton.style.visibility = "hidden";
-        }
-    }
 
-    document.getElementById("scrollToTopButton").addEventListener("click", topFunction);
+        } else {
+            $('#scrollToTopButton').css({
+                'opacity': '0',
+                'visibility': 'hidden'
+            });
+        }
+    });
 
     // Quand l'utilisateur clique sur le bouton, scroll jusqu'en haut de la page
-    function topFunction() {
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-    }
+    $('#scrollToTopButton').click(function() {
+        $('html, body').animate({ scrollTop: 0 }, 'slow');
+        return false;
+    });
 });

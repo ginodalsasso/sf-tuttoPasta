@@ -15,7 +15,7 @@ class PuzzleChallenge implements ChallengeInterface
     public const PIECE_WIDTH = 80;
     public const PIECE_HEIGHT = 50;
     private const SESSION_KEY = 'puzzles';
-    private const PRECISION = 2;
+    private const PRECISION = 4;
 
 
     // Constructeur pour injecter l'objet RequestStack en lecture seule

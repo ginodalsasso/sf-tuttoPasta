@@ -182,7 +182,8 @@ a{
     border: 3px solid;
     border-image: linear-gradient(45deg, var(--pink-color), var(--red-color), var(--blue-color), var(--green-color));
     border-image-slice: 1;
-}
+} 
+
 
 .full_button_black {
     border: 1px solid var(--white-color);
@@ -474,8 +475,8 @@ p {
     opacity: 0;
     visibility: hidden;
     position: fixed;
-    bottom: 30px;
-    left: 20px;
+    bottom: 50px;
+    right: 20px;
     border: none;
     border-radius: 5px;
     outline: none;
@@ -623,6 +624,10 @@ p {
 
 .service_cards_header {
     text-align: center;
+}
+
+#presta_content {
+    width: 50%; 
 }
 
 .btn_center_services_cards {
@@ -1273,7 +1278,7 @@ summary {
 #comment_commentContent{
     width: 50vw;
     height: 15vh;
-    resize: none;
+    resize: vertical;
     border-radius: 5px;
 }
 
@@ -1291,7 +1296,7 @@ summary {
 
 .edit_comment_form textarea {
     width: 100%;
-    resize: none;
+    resize: vertical;
 }
 
 #comment_join_btn {
@@ -1566,15 +1571,12 @@ footer {
         padding: 20px 0;
     }
 
-    .services_categories p:first-of-type {
-        width: 50%;
-    }
-
     .btn_offerPrice {
         flex-wrap: wrap-reverse;
         justify-content: center;
         margin-top: 50px;
     }
+
 
     #introduction_section,
     .service,
@@ -1603,6 +1605,10 @@ footer {
     .footer_collab h1 {
         width: 100%;
         margin-top: 20px;
+    }
+    
+    #presta_content {
+        width: 100%; 
     }
 
     .project_details,

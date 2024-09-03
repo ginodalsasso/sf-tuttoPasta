@@ -16,8 +16,8 @@ gsap.set(introContent, { xPercent: 100, opacity: 0 });
 gsap.to(introImage, {
     xPercent: 0,   // Ramène l'image à sa position d'origine
     opacity: 1,    // Rend l'image visible
-    duration: 2,
-    ease: "power2.out", // animation fluide
+    duration: 1,
+    ease: "power3.out", // animation fluide
     delay: 0.2,
     scrollTrigger: {
         trigger: "#h1_page_title", // Déclenche l'animation 
@@ -31,8 +31,8 @@ gsap.to(introImage, {
 gsap.to(introContent, {
     xPercent: 0,   // Ramène le contenu à sa position d'origine
     opacity: 1,    // Rend le contenu visible
-    duration: 2, 
-    ease: "power2.out", // Easing pour une animation fluide
+    duration: 1.5, 
+    ease: "power3.out", // Easing pour une animation fluide
     delay: 0.4,
     scrollTrigger: {
         trigger: "#h1_page_title", // Déclenche l'animation 
@@ -82,7 +82,7 @@ gsap.from(".service .service_cards", {
     opacity: 0,
     ease: "power3.out",  // Glissement fluide
     duration: 1, 
-    stagger: 2 // Délai entre chaque élément
+    stagger: 0.5 // Délai entre chaque élément
 });
 
 $(document).ready(function () {

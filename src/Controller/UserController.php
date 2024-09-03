@@ -101,8 +101,6 @@ class UserController extends AbstractController
             // Ajoute le rôle ROLE_USER
             $user->setRoles(['ROLE_USER']);
 
-            // $user->setBanned(false);
-
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -258,7 +256,7 @@ class UserController extends AbstractController
         $comments = $commentRepository->findBy(['user' => $user]);
         foreach ($comments as $comment) {
             $comment->setUser(null);
-            $comment->setUsername('Utilisateur supprimé');
+            $comment->setUsername('Utilisateur anonyme');
             $entityManager->persist($comment);
         }
 
