@@ -2,14 +2,20 @@
 
 {% block title %} Tutto Pasta - Rendez-Vous {% endblock %} 
 
-{% block page_title %} Rendez-vous {% endblock %}
+{% block page_title %} 
+    Rendez-vous 
+    <div class="h1_content">
+        Ici, vous pouvez sélectionner le service qui correspond le mieux à vos besoins, choisir une date et une heure qui vous conviennent, et nous transmettre toutes les informations nécessaires pour un rendez-vous personnalisé. 
+        Merci de votre confiance et à très bientôt !
+    </div>
+{% endblock %}
 
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <main class="wrapper_forms">
         <div class="form_display">
             {{ form_start(form) }}
-                <div class="form_container">
+            <div class="form_container">
                     <input type="hidden" id="selectedSlot" name="selectedSlot" value="" />
             
                     <div class="form-group">
@@ -29,15 +35,17 @@
                         <div class="error_msg" id="message_error"></div>
                     </div>
                     <div class="form-group" id="availableServices">
-                        {{ form_row(form.services) }}
+                        {{ form_label(form.services) }}
+                        {{ form_widget(form.services) }}
+                        {# {{ form_row(form.services) }} #}
                     </div> 
-                    <input type="hidden" id="selectedService" name="selectedService" value="">
-                                        <div id="discover_services">
+                    <div id="discover_services">
                         <a href="#services_section">
                             <p>Découvrir les services</p>
                             <i class="fa-solid fa-arrow-down"></i>
                         </a>
                     </div>
+                    <input type="hidden" id="selectedService" name="selectedService" value="">
                     <div class="form-group">
                         {{ form_row(form.startDate, {'attr': {'id': 'dateInput'}}) }}
                         <div class="error_msg" id="date_error"></div>

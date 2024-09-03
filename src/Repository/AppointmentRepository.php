@@ -14,7 +14,7 @@ class AppointmentRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Appointment::class);
+        parent::__construct($registry, Appointment::class); // Appel du constructeur de la classe parent
     }
 
 

@@ -347,10 +347,12 @@ a{
 
 /*=============== HEADER ===============*/
 .sub_header_tittle_container {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     background-color: var(--black-color);
+    overflow: hidden;
 }
 
 .sub_header_tittle_container h1{
@@ -359,6 +361,16 @@ a{
     text-align: center;
     width: 70vw;
 }
+
+#background_top {
+    position: absolute;
+    width: 100vw; 
+    height: 100vh; 
+    top: 250px;
+    object-fit: cover;
+    opacity: 0.8;
+}
+
 
 /* animation des logos dans le header */
 @keyframes slide {
@@ -377,7 +389,7 @@ a{
     background-color: var(--black-color);
     overflow: hidden;
     display: flex;
-    padding-bottom: 30px;
+    padding: 20px 0;
     white-space: nowrap;
     box-sizing: border-box;
 }
@@ -418,10 +430,15 @@ a{
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 10;
 }
 
 #h1_page_title a {
     margin-top: 30px;
+}
+
+#h1_page_title .full_button_black {
+    z-index: 10;
 }
 
 .h1_content {
@@ -516,6 +533,7 @@ p {
     display: flex;
     gap: 50px;
     padding-right: 8%;
+    overflow: hidden;
     
 }
 
@@ -572,6 +590,7 @@ p {
     background-color: var(--white-color);
     color: var(--black-color);
     padding: 8%;
+    border-radius: 5px;
 }
 
 .expertise_section,
@@ -887,8 +906,8 @@ summary {
     position: relative;
     z-index: 1;
     border: 2px solid;
-    border-image: linear-gradient(45deg, var(--pink-color), var(--red-color), var(--blue-color), var(--green-color));
-    border-image-slice: 1;
+    /* border-image: linear-gradient(45deg, var(--pink-color), var(--red-color), var(--blue-color), var(--green-color)); */
+    /* border-image-slice: 1; */
 }
 
 .form_container label::after,
@@ -922,13 +941,13 @@ summary {
     align-items: center;
     flex-direction:column;
     gap: 20px;
-    margin: 100px 100px 100px 100px;
+    margin: 8%;
     padding: 70px 0;
     position: relative;
     z-index: 1;
     border: 2px solid;
-    border-image: linear-gradient(45deg, var(--pink-color), var(--red-color), var(--blue-color), var(--green-color));
-    border-image-slice: 1;
+    /* border-image: linear-gradient(45deg, var(--pink-color), var(--red-color), var(--blue-color), var(--green-color)); */
+    /* border-image-slice: 1; */
     border-radius: 5px;
 
 }
@@ -1435,6 +1454,10 @@ footer {
         display: none;
     }
 
+    #background_top {
+        top: 300px;
+    }
+
     .service {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -1531,9 +1554,14 @@ footer {
         margin: 100px 0;
     }
 
+    #background_top {
+        display: none;
+    }
+
     .slider{
         margin-top: -60px;
     }
+
     #introduction_section img,
     .introduction_content,
     .badges_guide,

@@ -13,9 +13,10 @@ class DayOffRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, DayOff::class); 
+        parent::__construct($registry, DayOff::class); // Appel du constructeur de la classe parent
     }
-
+    
+    // Méthode permettant de récupérer tous les jours de congés
     public function findAllDayoffs(): array
     {
         $results = $this->createQueryBuilder('d')

@@ -82,7 +82,8 @@ gsap.from(".service .service_cards", {
     opacity: 0,
     ease: "power3.out",  // Glissement fluide
     duration: 1, 
-    stagger: 0.5 // Délai entre chaque élément
+    stagger: 0.5, // Délai entre chaque élément
+    delay: 0.5
 });
 
 $(document).ready(function () {
