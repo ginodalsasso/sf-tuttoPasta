@@ -132,8 +132,8 @@ class ViewsController extends AbstractController
 
 
     // ---------------------------------Vue profil utilisateur--------------------------------- //
-    #[Route('/profil', name: 'app_profil', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
+    #[Route('/profil', name: 'app_profil', methods: ['GET'])]
     public function profil(Security $security, AppointmentRepository $appointmentRepository, QuoteRepository $quoteRepository): Response
     {
         $user = $security->getUser();
@@ -148,7 +148,10 @@ class ViewsController extends AbstractController
         // Formulaire pour le changement de mot de passe
         $passwordForm = $this->createForm(EditPasswordType::class, $user);
 
+        // Récupération des rendez-vous de l'utilisateur
         $appointments = $appointmentRepository->findByUser($user);
+        
+        // Récupération des devis de l'utilisateur
         $quotes = $quoteRepository->findByUser($user);
 
         return $this->render('user/profil.html.twig', [

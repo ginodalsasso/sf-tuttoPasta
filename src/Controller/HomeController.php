@@ -94,11 +94,12 @@ class HomeController extends AbstractController
             // Récupère le créneau horaire sélectionné depuis la requête
             $selectedSlot = $request->request->get('selectedSlot');
 
+            // si un créneau horaire a été sélectionné
             if ($selectedSlot) {
                 // Crée des objets DateTime pour le début et la fin du rendez-vous
                 $startDate = new \DateTime($selectedSlot);
-                $endDate = clone $startDate;
-                $endDate->modify('+1 hour');
+                $endDate = clone $startDate; // Clone la date de début
+                $endDate->modify('+1 hour'); // Ajoute une heure à la date de fin
 
                 // Vérifie si la date sélectionnée est un jour de congé
                 if (in_array($startDate->format('Y-m-d'), $dayOffDates)) {

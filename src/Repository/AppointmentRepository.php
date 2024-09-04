@@ -37,7 +37,7 @@ class AppointmentRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
 
-        // Génération de tous les créneaux horaires possibles pour la journée
+        // Initialisation d'un tableau de créneaux reservés
         $bookedSlots = [];
         // Parcours des rendez-vous pour récupérer les créneaux déjà réservés
         foreach($booking as $booked) {
@@ -47,13 +47,13 @@ class AppointmentRepository extends ServiceEntityRepository
         $interval = new \DateInterval('PT1H'); // Intervalle d'une heure
         $slots = [];
 
-        // Parcours de la journée par tranches d'une heure
+        // Pour chaque tranche horaire, on vérifie si le créneau est déjà réservé
         for ($time = clone $startTime; $time < $endTime; $time->add($interval)) {
             $slot = $time->format('Y-m-d H:i:s');
 
-            // Si le créneau n'est pas déjà réservé, on l'ajoute aux créneaux disponibles 
+            // Si le créneau n'est pas déjà réservé
             if (!in_array($slot, $bookedSlots)) { 
-                $slots[] = $slot;
+                $slots[] = $slot; // Ajoute le créneau aux créneaux disponibles
             }
         }
         // Retourne un tableau contenant les créneaux disponibles et les créneaux réservés
