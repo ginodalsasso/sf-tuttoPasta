@@ -78,7 +78,9 @@ class BlogController extends AbstractController
             $comment = new Comment();
             $comment->setUser($user);
             $comment->setArticle($article);
-            $comment->setCommentDate(new \DateTime());
+            // $comment->setCommentDate(new \DateTime());
+            $timezone = new \DateTimeZone('Europe/Paris');
+            $comment->setCommentDate(new \DateTime('now', $timezone));
         }
     
         $form = $this->createForm(CommentType::class, $comment);
@@ -95,7 +97,7 @@ class BlogController extends AbstractController
             }
 
             // Sanitize le contenu du commentaire
-            $sanitizedCommentContent = $this->htmlSanitizer->sanitize($comment->getCommentContent());
+            $sanitizedCommentContent = htmlspecialchars($comment->getCommentContent(), ENT_QUOTES, 'UTF-8');
             // Enregistre le contenu du commentaire
             $comment->setCommentContent($sanitizedCommentContent);
 

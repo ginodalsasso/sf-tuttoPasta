@@ -36,21 +36,21 @@
         <div class="canvas_items">
             <canvas
             id="quotes_chart"
-            data-quotesbystate='{{ quotesByStateJson|e('html_attr') }}'
+            data-quotesbystate='{{ quotesByStateJson }}'
             ></canvas>
             <h3>Devis par status</h3>
         </div>
         <div class="canvas_items">
             <canvas
             id="monthlyAppointment_chart"
-            data-monthly-appointment='{{ appointmentsByMonthJson|e('html_attr') }}'
+            data-monthly-appointment='{{ appointmentsByMonthJson }}'
             ></canvas>
             <h3>Rendez-vous par mois</h3>
         </div>
         <div class="canvas_items">
             <canvas
             id="monthlyTotalTTC_chart"
-            data-monthly-total-ttc='{{ totalTTCByMonthJson|e('html_attr') }}'
+            data-monthly-total-ttc='{{ totalTTCByMonthJson }}'
             ></canvas>
             <h3>Bénéfices mensuels</h3>
         </div>
@@ -60,6 +60,7 @@
 
     <script>
         // Graphique des devis par status
+
         const quotes_chart = document.getElementById('quotes_chart'); // Récupère le canvas
         const quotesByState = JSON.parse(quotes_chart.dataset.quotesbystate); // Récupère les données
         const labelsQuotes = quotesByState.map(item => item.state); // Récupère les labels

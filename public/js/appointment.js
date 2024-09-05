@@ -29,15 +29,15 @@ $(document).ready(function () {
 
     // Messages d'erreurs UI
     $("#appointment_save").on("click", function (event) {
-        $(".error_msg").text("");
-        $(".data").removeClass("input_invalid");
+        $(".error_msg").text(""); // Efface les messages d'erreur
+        $(".data").removeClass("input_invalid"); // Réinitialise les champs invalides
 
         let isValid = true;
 
-        $(".data").each(function () {
-            if ($(this).val() === "") {
+        $(".data").each(function () { // Parcours tous les champs du formulaire
+            if ($(this).val() === "") { // si le champ est vide
                 $(this).addClass("input_invalid");
-                isValid = false;
+                isValid = false; // invalide
             }
         });
 
@@ -201,11 +201,11 @@ function handleServiceSelection() {
     $("#appointment_services").on("change","input[type='checkbox']", function (e) {
         const $input = $(this);
         const $label = $input.next('label');
-        const slot = $input.val();
+        const service = $input.val();
 
         if ($input.is(":checked")) {
             $label.addClass("showRadioClass");
-            $("#selectedService").val(slot);
+            $("#selectedService").val(service);
         } else {
             $label.removeClass("showRadioClass");
             $("#selectedService").val('');

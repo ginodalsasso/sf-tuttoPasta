@@ -16,7 +16,7 @@ class PdfGenerator
     private $twig;
     private $params;
 
-    // Définition des dépendances
+    // Définition des dépendances du service
     public function __construct(Environment $twig, ParameterBagInterface $params)
     {
 
@@ -39,6 +39,7 @@ class PdfGenerator
     // ---------------------------------Affichage du PDF--------------------------------- //
     public function showPdfFile($html): Response
     {
+        // Charge le contenu HTML
         $this->domPdf->loadHtml($html);
         $this->domPdf->render();
 
@@ -57,9 +58,9 @@ class PdfGenerator
     // ---------------------------------Génération du PDF--------------------------------- //
     public function generatePDF($html): string
     {
-        $this->domPdf->loadHtml($html);
-        $this->domPdf->render();
-        return $this->domPdf->output();
+        $this->domPdf->loadHtml($html); // Charge le contenu HTML
+        $this->domPdf->render(); // Rendu du PDF
+        return $this->domPdf->output(); // Renvoie le contenu du PDF
     }
 
 
@@ -113,20 +114,20 @@ class PdfGenerator
 
         // Utilisation d'un répertoire sécurisé non accessible publiquement
         $pdfDirectory = $this->params->get('kernel.project_dir') . '/var/uploads/pdf/';
+        // Si le répertoire n'existe pas
         if (!file_exists($pdfDirectory)) {
             mkdir($pdfDirectory, 0750, true); // Création du dossier avec des permissions sécurisées
         }
-
         // Nettoyage du nom de fichier pour éviter path Injection
         $safeReference = preg_replace('/[^a-zA-Z0-9_\-]/', '', $reference);
-        $pdfFilename = $safeReference . '.pdf';
-        $pdfFilepath = $pdfDirectory . $pdfFilename;
-
+        $pdfFilename = $safeReference . '.pdf'; // Nom du fichier PDF
+        $pdfFilepath = $pdfDirectory . $pdfFilename; // Chemin du fichier PDF
+        // Enregistre le PDF sur le système de fichiers avec des permissions sécurisées
         file_put_contents($pdfFilepath, $pdfContent);
-
         // Enregistre le chemin relatif sécurisé
         $quote->setPdfContent('/uploads/pdf/' . $pdfFilename);
 
+        // retourne le chemin relatif du PDF
         return $quote->getPdfContent();
     }
 

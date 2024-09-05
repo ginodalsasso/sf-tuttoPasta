@@ -11,7 +11,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-#[ORM\Entity(repositoryClass: AppointmentRepository::class)]
+// Définit l'entité Appointment et ses contraintes de validation
+#[ORM\Entity(repositoryClass: AppointmentRepository::class)] 
+// Définit les contraintes d'unicité sur les champs startDate et endDate
 #[UniqueEntity(fields:["startDate", "endDate"], message:"Ce créneau horraire est déjà pris.")]
 #[ORM\UniqueConstraint(name: "unique_appointment", columns: ["start_date", "end_date"])]
 

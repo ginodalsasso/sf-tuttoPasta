@@ -127,33 +127,36 @@
                     {% endif %}
                 </div>
                 {% endif %}
-                {% if quotes is not empty %}
-                    <h3>Devis:</h3>
-                    <table class="appointments_table">
-                        <thead>
-                            <tr>
-                                <th>Référence</th>
-                                <th>Date</th>
-                                <th>Prix</th>
-                                <th>Télécharger</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for quote in quotes %}
-                                {% if quote.status == 1 %}
-                                    <tr id="quote-{{ quote.id }}">
-                                        <td data-label="Référence">{{ quote.reference }}</td>
-                                        <td data-label="Date">{{ quote.quoteDate|date('d/m/Y') }}</td>
-                                        <td data-label="Prix">{{ quote.totalTTC }}</td>
-                                        <td data-label="Télécharger">
-                                            <a href="{{ path('quote_pdf', { 'id': quote.id }) }}" download><i class="fa-solid fa-download"></i></a>
-                                        </td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
+                <div class="appointments_container">
+
+                    {% if quotes is not empty %}
+                        <h3>Devis:</h3>
+                        <table class="appointments_table">
+                            <thead>
+                                <tr>
+                                    <th>Référence</th>
+                                    <th>Date</th>
+                                    <th>Prix</th>
+                                    <th>Télécharger</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for quote in quotes %}
+                                    {% if quote.status == 1 %}
+                                        <tr id="quote-{{ quote.id }}">
+                                            <td data-label="Référence">{{ quote.reference }}</td>
+                                            <td data-label="Date">{{ quote.quoteDate|date('d/m/Y') }}</td>
+                                            <td data-label="Prix">{{ quote.totalTTC }}</td>
+                                            <td data-label="Télécharger">
+                                                <a href="{{ path('quote_pdf', { 'id': quote.id }) }}" download><i class="fa-solid fa-download"></i></a>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
             </section>
     </main>
 {% endblock %}

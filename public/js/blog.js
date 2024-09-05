@@ -59,6 +59,7 @@ $(document).ready(function() {
     });
 
     // // Gestion de la suppression de commentaire
+    // $(document).on('click', '.delete_comment', function(){
     $('.delete_comment').on('click', function(e) {
         e.preventDefault();
         var commentId = $(this).data('id');

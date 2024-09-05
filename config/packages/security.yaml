@@ -18,19 +18,19 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
-            lazy: true
+            lazy: true 
             provider: app_user_provider
             custom_authenticator: App\Security\GoogleAuthenticator
-            user_checker: App\Security\UserChecker
-            entry_point: form_login
+            user_checker: App\Security\UserChecker # Vérification de l'utilisateur
+            entry_point: form_login 
 
             form_login:
-                login_path: app_login
-                check_path: app_login
-                default_target_path: app_home
-                always_use_default_target_path: true
-                use-forward: false
-                enable_csrf: true
+                login_path: app_login # La route de connexion
+                check_path: app_login # La route de vérification
+                default_target_path: app_home # La route de redirection après connexion
+                always_use_default_target_path: true 
+                use-forward: false 
+                enable_csrf: true # Activer le token CSRF
 
             # maximum 3 tentatives de connexion par minute
             login_throttling:
@@ -53,7 +53,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/profil, roles: ROLE_USER }
 
 
 when@test:

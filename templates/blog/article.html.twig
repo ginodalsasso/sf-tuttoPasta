@@ -22,7 +22,7 @@
         <span id="article_date">Rédigé par TuttoPasta, le {{ article.date }} | <a href="#comment_title">{{article.comments|length}} {% if article.comments|length <= 1 %}Commentaire{% else %}Commentaires{% endif %}</a></span>
         
         {% for category in article.categories %}
-        <p>{{ category.categoryName }}</p>
+            <p>{{ category.categoryName }}</p>
         {% endfor %}
         <div class="article_description">
             {{ article.articleContent|raw }} <br>
@@ -67,7 +67,7 @@
                         <li>- Assurez-vous de rester dans le sujet de l'article pour une meilleure expérience de discussion.</li>
                     </ul>
                 </div>
-                {{ form_widget(form.commentContent) }} 
+                {{ form_widget(form.commentContent) }} {# Affiche le champ de saisie du commentaire #}
                 <div class="error_msg" id="message_error"></div>
                 
                 {{ form_errors(form) }}

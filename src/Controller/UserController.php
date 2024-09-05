@@ -256,6 +256,7 @@ class UserController extends AbstractController
         $comments = $commentRepository->findBy(['user' => $user]);
         foreach ($comments as $comment) {
             $comment->setUser(null);
+             // Anonymise le nom de l'utilisateur
             $comment->setUsername('Utilisateur anonyme');
             $entityManager->persist($comment);
         }
@@ -337,7 +338,7 @@ class UserController extends AbstractController
             $expectedDirectory = realpath($this->getParameter('kernel.project_dir') . '/var/uploads/pdf/');
             // realpath:  obtenir le chemin absolu et vérifier que le fichier est dans le répertoire sécurisé prévu
 
-            // Suppression sécurisée du fichier PDF
+            // Si le fichier PDF existe et est dans le répertoire sécurisé, le supprime
             if ($pdfPath && str_starts_with($pdfPath, $expectedDirectory) && file_exists($pdfPath)) {
                 unlink($pdfPath);
             }

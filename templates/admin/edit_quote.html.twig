@@ -6,8 +6,6 @@
 {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
 
 <main class="wrapper">
-    <div class="form_display">
-
         {{ form_start(form) }}
             <div class="form_container">
                 {{ form_row(form.reference) }}
@@ -27,9 +25,7 @@
                 {{ form_row(form.newServiceCategory) }}
 
                 <button class="full_button_black">Sauvegarder les modifications</button>
-            <div class="form_container">
-
+            </div>
         {{ form_end(form) }}
-    </div>
 </main>
 {% endblock %}
