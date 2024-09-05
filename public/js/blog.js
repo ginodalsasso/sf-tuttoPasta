@@ -196,7 +196,7 @@ function addNewComment(comment) {
     var slug = escapeHtml(comment.slug);
     var username = escapeHtml(comment.username);
     var date = escapeHtml(comment.date);
-    var commentContent = escapeHtml(comment.commentContent);
+    var commentContent = comment.commentContent;
 
     var newCommentHtml = 
         `<div class="comment" id="comment-${id}" data-slug="${slug}">

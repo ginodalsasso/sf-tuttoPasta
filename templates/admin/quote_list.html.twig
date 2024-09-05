@@ -16,6 +16,7 @@
                         <th>Nom</th>
                         <th>Email</th>
                         <th>Utilisateur</th>
+                        <th>Prix</th>
                         <th>Etat</th>
                         <th>Actions</th>
                     </tr>
@@ -35,6 +36,7 @@
                             <td data-label="Utilisateur">
                                 {{ item.user ? item.user.username : 'Aucun utilisateur' }}
                             </td>
+                            <td data-label="Prix">{{ item.quote.totalTTC }}€</td>
                             <td data-label="Etat" data-etat="{{ item.quote.state }}">{{ item.quote.state }}</td>
                             <td data-label="Actions" id="action_quote_buttons">
 

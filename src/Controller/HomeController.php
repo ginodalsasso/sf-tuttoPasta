@@ -101,8 +101,8 @@ class HomeController extends AbstractController
                 $endDate = clone $startDate; // Clone la date de début
                 $endDate->modify('+1 hour'); // Ajoute une heure à la date de fin
 
-                // Vérifie si la date sélectionnée est un jour de congé
-                if (in_array($startDate->format('Y-m-d'), $dayOffDates)) {
+                //si dans le tableau des jours de congé on trouve la date sélectionnée
+                if (in_array($startDate->format('Y-m-d'), $dayOffDates)) { 
                     $this->addFlash('error', 'Vous ne pouvez pas prendre RDV durant nos congés.');
                 } else {
                     // Définit les dates de début et de fin du rendez-vous

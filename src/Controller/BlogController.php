@@ -108,7 +108,7 @@ class BlogController extends AbstractController
                 'success' => true,
                 'comment' => [
                     'id' => $comment->getId(),
-                    'username' => $comment->getUser() ? htmlspecialchars($comment->getUser()->getUsername()) : 'Utilisateur supprimé',
+                    'username' => $comment->getUser() ? htmlspecialchars($comment->getUser()->getUsername()) : 'Utilisateur anonyme',
                     'commentContent' => $sanitizedCommentContent,
                     'date' => $comment->getCommentDate()->format('d/m/Y à H:i')
                 ]
