@@ -28,8 +28,32 @@ $(document).ready(function() {
             completedQuote(quoteId, csrfToken);
         }
     });
+
+    // Selection du service
+    handleServiceSelection();
+
 });
-    
+
+//___________________________________Edit quote Services_______________________________________
+// Fonction pour gérer la sélection des services
+function handleServiceSelection() {
+    $("#quote_services").on("change","input[type='checkbox']", function (e) {
+        const $input = $(this);
+        const $label = $input.next('label');
+        const service = $input.val();
+        // console.log(service);
+
+        if ($input.is(":checked")) {
+            $label.addClass("showRadioClass");
+            $("#selectedService").val(service);
+        } else {
+            $label.removeClass("showRadioClass");
+            $("#selectedService").val('');
+        }
+    });
+}
+
+//___________________________________Liste des devis_______________________________________
 // selectionner les td avec l'attribut data-etat
 $('.quotes_table td[data-etat]').each(function() {
     // Récupère la valeur de l'attribut data-etat

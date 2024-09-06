@@ -27,7 +27,9 @@ class ProjectImgCrudController extends AbstractCrudController
                 ]),
             ImageField::new('image')
                 ->setUploadDir('public/img/projects/')
-                ->setBasePath('img/projects/'),
+                ->setBasePath('img/projects/')
+                // ->setUploadedFileNamePattern('[year][month][day][slug][contenthash].webp')
+                ,
             TextField::new('alt'),
         ];
     }

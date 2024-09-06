@@ -92,7 +92,13 @@ class QuoteController extends AbstractController
         $quote = $entityManager->getRepository(Quote::class)->find($id);
         // Récupérer l'appointment lié
         $appointment = $quote ? $quote->getAppointments() : null;
-    
+
+        // // Récupérer les services associés à l'entité Quote
+        // $selectedServices = $quote->getServices();
+        // $form = $this->createForm(QuoteType::class, $quote, [
+        //     'selected_services' => $selectedServices, // Passe les services sélectionnés au formulaire
+        // ]);
+        
         if (!$quote) {
             throw $this->createNotFoundException('Ce devis n\'existe pas');
         }

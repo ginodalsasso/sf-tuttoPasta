@@ -15,9 +15,9 @@
                 {{ form_row(form.customerFirstName) }}
 
                 {{ form_row(form.customerEmail) }}
-
+                
                 {{ form_row(form.services) }}
-
+                
                 {{ form_row(form.newService) }}
 
                 {{ form_row(form.newServicePrice) }}
@@ -28,4 +28,8 @@
             </div>
         {{ form_end(form) }}
 </main>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('/js/quote.js')}}"></script>
 {% endblock %}

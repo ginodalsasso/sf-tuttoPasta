@@ -51,6 +51,7 @@ body {
 
 
 .wrapper,
+.wrapper_legal,
 .wrapper_project_list,
 .wrapper_forms
 {
@@ -58,7 +59,8 @@ body {
     background-color: var(--white-color);
 }
 
-.wrapper{
+.wrapper,
+.wrapper_legal{
     padding: 8%;
 }
 
@@ -70,6 +72,13 @@ body {
     color: var(--white-color);
     background-color: var(--black-color);
     padding-bottom: 8%;
+}
+
+.wrapper_legal section {
+    margin: 30px 0;
+}
+.wrapper_legal section h2 {
+    margin-bottom: 20px;
 }
 
 
@@ -974,14 +983,22 @@ summary {
 .form_container input[type=email], 
 .form_container input[type=date], 
 .form_container select, 
-.form_container textarea,
-#quote_services {
+.form_container textarea {
     width: 50vw;
     padding: 10px;
     font-size: 16px;
-    margin-bottom: 1px;
     border-radius: 5px;
     border: 2px solid #000000;
+}
+
+#quote_services {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 50vw;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
 }
 
 .form_container #constraints_message {
@@ -1012,7 +1029,8 @@ summary {
 }
 
 #available-rdv label, 
-#appointment_services label {
+#appointment_services label,
+#quote_services label {
     display: inline-block;
     padding: 10px 20px;
     margin-right: 5px;
@@ -1023,12 +1041,15 @@ summary {
 }
 
 #available-rdv label:hover, 
-#appointment_services label:hover {
+#appointment_services label:hover,
+#quote_services label:hover {
     background-color: var(--black-color);
     color: var(--white-color);
 }
 
-.radioSlots, #appointment_services input[type="checkbox"]  {
+.radioSlots, 
+#appointment_services input[type="checkbox"],
+#quote_services input[type="checkbox"] {
     display: none;
 }
 
