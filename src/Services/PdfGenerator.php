@@ -73,7 +73,9 @@ class PdfGenerator
         $quote = new Quote();
         $reference = 'DEVIS-' . uniqid(); // Génère une référence unique
         $quote->setReference($reference);
-        $quote->setQuoteDate(new \DateTime()); // Définit la date du devis
+        $timezone = new \DateTimeZone('Europe/Paris');
+
+        $quote->setQuoteDate(new \DateTime('now', $timezone)); // Définit la date du devis
         $quote->setCustomerName($appointment->getName());
         $quote->setCustomerFirstName($appointment->getFirstName());
         $quote->setCustomerEmail($appointment->getEmail());
