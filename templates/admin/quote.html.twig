@@ -1,105 +1,116 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Devis - Studio TuttoPasta</title>
-    <style>
-        :root {
-            --white-color: #F5F5F5;
-            --black-color: #0F0F0F;
-        }
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Devis - Studio TuttoPasta</title>
+        <style>
+            :root {
+                --white-color: #f5f5f5;
+                --black-color: #0f0f0f;
+            }
 
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-        }
-        .quote {
-            background-color: white;
-            border: 1px solid #dddddd;
-            padding: 20px;
-            max-width: 800px;
-            margin: auto;
-        }
-        .footer {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .header p, .footer p {
-            margin: 5px 0;
-        }
-        .content h2 {
-            border-bottom: 2px solid var(--black-color);
-            padding-bottom: 5px;
-        }
-        .content p {
-            margin: 5px 0;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        table, th, td {
-            border: 1px solid var(--black-color);
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: var(--black-color);
-            color: var(--white-color);
-        }
-        tfoot th, tfoot td {
-            font-size: 1.2em;
-        }
-    </style>
-</head>
-<body>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 20px;
+            }
+            .quote {
+                background-color: white;
+                border: 1px solid #dddddd;
+                padding: 20px;
+                max-width: 800px;
+                margin: auto;
+            }
+            .footer {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .header p,
+            .footer p {
+                margin: 5px 0;
+            }
+            .content h2 {
+                border-bottom: 2px solid var(--black-color);
+                padding-bottom: 5px;
+            }
+            .content p {
+                margin: 5px 0;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            table,
+            th,
+            td {
+                border: 1px solid var(--black-color);
+            }
+            th,
+            td {
+                padding: 10px;
+                text-align: left;
+            }
+            th {
+                background-color: var(--black-color);
+                color: var(--white-color);
+            }
+            tfoot th,
+            tfoot td {
+                font-size: 1.2em;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="quote">
+            <div class="header">
+                <img src="data:image/svg+xml;base64,{{ logo }}" alt="Logo" />
+                <p>Référence: {{ quote.reference }}</p>
+                <p>Date: {{ quote.quoteDate|date('d-m-Y H:i') }}</p>
+            </div>
+            <div class="content">
+                <h2>Informations client:</h2>
+                <p>
+                    Nom: {{ quote.customerFirstName }} {{ quote.customerName }}
+                </p>
+                <p>Email: {{ quote.customerEmail }}</p>
+                <h2>Informations du rendez-vous</h2>
+                <p>Début: {{ appointment.startDate|date('d-m-Y à H:i') }}</p>
+                <p>Fin: {{ appointment.endDate|date('d-m-Y à H:i') }}</p>
 
-
-    <div class="quote">
-        <div class="header">
-            <img src="data:image/svg+xml;base64,{{ logo }}" alt="Logo">
-            <p>Référence: {{ quote.reference }}</p>
-            <p>Date: {{ quote.quoteDate|date('d-m-Y H:i') }}</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Prix</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for service in appointment.services %}
+                        <tr>
+                            <td>{{ service.serviceName }}</td>
+                            <td>
+                                {{ service.servicePrice|number_format(2, ',', ' ') }}
+                                €
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total TTC</th>
+                            <td>
+                                {{ quote.totalTTC|number_format(2, ',', ' ') }}
+                                €
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="footer">
+                <p>&copy; {{ "now"|date("Y") }} Studio TuttoPasta</p>
+            </div>
         </div>
-        <div class="content">
-            <h2>Informations client:</h2>
-            <p>Nom: {{ quote.customerFirstName }} {{ quote.customerName }}</p>
-            <p>Email: {{ quote.customerEmail }}</p>
-            <h2>Informations du rendez-vous</h2>
-            <p>Début: {{ appointment.startDate|date('d-m-Y à H:i') }}</p>
-            <p>Fin: {{ appointment.endDate|date('d-m-Y à H:i') }}</p>
-            
-            <table>
-                <thead>
-                    <tr>
-                        <th>Service</th>
-                        <th>Prix</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for service in appointment.services %}
-                    <tr>
-                        <td>{{ service.serviceName }}</td>
-                        <td>{{ service.servicePrice|number_format(2, ',', ' ') }} €</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>Total TTC</th>
-                        <td>{{ quote.totalTTC|number_format(2, ',', ' ') }} €</td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-        <div class="footer">
-            <p>&copy; {{ "now"|date("Y") }} Studio TuttoPasta</p>
-        </div>
-    </div>
-</body>
+    </body>
 </html>

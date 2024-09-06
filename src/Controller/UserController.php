@@ -242,13 +242,22 @@ class UserController extends AbstractController
         AppointmentRepository $appointmentRepository,
         MailerInterface $mailer,
         QuoteRepository $quoteRepository,
-        PdfGenerator $pdfGenerator
+        PdfGenerator $pdfGenerator,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        Request $request
     ): RedirectResponse {
         // Récupère l'utilisateur actuellement connecté
         $user = $this->getUser();
 
         // Vérifie si l'utilisateur est valide
         if (!$user instanceof UserInterface) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+
+        // Récupère le jeton CSRF depuis la requête
+        $csrfToken = $request->request->get('csrf');
+        // Vérifie la validité du jeton CSRF
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
             throw new AccessDeniedException('Accès refusé');
         }
 

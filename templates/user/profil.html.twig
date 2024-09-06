@@ -19,7 +19,11 @@
             {% if app.user.isGoogleUser == false %}
                 <a class="show_modal_edit_password full_button_black">Modifier mon mot de passe</a>
             {% endif %}
-            <a class="full_button_red" id="delete_account_link" href="{{ path('app_delete_account') }}">Suprimer mon comtpe</a>
+            {# <a class="full_button_red" id="delete_account_link" href="{{ path('app_delete_account') }}" value="">Suprimer mon compte</a> #}
+            <form action="{{ path('app_delete_account') }}" method="post">
+                <input type="hidden" name="csrf" value="">
+                <button class="full_button_red" id="delete_account_link" href="{{ path('app_delete_account') }}" value="">Suprimer mon compte</button>
+            </form>
         </div>
 
         
