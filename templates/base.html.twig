@@ -10,7 +10,7 @@
         <meta name="robots" content="index, follow">
 
         <meta name="description" content="Découvrez les dernières actualités, astuces et projets de TuttoPasta, graphiste et webdesigneuse freelance.">
-        <meta http-equiv="Content-Security-Policy" content="
+        {# <meta http-equiv="Content-Security-Policy" content="
             default-src 'self';
             script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://accounts.google.com https://*.fontawesome.com https://use.typekit.net https://www.googletagmanager.com;
             style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://use.typekit.net https://*.typekit.net https://*.fontawesome.com;
@@ -20,7 +20,7 @@
             frame-src 'self' https://accounts.google.com;
             connect-src 'self' https://www.google-analytics.com https://*.fontawesome.com https://use.typekit.net;
             worker-src 'self' https://*.fontawesome.com blob:;
-        ">
+        "> #}
         <title>{% block title %}{% endblock %} - Graphiste/Webdesigner</title>
         <link rel="icon" href="{{ asset('/img/favicon.png') }}" type="image/png">
 
@@ -42,7 +42,7 @@
 
         <!-- Tarte au Citron Script -->
         <script src="https://cdn.jsdelivr.net/npm/tarteaucitronjs@1.9.3/tarteaucitron.js"></script>
-        <script>
+        {# <script>
             tarteaucitron.init({
                 "privacyUrl": "", // URL of your privacy policy
                 "hashtag": "#tarteaucitron", // Open the panel with this hashtag
@@ -65,7 +65,7 @@
                 "readmoreLink": "", // Change the default readmore link pointing to tarteaucitron.io
                 "mandatory": true // Show a message about mandatory cookies
             });
-            </script>
+            </script> #}
             <script>
                 // Google Analytics
                 tarteaucitron.user.gtagUa = '694190220787-elursji5hbf1qjjrtgg9g9mdhm11c68a.apps.googleusercontent.com';

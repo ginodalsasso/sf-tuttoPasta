@@ -1,29 +1,31 @@
-$(document).ready(function() {   
+
+$(document).ready(function () {
+
     // Suppression d'un devis
-    $(document).on('click', '.delete_quote', function(e) {
+    $(document).on("click", ".delete_quote", function (e) {
         e.preventDefault();
-        var quoteId = $(this).data('id');
-        
+        var quoteId = $(this).data("id");
+
         if (confirm("Êtes-vous sûr de vouloir supprimer ce devis ?")) {
             deleteQuote(quoteId, csrfToken);
         }
     });
 
     // Archivage d'un devis
-    $(document).on('click', '.archive_quote', function(e) {
+    $(document).on("click", ".archive_quote", function (e) {
         e.preventDefault();
-        var quoteId = $(this).data('id');
-        
+        var quoteId = $(this).data("id");
+
         if (confirm("Êtes-vous sûr de vouloir archiver ce devis ?")) {
             archiveQuote(quoteId, csrfToken);
         }
     });
 
     // Devis terminé
-    $(document).on('click', '.completed_quote', function(e) {
+    $(document).on("click", ".completed_quote", function (e) {
         e.preventDefault();
-        var quoteId = $(this).data('id');
-        
+        var quoteId = $(this).data("id");
+
         if (confirm("Êtes-vous sûr de vouloir finaliser ce devis ?")) {
             completedQuote(quoteId, csrfToken);
         }
@@ -33,16 +35,32 @@ $(document).ready(function() {
     handleServiceSelection();
 
     // Barre de recherche
-    getSearch()
+    getSearch();
 
+    // selectionner les td avec l'attribut data-etat
+    $(".quotes_table td[data-etat]").each(function () {
+        // Récupère la valeur de l'attribut data-etat
+        var dataEtat = $(this).attr("data-etat");
+
+        // Apply styles based on the data-etat value
+        if (dataEtat === "En attente") {
+            $(this).css("background-color", "#fbfb8f");
+        } else if (dataEtat === "En cours") {
+            $(this).css("background-color", "#6C6CFF");
+        } else if (dataEtat === "Payé") {
+            $(this).css("background-color", "#27B474");
+        } else {
+            $(this).css("background-color", "#b6b6b6");
+        }
+    });
 });
 
 //___________________________________Edit quote Services_______________________________________
 // Fonction pour gérer la sélection des services
 function handleServiceSelection() {
-    $("#quote_services").on("change","input[type='checkbox']", function (e) {
+    $("#quote_services").on("change", "input[type='checkbox']", function (e) {
         const $input = $(this);
-        const $label = $input.next('label');
+        const $label = $input.next("label");
         const service = $input.val();
         // console.log(service);
 
@@ -51,117 +69,139 @@ function handleServiceSelection() {
             $("#selectedService").val(service);
         } else {
             $label.removeClass("showRadioClass");
-            $("#selectedService").val('');
+            $("#selectedService").val("");
         }
     });
 }
 
-//___________________________________Liste des devis_______________________________________
-// selectionner les td avec l'attribut data-etat
-$('.quotes_table td[data-etat]').each(function() {
-    // Récupère la valeur de l'attribut data-etat
-    var dataEtat = $(this).attr('data-etat');
-    
-    // Apply styles based on the data-etat value
-    if (dataEtat === 'En attente') {
-        $(this).css('background-color', '#fbfb8f');
-    } else if (dataEtat === 'En cours') {
-        $(this).css('background-color', '#6C6CFF');
-    } else if (dataEtat === 'Payé') {
-        $(this).css('background-color', '#27B474');
-    } else {
-        $(this).css('background-color', '#b6b6b6');
-    }
-});
-
 //___________________________________Suppression devis_______________________________________
 function deleteQuote(quoteId, csrfToken) {
     var url = `/admin/quote/${quoteId}/delete`;
-    
+
     $.ajax({
         url: url,
-        method: 'DELETE', 
+        method: "DELETE",
         headers: {
-            'X-CSRF-TOKEN': csrfToken  // Ajout du token CSRF dans les headers
+            "X-CSRF-TOKEN": csrfToken, // Ajout du token CSRF dans les headers
         },
-        success: function(data) {
+        success: function (data) {
             if (data.success) {
                 // Supprimer le devis
-                $('#quote-' + quoteId).remove();
+                $("#quote-" + quoteId).remove();
             } else {
-                alert(data.message || "Erreur lors de la suppression du devis. Veuillez réessayer.");
+                alert(
+                    data.message ||
+                        "Erreur lors de la suppression du devis. Veuillez réessayer."
+                );
                 console.log(data);
             }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.error("Erreur lors de la suppression du devis :", textStatus, errorThrown);
-            alert("Une erreur est survenue lors de la suppression du devis. Veuillez vérifier votre connexion et réessayer.");
-        }
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error(
+                "Erreur lors de la suppression du devis :",
+                textStatus,
+                errorThrown
+            );
+            alert(
+                "Une erreur est survenue lors de la suppression du devis. Veuillez vérifier votre connexion et réessayer."
+            );
+        },
     });
 }
 
 //___________________________________Archivage devis_______________________________________
 function archiveQuote(quoteId, csrfToken) {
     var url = `/admin/quote/${quoteId}/archive`;
-    
+
     $.ajax({
         url: url,
-        method: 'POST', 
+        method: "POST",
         headers: {
-            'X-CSRF-TOKEN': csrfToken  // Ajout du token CSRF dans les headers
+            "X-CSRF-TOKEN": csrfToken, // Ajout du token CSRF dans les headers
         },
-        success: function(data) {
+        success: function (data) {
             if (data.success) {
                 location.reload();
             } else {
-                alert(data.message || "Erreur lors du changement d'état du devis. Veuillez réessayer.");
+                alert(
+                    data.message ||
+                        "Erreur lors du changement d'état du devis. Veuillez réessayer."
+                );
                 console.log(data);
             }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.error("Erreur lors du changement d'état du devis :", textStatus, errorThrown);
-            alert("Une erreur est survenue lors du changement d'état du devis. Veuillez vérifier votre connexion et réessayer.");
-        }
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error(
+                "Erreur lors du changement d'état du devis :",
+                textStatus,
+                errorThrown
+            );
+            alert(
+                "Une erreur est survenue lors du changement d'état du devis. Veuillez vérifier votre connexion et réessayer."
+            );
+        },
     });
 }
 
 //___________________________________Devis terminé_______________________________________
 function completedQuote(quoteId, csrfToken) {
     var url = `/admin/quote/${quoteId}/completed`;
-    
+
     $.ajax({
         url: url,
-        method: 'POST', 
+        method: "POST",
         headers: {
-            'X-CSRF-TOKEN': csrfToken  // Ajout du token CSRF dans les headers
+            "X-CSRF-TOKEN": csrfToken, // Ajout du token CSRF dans les headers
         },
-        success: function(data) {
+        success: function (data) {
             if (data.success) {
                 location.reload();
             } else {
-                alert(data.message || "Erreur lors du changement d'état du devis. Veuillez réessayer.");
+                alert(
+                    data.message ||
+                        "Erreur lors du changement d'état du devis. Veuillez réessayer."
+                );
                 console.log(data);
             }
         },
-        error: function(jqXHR, textStatus, errorThrown) {
-            console.error("Erreur lors du changement d'état du devis :", textStatus, errorThrown);
-            alert("Une erreur est survenue lors du changement d'état du devis. Veuillez vérifier votre connexion et réessayer.");
-        }
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.error(
+                "Erreur lors du changement d'état du devis :",
+                textStatus,
+                errorThrown
+            );
+            alert(
+                "Une erreur est survenue lors du changement d'état du devis. Veuillez vérifier votre connexion et réessayer."
+            );
+        },
     });
 }
 
 //___________________________________Search bar_______________________________________
-function getSearch() {
-    $('#getName').on('keyup', function(){
-        var getName = $(this).val();
-        $.ajax({
-            method: 'POST',
-            url: '/get_search_name',
-            data: {name:getName},
-            success: function(response)
-            {
-                $('#show_data').html(response)
-            }
-        })
-    })
-}
+    function getSearch() {
+        var typingTimer; // définit un timer
+        var doneTypingInterval = 500; // définit un intervalle de temps
+
+        $("#name").on("keyup", function (e) {
+            e.preventDefault(); // Empêche l'envoi normal du formulaire
+            clearTimeout(typingTimer); // efface le timer à chaque key-up event
+            var url = $(this).attr("action"); // Récupère l'URL du formulaire
+            var formData = $(this).serialize(); // Récupère les données du formulaire
+            
+            typingTimer = setTimeout(function () {
+                $.ajax({
+                    url: url,
+                    method: "POST",
+                    data: formData,
+                    success: function (data) {
+                        // Injecter le HTML reçu dans le tableau
+                        $('#show_data').html(data);
+                    },
+                    error: function (xhr) {
+                        console.error("Erreur:", xhr.responseText);
+                    },
+                });
+            }, doneTypingInterval);
+        });
+    }
+

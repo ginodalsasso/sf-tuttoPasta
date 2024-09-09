@@ -32,6 +32,15 @@ class QuoteRepository extends ServiceEntityRepository
     //        ;
     //    }
 
+    public function findOneByNameOrEmail(string $name): array
+    {
+        return $this->createQueryBuilder('q')
+            ->where('q.customerName LIKE :name OR q.customerEmail LIKE :name')
+            ->setParameter('name', '%' . $name . '%')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Quote[] Returns an array of Quotes objects
     //     */

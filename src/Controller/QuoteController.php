@@ -63,9 +63,24 @@ class QuoteController extends AbstractController
     // ---------------------------------Vue LISTE DES DEVIS--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quotes', name: 'app_quotes')]
-    public function listQuotesShow (QuoteRepository $quoteRepository, UserRepository $userRepository): Response
+    public function listQuotesShow (Request $request, QuoteRepository $quoteRepository, UserRepository $userRepository): Response
     {
-        $quotes = $quoteRepository->findAll();
+        // Récupérer le résultat de la recherche
+        $searchName = $request->request->get('name');
+
+        if (!filter_var($searchName, FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+            $this->addFlash('error', 'Recherche invalide.');
+            return $this->redirectToRoute('app_home');
+        }
+
+        // s'il y a une recherche
+        if($searchName) {
+            $quotes = $quoteRepository->findOneByNameOrEmail($searchName);
+        } else {
+            $quotes = $quoteRepository->findAll();
+        }
+
+        // Initialiser un tableau pour stocker les devis et les utilisateurs associés
         $quoteWithUsers = [];
         foreach ($quotes as $quote) {
             // Récupérer l'utilisateur lié au devis par l'email
@@ -77,6 +92,13 @@ class QuoteController extends AbstractController
             ];
         }
         
+         // Si la requête est AJAX, renvoyer le HTML des résultats seulement
+        if ($request->isXmlHttpRequest()) {
+            return $this->render('admin/_quote_list.html.twig', [
+                'quoteWithUsers' => $quoteWithUsers,
+            ]);
+        }
+        // Sinon, renvoyer la page entière
         return $this->render('admin/quote_list.html.twig', [
             'quoteWithUsers' => $quoteWithUsers,
         ]);
@@ -323,30 +345,46 @@ class QuoteController extends AbstractController
 
 
     // ---------------------------------Barre de recherche--------------------------------- //
-    #[IsGranted('ROLE_ADMIN')]
-    #[Route('/admin/quote/{id}/', name: 'get_search_name', methods: ['POST'])]
-    public function searchQuote(Request $request, EntityManagerInterface $entityManager, int $id, Security $security): JsonResponse
-    {
-        // Récupère le jeton CSRF depuis les en-têtes
-        $csrfToken = $request->headers->get('X-CSRF-TOKEN');
+    // #[IsGranted('ROLE_ADMIN')]
+    // #[Route('/admin/search_quote', name: 'get_search_name', methods: ['POST'])]
+    // public function searchQuote(Request $request, QuoteRepository $quoteRepository, Security $security): JsonResponse
+    // {
+    //     // // Récupère le jeton CSRF depuis les en-têtes
+    //     // $csrfToken = $request->headers->get('X-CSRF-TOKEN');
 
-        // Vérifier la validité du jeton CSRF
-        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
-            return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
-        }
+    //     // // Vérifier la validité du jeton CSRF
+    //     // if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
+    //     //     return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
+    //     // }
         
-        // Récupère l'utilisateur actuellement connecté
-        $user = $security->getUser();
+    //     // Récupère l'utilisateur actuellement connecté
+    //     $user = $security->getUser();
     
-        // Vérifie si l'utilisateur est valide
-        if (!$user instanceof UserInterface) {
-            throw new AccessDeniedException('Accès refusé');
-        }
-    
-        $name = 
-    
-        return new JsonResponse(['success' => true]);
-    }
+    //     // Vérifie si l'utilisateur est valide
+    //     if (!$user instanceof UserInterface) {
+    //         throw new AccessDeniedException('Accès refusé');
+    //     }
 
+    //     // Récupère le nom de la requête
+    //     $name = $request->request->get('name');
+    //     // Recherche les devis par nom
+    //     $quotes = $quoteRepository->findOneByName($name);
+    //     // dd($quotes);
+    //     // Transformer les entités en données JSON
+    //     $data = [];
+    //     foreach ($quotes as $quote) {
+    //         $data[] = [
+    //             'id' => $quote->getId(),
+    //             'reference' => $quote->getReference(),
+    //             'quoteDate' => $quote->getQuoteDate()->format('d-m-Y'),
+    //             'customerName' => $quote->getCustomerName(),
+    //             'customerEmail' => $quote->getCustomerEmail(),
+    //             'totalTTC' => $quote->getTotalTTC(),
+    //             'state' => $quote->getState(),
+    //         ];
+    //     }
+
+    //     return new JsonResponse($data);
+    // }
 
 }
