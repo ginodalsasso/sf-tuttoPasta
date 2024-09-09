@@ -7,6 +7,10 @@
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <main class="wrapper">
+        <label for="getName">Rechercher par nom:</label>
+        <input type="search" id="getName" name="q" />
+        <button>Rechercher</button>
+
         <div class="quotes_container">
             <table class="quotes_table">
                 <thead>
@@ -31,7 +35,7 @@
                                 </a>
                             </td>
                             <td data-label="Date">{{ item.quote.quoteDate|date('d-m-Y') }}</td>
-                            <td data-label="Nom">{{ item.quote.customerName }}</td>
+                            <td data-label="Nom">{{ item.quote.customerName|capitalize }}</td>
                             <td data-label="Email">{{ item.quote.customerEmail }}</td>
                             <td data-label="Utilisateur">
                                 {{ item.user ? item.user.username : 'Aucun utilisateur' }}

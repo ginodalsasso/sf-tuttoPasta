@@ -10,7 +10,7 @@
         <meta name="robots" content="index, follow">
 
         <meta name="description" content="Découvrez les dernières actualités, astuces et projets de TuttoPasta, graphiste et webdesigneuse freelance.">
-        {# <meta http-equiv="Content-Security-Policy" content="
+        <meta http-equiv="Content-Security-Policy" content="
             default-src 'self';
             script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://accounts.google.com https://*.fontawesome.com https://use.typekit.net https://www.googletagmanager.com;
             style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://use.typekit.net https://*.typekit.net https://*.fontawesome.com;
@@ -20,10 +20,10 @@
             frame-src 'self' https://accounts.google.com;
             connect-src 'self' https://www.google-analytics.com https://*.fontawesome.com https://use.typekit.net;
             worker-src 'self' https://*.fontawesome.com blob:;
-        "> #}
+        ">
         <title>{% block title %}{% endblock %} - Graphiste/Webdesigner</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        
+        <link rel="icon" href="{{ asset('/img/favicon.png') }}" type="image/png">
+
         {% block stylesheets %}
             <link rel="icon" href="{{ asset('/img/favicon.png') }}" type="image/png">
             <link rel="stylesheet" href="{{ asset('/css/flatpickr.css')}}">
@@ -84,6 +84,7 @@
                 <a href="{{ path('app_home') }}"><img class="logo_header" src="{{ asset('/img/logo_white.svg')}}" alt="Logo TuttoPasta"></a>
                 <nav>
                     <ul id="nav_container">
+                        <a href="{{ path('app_home') }}"><img class="logo_header" src="{{ asset('/img/logo_white.svg')}}" alt="Logo TuttoPasta"></a>
                         {% if is_granted('ROLE_ADMIN') %}
                             <li><a href="{{ path('admin') }}"> <i class="fa-solid fa-user-shield"></i> Admin </a></li>
                         {% endif %}

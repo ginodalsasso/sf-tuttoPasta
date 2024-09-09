@@ -6,6 +6,7 @@ use App\Entity\Quote;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Field\UrlField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -46,6 +47,12 @@ class QuoteCrudController extends AbstractCrudController
                 ])
                 ->setCrudController(AppointmentCrudController::class)
                 ->setLabel('Rendez-vous'),
+            UrlField::new('pdfContent')
+                ->setLabel('Devis PDF')
+                ->formatValue(function ($value, $entity) {
+                    return $value ? $entity->getPdfContent() : null;
+                }),
+                // ->onlyOnIndex(),
             TextField::new('state')
             ->setLabel('Etat')
         ];

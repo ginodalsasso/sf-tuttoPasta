@@ -432,6 +432,10 @@ a{
     display: none;
 }
 
+#nav_container .logo_header {
+    display: none;
+}
+
 /*=============== TITLES ===============*/
 #h1_page_title {
     text-align: center;
@@ -1491,6 +1495,14 @@ footer {
         font-size: 40px;
         display: none;
     }
+    
+    
+    #nav_container .logo_header {
+        display: block;
+        position: absolute;
+        top: 30px;
+        left: 30px;
+    }
 
     #background_top {
         top: 300px;
@@ -1612,6 +1624,7 @@ footer {
 
     #h1_page_title {
         margin: 100px 0;
+        width: 90vw;
     }
 
     #background_top {

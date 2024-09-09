@@ -55,7 +55,9 @@ class BlogController extends AbstractController
         if (!$user) {
             return new JsonResponse(['error' => 'Utilisateur non connecté.'], Response::HTTP_UNAUTHORIZED);
         }
-
+        /**
+         * @var User|null $user
+         */
         if ($user->isBanned()) {
             return new JsonResponse(['error' => 'Vous avez été banni.'], Response::HTTP_FORBIDDEN);
         }
@@ -78,7 +80,6 @@ class BlogController extends AbstractController
             $comment = new Comment();
             $comment->setUser($user);
             $comment->setArticle($article);
-            // $comment->setCommentDate(new \DateTime());
             $timezone = new \DateTimeZone('Europe/Paris');
             $comment->setCommentDate(new \DateTime('now', $timezone));
         }
