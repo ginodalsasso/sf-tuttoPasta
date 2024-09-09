@@ -320,4 +320,33 @@ class QuoteController extends AbstractController
     
         return new JsonResponse(['success' => true]);
     }
+
+
+    // ---------------------------------Barre de recherche--------------------------------- //
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/admin/quote/{id}/', name: 'get_search_name', methods: ['POST'])]
+    public function searchQuote(Request $request, EntityManagerInterface $entityManager, int $id, Security $security): JsonResponse
+    {
+        // Récupère le jeton CSRF depuis les en-têtes
+        $csrfToken = $request->headers->get('X-CSRF-TOKEN');
+
+        // Vérifier la validité du jeton CSRF
+        if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
+            return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
+        }
+        
+        // Récupère l'utilisateur actuellement connecté
+        $user = $security->getUser();
+    
+        // Vérifie si l'utilisateur est valide
+        if (!$user instanceof UserInterface) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+    
+        $name = 
+    
+        return new JsonResponse(['success' => true]);
+    }
+
+
 }

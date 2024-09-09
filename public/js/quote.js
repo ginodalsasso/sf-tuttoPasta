@@ -32,6 +32,9 @@ $(document).ready(function() {
     // Selection du service
     handleServiceSelection();
 
+    // Barre de recherche
+    getSearch()
+
 });
 
 //___________________________________Edit quote Services_______________________________________
@@ -145,4 +148,20 @@ function completedQuote(quoteId, csrfToken) {
             alert("Une erreur est survenue lors du changement d'état du devis. Veuillez vérifier votre connexion et réessayer.");
         }
     });
+}
+
+//___________________________________Search bar_______________________________________
+function getSearch() {
+    $('#getName').on('keyup', function(){
+        var getName = $(this).val();
+        $.ajax({
+            method: 'POST',
+            url: '/get_search_name',
+            data: {name:getName},
+            success: function(response)
+            {
+                $('#show_data').html(response)
+            }
+        })
+    })
 }

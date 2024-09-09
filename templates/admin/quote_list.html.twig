@@ -25,7 +25,7 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="show_data">
                     {% set sorted_quotes = quoteWithUsers|sort((a, b) => b.quote.quoteDate <=> a.quote.quoteDate) %}
                     {% for item in sorted_quotes %}
                         <tr id="quote-{{ item.quote.id }}">
