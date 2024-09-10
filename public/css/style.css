@@ -930,8 +930,6 @@ summary {
     position: relative;
     z-index: 1;
     border: 2px solid;
-    /* border-image: linear-gradient(45deg, var(--pink-color), var(--red-color), var(--blue-color), var(--green-color)); */
-    /* border-image-slice: 1; */
 }
 
 .form_container label::after,
@@ -971,8 +969,6 @@ summary {
     position: relative;
     z-index: 1;
     border: 2px solid;
-    /* border-image: linear-gradient(45deg, var(--pink-color), var(--red-color), var(--blue-color), var(--green-color)); */
-    /* border-image-slice: 1; */
     border-radius: 5px;
 
 }
@@ -986,6 +982,7 @@ summary {
 .form_container input[type=password],
 .form_container input[type=email], 
 .form_container input[type=date], 
+input[type=search],
 .form_container select, 
 .form_container textarea {
     width: 50vw;
@@ -1095,6 +1092,16 @@ summary {
 
 .services_content h2 {
     text-align: center;
+}
+
+#searchForm {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+}
+
+#searchForm label {
+    font-weight: 600;
 }
 
 /*=============== LISTE PROJETS ===============*/
