@@ -14,6 +14,8 @@
             <p> {{ message.content }} </p>
         </article>
 
+        <a class="full_button_black" href="{{ path("app_reply", {id: message.id}) }}">Répondre</a>
+
         <div class="back_to">
             <a class="full_button_white" href="{{path("app_messages")}}">Retour à la messagerie</a>
         </div>

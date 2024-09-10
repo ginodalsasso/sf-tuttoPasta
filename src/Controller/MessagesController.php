@@ -58,6 +58,46 @@ class MessagesController extends AbstractController
         ]);
     }
 
+    #[Route('/reply/{id}', name: 'app_reply')]
+    public function reply(Message $originalMessage, Request $request, EntityManagerInterface $entityManager, Security $security): Response
+    {
+        // Récupère l'utilisateur actuellement connecté
+        $user = $security->getUser();
+
+        // Vérifie si l'utilisateur est valide
+        if (!$user instanceof UserInterface) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+
+        // Vérifie que l'utilisateur est autorisé à répondre
+        if ($user !== $originalMessage->getSender() && $user !== $originalMessage->getRecipient()) {
+            throw new AccessDeniedException('Vous n\'êtes pas autorisé à répondre à ce message.');
+        }
+
+        $reply = new Message();
+        $reply->setSender($user);
+        // Si l'utilisateur est l'expéditeur, le destinataire est le récepteur et vice versa
+        $reply->setRecipient($user === $originalMessage->getSender() ? $originalMessage->getRecipient() : $originalMessage->getSender()); 
+        $form = $this->createForm(MessageType::class, $reply);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $reply->setContent($form->get('content')->getData());
+
+            $entityManager->persist($reply);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Réponse envoyée avec succès');
+            return $this->redirectToRoute('app_received');
+        }
+
+        return $this->render('messages/reply.html.twig', [
+            'form' => $form->createView(),
+            'originalMessage' => $originalMessage,
+        ]);
+    }
+
+
     #[Route('/received', name: 'app_received')]
     public function received(Security $security): Response
     {

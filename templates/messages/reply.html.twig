@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Envoyer un message{% endblock %}
+{% block title %}Répondre au message{% endblock %}
 
-{% block page_title %} Envoyer un message {% endblock %}
+{% block page_title %} Répondre à {{originalMessage.sender|upper}}{% endblock %}
 
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
