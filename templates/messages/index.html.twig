@@ -7,7 +7,7 @@
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <main class="wrapper">
-
+        <p>Non lus: {{ app.user.received|filter(message => message.isRead == false)|length }}</p>
         <p>Reçus: {{ app.user.received|length }}</p>
         <p>Envoyés: {{ app.user.sent|length }}</p>
 

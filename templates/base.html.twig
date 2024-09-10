@@ -92,7 +92,10 @@
                         <li><a href="{{ path('app_blog') }}"> Blog </a></li>
                         <li><a href="{{ path('app_contact') }}"> Contact </a></li>
                         {% if app.user %}
-                            <li><a href="{{ path('app_profil') }}"><i class="fa-solid fa-user"></i> Profil </a></li>
+                            <li class="relative"><a href="{{ path('app_profil') }}"><i class="fa-solid fa-user"></i> Profil  
+                                {% if app.user.received|filter(message => message.isRead == false)|length > 0 %} 
+                                    <span id="unread_icon">{{ app.user.received|filter(message => message.isRead == false)|length }}</span>
+                                {% endif %} </a></li>
                             <li><a href="{{ path('app_logout') }}"> Déconnexion </a></li>
                         {% else %}
                             <li><a href="{{ path('app_login') }}"> Connexion </a></li>

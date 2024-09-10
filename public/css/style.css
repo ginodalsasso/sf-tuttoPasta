@@ -530,6 +530,9 @@ p {
     background-color: var(--blue-color);
 }
 
+.hidden {
+    display: none;
+}
 /*=============== ERRORS ===============*/
 #error_content {
     display: flex;
@@ -790,12 +793,22 @@ summary {
 }
 
 /*=============== PROFIL / LISTE DEVIS ===============*/
+.header_profil {
+    text-align: end;
+    margin: -30px 0 10px 0;
+}
+
+.header_profil .full_button_white {
+    display: inline-block;
+}
+
 #user_content,
-#user_table {
+.user_table,
+.messagerie {
     border: 2px solid var(--black-color);
     border-radius: 5px;
     max-width: 1280px;
-    margin: 0 auto;
+    margin: 0 auto 40px auto;
     padding: 40px;
 }
 
@@ -808,7 +821,7 @@ summary {
 #user_action_buttons {
     display: flex;
     justify-content: center;
-    margin: 50px 0;    
+    margin-top: 20px;
     flex-wrap: wrap;
     gap: 50px;
 }
@@ -823,7 +836,7 @@ summary {
 .quotes_table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 0;
+    margin: 20px 0 40px 0;
 }
 
 .appointments_table th, 
@@ -861,6 +874,21 @@ summary {
 
 .unread {
     font-weight: 600;
+}
+
+#unread_icon {
+    font-size: 14px;
+    color: var(--black-color);
+    font-weight: 600;
+    padding: 2px 6px;
+    background-color: var(--green-color);
+    border-radius: 50%;
+    position: absolute;
+    top: -10px;
+}
+
+.relative {
+    position: relative;
 }
 
 .message_container {

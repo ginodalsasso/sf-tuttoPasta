@@ -13,6 +13,52 @@ $(document).ready(function () {
     const showModalPassword = $(".show_modal_edit_password");
     const closeModal = $(".closeModal");
 
+    // Variables du menu dans le profil
+    var infoMenu = $('#infos_user');
+    var rdvMenu = $('#rdv_user');
+    var devisMenu = $('#devis_user');
+    var messagesMenu = $('#messages_user');
+
+    // Variables des sections de contenu
+    var infoSection = $('#user_content');
+    var rdvSection = $('#appointments_container');
+    var devisSection = $('#devis_section');
+    var messagesSection = $('.messagerie');
+
+    // Fonction pour masquer toutes les sections
+    function hideAllSections() {
+        infoSection.addClass('hidden');
+        rdvSection.addClass('hidden');
+        devisSection.addClass('hidden');
+        messagesSection.addClass('hidden');
+    }
+
+    // Par défaut, afficher la section des informations personnelles
+    hideAllSections();
+    infoSection.removeClass('hidden');
+
+    // Gestion des clics sur les menus
+    infoMenu.on('click', function () {
+        hideAllSections();
+        infoSection.removeClass('hidden');
+    });
+
+    rdvMenu.on('click', function () {
+        hideAllSections();
+        rdvSection.removeClass('hidden');
+    });
+
+    devisMenu.on('click', function () {
+        hideAllSections();
+        devisSection.removeClass('hidden');
+    });
+
+    messagesMenu.on('click', function () {
+        hideAllSections();
+        messagesSection.removeClass('hidden');
+    });
+
+
     // Affiche la modale de modification des informations utilisateur
     showModalData.on("click", function () {
         modalEditData[0].showModal();  // [0] pour accéder à l'élément natif

@@ -1,4 +1,6 @@
-// $(document).ready(function () {
+$(document).ready(function () {
+
+
 //     // Messages d'erreurs UI
 //     // Vue Login
 //     $("#login_save").on("click", function (event) {
@@ -136,4 +138,6 @@
 //             event.preventDefault();
 //         }
 //     });
-// });
+});
+
+
