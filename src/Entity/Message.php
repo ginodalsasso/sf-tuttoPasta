@@ -20,7 +20,7 @@ class Message
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column]
@@ -36,7 +36,7 @@ class Message
 
     public function __construct()
     {
-        //initialise la date et l'heure du RDV lors de la création de l'objet
+        //initialise la date et l'heure lors de la création de l'objet
         $timezone = new \DateTimeZone('Europe/Paris');
         $this->createdAt = new \DateTime('now', $timezone);
     }
@@ -81,6 +81,11 @@ class Message
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    public function getDate()
+    {
+        return $this->createdAt->format("d/m/Y H:i");
     }
 
     public function isRead(): ?bool

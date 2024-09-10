@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Envoyer un message{% endblock %}
+
+{% block page_title %} Envoyer un message {% endblock %}
+
+{% block body %}
+    {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
+    <main class="wrapper">
+        {{ form(form) }}
+        <div class="back_to">
+            <a class="full_button_white" href="{{path("app_messages")}}">Retour à la messagerie</a>
+        </div>
+    </main>
+
+{% endblock %}

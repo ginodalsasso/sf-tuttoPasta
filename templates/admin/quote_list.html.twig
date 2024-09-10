@@ -8,8 +8,8 @@
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
     <main class="wrapper">
         <form id="searchForm" method="POST" action="{{ path('app_quotes') }}">
-            <label>Rechercher par nom ou email</label>
-            <input type="search" id="name" name="name" />
+            {# <label>Rechercher par nom ou email</label> #}
+            <input type="search" id="name" name="name" placeholder="Rechercher par nom ou email" />
         </form>
 
         <div class="quotes_container">

@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Messagerie - {% endblock %}
+
+{% block page_title %} Messagerie {% endblock %}
+
+{% block body %}
+    {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
+    <main class="wrapper">
+        <article class="message_container">
+            <h2>{{ message.title }}</h2>
+            <p>{{ message.sender.email }}</p>
+            <p>Le {{ message.createdAt|date("d/m/Y H:i")}}</p>
+            <p> {{ message.content }} </p>
+        </article>
+
+        <div class="back_to">
+            <a class="full_button_white" href="{{path("app_messages")}}">Retour à la messagerie</a>
+        </div>
+    </main>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Boîte de réception{% endblock %}
+
+{% block page_title %}Boîte de réception{% endblock %}
+
+{% block body %}
+    {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
+    <main class="wrapper">
+        {# Si l'utilisateur a des messages non lus #}
+        {% if app.user.received|filter(message => message.isRead == false)|length > 0 %}
+            <p>Vous avez {{ app.user.received|filter(message => message.isRead == false)|length }} message(s) non lus.</p>
+        {% endif %}
+        <p>Vous avez reçu {{ app.user.received|length }} {% if app.user.received|length <= 1 %}message{% else %}messages{% endif %}</p>
+
+        <table class="quotes_table">
+            <thead>
+                <tr>
+                    <th>De</th>
+                    <th>Sujet</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="show_data">
+                {% set sorted_messages = app.user.received|sort((b, a) => a.createdAt <=> b.createdAt) %} {# Trie les messages par date de création #}
+                {% for message in sorted_messages %}
+                    <tr id="message-{{ message.id }}">
+
+                        {% if message.isRead == 0 %} {# Si le message n'a pas été lu #}
+                            {% set class = "unread" %}
+                        {% else %}
+                            {% set class = "" %} {# Si le message a été lu #}
+                        {% endif %}
+
+                        <td class="{{ class }}" data-label="De">{{ message.sender.email }}</td>
+                        <td class="{{ class }}" data-label="Sujet">
+                            <a href="{{ path("app_read", {id:message.id} )}}">
+                                {{ message.title }}
+                            </a></td>
+                        <td class="{{ class }}" data-label="Date">{{ message.createdAt|date("d/m/Y à H:i") }}</td>
+                        <td class="{{ class }}" data-label="Actions">
+                            <a href="{{ path('app_deleteMessage', {id: message.id}) }}" class="delete_message" data-id="{{ message.id }}" title="Supprimer"> 
+                                <i class="fa-solid fa-x"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="back_to">
+            <a class="full_button_white" href="{{path("app_messages")}}">Retour à la messagerie</a>
+        </div>
+    </main>
+
+{% endblock %}
