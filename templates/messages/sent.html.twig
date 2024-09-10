@@ -21,7 +21,7 @@
                 {% set sorted_messages = app.user.sent|sort((b, a) => a.createdAt <=> b.createdAt) %} {# Trie les messages par date de création #}
                 {% for message in sorted_messages %}
                     <tr id="message-{{ message.id }}"></tr>
-                        <td data-label="De">{{ message.sender.email }}</td>
+                        <td data-label="À">{{ message.recipient.email }}</td>
                         <td data-label="Sujet">
                             <a href="{{ path("app_read", {id:message.id} )}}">
                                 {{ message.title }}

@@ -15,6 +15,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
+//________________________________________________________________MESSAGERIE______________________________________________________________
 #[IsGranted('ROLE_USER')]
 class MessagesController extends AbstractController
 {
@@ -30,10 +31,40 @@ class MessagesController extends AbstractController
         }
         return $this->render('messages/index.html.twig');
     }
+
+    //________________________________________________________________MESSAGE RECUS______________________________________________________________
+    #[Route('/received', name: 'app_received')]
+    public function received(Security $security): Response
+    {
+        // Récupère l'utilisateur actuellement connecté
+        $user = $security->getUser();
+
+        // Vérifie si l'utilisateur est valide
+        if (!$user instanceof UserInterface) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+
+        return $this->render('messages/received.html.twig');
+    }
     
+    //________________________________________________________________MESSAGES ENVOYES______________________________________________________________
+    #[Route('/sent', name: 'app_sent')]
+    public function sent(Security $security): Response
+    {
+        // Récupère l'utilisateur actuellement connecté
+        $user = $security->getUser();
+
+        // Vérifie si l'utilisateur est valide
+        if (!$user instanceof UserInterface) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+
+        return $this->render('messages/sent.html.twig');
+    }
     
+    //________________________________________________________________ENVOI D'UN MESSAGE______________________________________________________________
     #[Route('/sendMessage', name: 'app_sendMessage')]
-    public function sendMessage(Request $request,EntityManagerInterface $entityManager, Security $security): Response
+    public function sendMessage(Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
@@ -47,29 +78,41 @@ class MessagesController extends AbstractController
         $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
 
-        // Si l'utilisateur est un ROLE_USER, on assigne automatiquement le recipient à un admin
-        if (in_array('ROLE_USER', $user->getRoles(), true)) {
-            $admin = $entityManager->getRepository(User::class)->findOneByRole('ROLE_ADMIN');
-            if (!$admin) {
-                throw new \Exception('Aucun administrateur trouvé');
-            }
-        }
-        
+
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $message->setRecipient($admin); // Assignation de l'admin par defaut pour un role USER
+            // Si l'utilisateur est un ROLE_USER, on assigne automatiquement le recipient à un admin
+            if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+                // Si c'est un admin qui envoie un message, le destinataire est celui choisi dans le formulaire
+                $recipient = $form->get('recipient')->getData();
+                if (!$recipient) {
+                    throw new \Exception('Aucun destinataire sélectionné');
+                }
+                $message->setRecipient($recipient);
+            } elseif (in_array('ROLE_USER', $user->getRoles(), true)) {
+                $admin = $entityManager->getRepository(User::class)->findOneByRole('ROLE_ADMIN');
+                if (!$admin) {
+                    throw new \Exception('Aucun administrateur trouvé');
+                }
+                $message->setRecipient($admin);
+            } else {
+                throw new \Exception('Rôle utilisateur non pris en charge');
+            }
+
             $message->setSender($user);
             $entityManager->persist($message);
             $entityManager->flush();
 
             $this->addFlash('success', 'Message envoyé avec succès');
             return $this->redirectToRoute('app_messages');
-        } 
+        }
 
         return $this->render('messages/send.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
+    //________________________________________________________________REPONSSE A UN MESSAGE______________________________________________________________
     #[Route('/reply/{id}', name: 'app_reply')]
     public function reply(Message $originalMessage, Request $request, EntityManagerInterface $entityManager, Security $security): Response
     {
@@ -89,7 +132,7 @@ class MessagesController extends AbstractController
         $reply = new Message();
         $reply->setSender($user);
         // Si l'utilisateur est l'expéditeur, le destinataire est le récepteur et vice versa
-        $reply->setRecipient($user === $originalMessage->getSender() ? $originalMessage->getRecipient() : $originalMessage->getSender()); 
+        $reply->setRecipient($user === $originalMessage->getSender() ? $originalMessage->getRecipient() : $originalMessage->getSender());
         $form = $this->createForm(MessageType::class, $reply);
         $form->handleRequest($request);
 
@@ -109,21 +152,7 @@ class MessagesController extends AbstractController
         ]);
     }
 
-
-    #[Route('/received', name: 'app_received')]
-    public function received(Security $security): Response
-    {
-        // Récupère l'utilisateur actuellement connecté
-        $user = $security->getUser();
-
-        // Vérifie si l'utilisateur est valide
-        if (!$user instanceof UserInterface) {
-            throw new AccessDeniedException('Accès refusé');
-        }
-
-        return $this->render('messages/received.html.twig');
-    }
-
+    //________________________________________________________________LECTURE D'UN MESSAGE______________________________________________________________
     #[Route('/read/{id}', name: 'app_read')]
     public function read(Message $message, EntityManagerInterface $entityManager, Security $security): Response
     {
@@ -134,7 +163,7 @@ class MessagesController extends AbstractController
         if (!$user instanceof UserInterface) {
             throw new AccessDeniedException('Accès refusé');
         }
-        
+
         $message->setRead(true);
         $entityManager->persist($message);
         $entityManager->flush();
@@ -142,6 +171,7 @@ class MessagesController extends AbstractController
         return $this->render('messages/read.html.twig', compact('message'));
     }
 
+    //________________________________________________________________SUPPRESSION D'UN MESSAGE______________________________________________________________
     #[Route('/delete/{id}', name: 'app_deleteMessage')]
     public function deleteMessage(Message $message, EntityManagerInterface $entityManager): Response
     {
@@ -150,19 +180,4 @@ class MessagesController extends AbstractController
 
         return $this->redirectToRoute('app_received');
     }
-
-    #[Route('/sent', name: 'app_sent')]
-    public function sent(Security $security): Response
-    {
-        // Récupère l'utilisateur actuellement connecté
-        $user = $security->getUser();
-
-        // Vérifie si l'utilisateur est valide
-        if (!$user instanceof UserInterface) {
-            throw new AccessDeniedException('Accès refusé');
-        }
-
-        return $this->render('messages/sent.html.twig');
-    }
-    
 }
