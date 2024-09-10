@@ -27,37 +27,36 @@ $(document).ready(function () {
 
     // Fonction pour masquer toutes les sections
     function hideAllSections() {
-        infoSection.addClass('hidden');
-        rdvSection.addClass('hidden');
-        devisSection.addClass('hidden');
-        messagesSection.addClass('hidden');
+        infoSection.hide();
+        rdvSection.hide();
+        devisSection.hide();
+        messagesSection.hide();
     }
 
     // Par défaut, afficher la section des informations personnelles
     hideAllSections();
-    infoSection.removeClass('hidden');
+    infoSection.show();
 
     // Gestion des clics sur les menus
     infoMenu.on('click', function () {
         hideAllSections();
-        infoSection.removeClass('hidden');
+        infoSection.show();
     });
 
     rdvMenu.on('click', function () {
         hideAllSections();
-        rdvSection.removeClass('hidden');
+        rdvSection.show();
     });
 
     devisMenu.on('click', function () {
         hideAllSections();
-        devisSection.removeClass('hidden');
+        devisSection.show();
     });
 
     messagesMenu.on('click', function () {
         hideAllSections();
-        messagesSection.removeClass('hidden');
+        messagesSection.show();
     });
-
 
     // Affiche la modale de modification des informations utilisateur
     showModalData.on("click", function () {

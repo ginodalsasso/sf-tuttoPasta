@@ -27,7 +27,7 @@
             <span id="messages_user">Messagerie</span>
         </div>
         {# ----------------------------Informations personnelles ------------------#}
-        <section id="user_content">
+        <section id="user_content" class="hidden">
             <h3>Mes informations personnelles:</h3>
             <p><b>Pseudo:</b> {{user.username|capitalize}} </p>
             <p><b>Email:</b> {{user.email}} </p>
@@ -76,7 +76,7 @@
             <button class="closeModal">X</button>
         </dialog>
         {# ----------------------------Devis ------------------#}
-        <section id="devis_section" class="appointments_container user_table">
+        <section id="devis_section" class=" user_table hidden">
             {% if quotes is not empty %}
                 <h3>Devis:</h3>
                 <table class="appointments_table">
@@ -107,7 +107,7 @@
         </section>
 
         {# ----------------------------Rendez-vous ------------------#}
-        <section class="appointments_container user_table">
+        <section id="appointments_container" class="user_table hidden">
             {% set now = "now"|date('Y-m-d H:i:s') %}  {# On crée une variable pour la date actuelle avec heure au format 'Y-m-d H:i:s' #}
 
             {# On vérifie si l'utilisateur a des rendez-vous #}
@@ -177,9 +177,9 @@
                 {% endif %}
             </section>
         {% endif %}
-        
+
         {# ----------------------------Messagerie ------------------#}
-        <section class="messagerie user_table">
+        <section class="messagerie user_table hidden">
             <p>Non lus: {{ app.user.received|filter(message => message.isRead == false)|length }}</p>
             <p>Reçus: {{ app.user.received|length }}</p>
             <p>Envoyés: {{ app.user.sent|length }}</p>
