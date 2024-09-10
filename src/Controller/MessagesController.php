@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Message;
 use App\Form\MessageType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,19 +11,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
+#[IsGranted('ROLE_USER')]
 class MessagesController extends AbstractController
 {
     #[Route('/messages', name: 'app_messages')]
-    public function index(): Response
+    public function index(Security $security): Response
     {
+        // Récupère l'utilisateur actuellement connecté
+        $user = $security->getUser();
 
-
-        return $this->render('messages/index.html.twig', [
-            'controller_name' => 'MessagesController',
-        ]);
+        // Vérifie si l'utilisateur est valide
+        if (!$user instanceof UserInterface) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+        return $this->render('messages/index.html.twig');
     }
     
     
@@ -41,11 +47,17 @@ class MessagesController extends AbstractController
         $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
 
+        // Si l'utilisateur est un ROLE_USER, on assigne automatiquement le recipient à un admin
+        if (in_array('ROLE_USER', $user->getRoles(), true)) {
+            $admin = $entityManager->getRepository(User::class)->findOneByRole('ROLE_ADMIN');
+            if (!$admin) {
+                throw new \Exception('Aucun administrateur trouvé');
+            }
+        }
+        
         if ($form->isSubmitted() && $form->isValid()) {
-
-            $message->setSender($this->getUser());
-
-            $message = $form->getData();
+            $message->setRecipient($admin); // Assignation de l'admin par defaut pour un role USER
+            $message->setSender($user);
             $entityManager->persist($message);
             $entityManager->flush();
 

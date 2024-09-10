@@ -18,6 +18,12 @@
                     {{ form_row(form.content) }}
                     <div class="error_msg" id="name_error"></div>
                 </div>
+                {% if is_granted('ROLE_ADMIN') %}                    
+                    <div class="form-group">
+                        {{ form_row(form.recipient) }}
+                        <div class="error_msg" id="name_error"></div>
+                    </div>
+                {% endif %}
                     {{ form_row(form.submit) }}
                 </div>
             </div>
