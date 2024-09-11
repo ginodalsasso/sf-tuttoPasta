@@ -35,11 +35,11 @@ $(document).ready(function () {
 
     // Fonction pour ajouter la classe 'active' à tous les menus sauf le cliqué
     function addActiveClass(clickedMenu) {
-        infoMenu.addClass('active');
-        rdvMenu.addClass('active');
-        devisMenu.addClass('active');
-        messagesMenu.addClass('active');
-        clickedMenu.removeClass('active');
+        infoMenu.addClass('active_form');
+        rdvMenu.addClass('active_form');
+        devisMenu.addClass('active_form');
+        messagesMenu.addClass('active_form');
+        clickedMenu.removeClass('active_form');
     }
 
     // Par défaut, afficher la section des informations personnelles

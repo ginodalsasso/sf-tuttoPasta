@@ -16,7 +16,7 @@
 {% block body %}
 {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
 
-<main class="wrapper">
+<main class="wrapper_article">
     {#--------------------------------------- Section article ----------------------------------------#}
     <article class="article_content">
         <span id="article_date">Rédigé par TuttoPasta, le {{ article.date }} | <a href="#comment_title">{{article.comments|length}} {% if article.comments|length <= 1 %}Commentaire{% else %}Commentaires{% endif %}</a></span>

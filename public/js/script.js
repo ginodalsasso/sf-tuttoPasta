@@ -33,6 +33,7 @@ function escapeHtml(unsafe) {
 
 
 $(document).ready(function() {
+    //_______________________________NAVBAR________________________________
     // Evenement click burger menu
     $('.burger-menu').click(function() {
         $('#nav_container').addClass('active');
@@ -62,20 +63,33 @@ $(document).ready(function() {
         lastScrollTop = scrollTop;
     });
 
-    // Scroll to top
+    //_______________________________SCROLL TO TOP BUTTON________________________________
+    // Initialement, le bouton est invisible
     $('#scrollToTopButton').css({
         'opacity': '0',
         'visibility': 'hidden'
     });
 
+    let timeout;
+
     $(window).scroll(function() {
-        // Si l'utilisateur a scrollé de 20px ou plus, affiche le bouton
-        if ($(this).scrollTop() > 20) {
+        // Si l'utilisateur a scrollé de 50px ou plus, affiche le bouton
+        if ($(this).scrollTop() > 50) {
             $('#scrollToTopButton').css({
                 'opacity': '1',
                 'visibility': 'visible'
             });
-        // Sinon, cache le bouton
+
+            // Réinitialiser le timer si l'utilisateur continue de scroller
+            clearTimeout(timeout);
+
+            // Cache le bouton après 1sec
+            timeout = setTimeout(function() {
+                $('#scrollToTopButton').css({
+                    'opacity': '0',
+                    'visibility': 'hidden'
+                });
+            }, 1000);
 
         } else {
             $('#scrollToTopButton').css({

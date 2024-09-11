@@ -213,7 +213,7 @@ $(document).ready(function () {
     // Gestion des checkboxes et des labels
     $('#identite_visuelle, #services_site_internet, #presta_a_la_carte').each(function() {
         $(this).find('input[type="checkbox"]').on('change', handleCheckboxChange); // Gestion des changements de checkbox
-        $(this).find('label').on('click', handleLabelClick); // Gestion des clics sur les labels
+        $(this).find('label').on('clic', handleLabelClick); // Gestion des clics sur les labels
     });
 
 
