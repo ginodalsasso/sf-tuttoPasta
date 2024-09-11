@@ -52,7 +52,7 @@ class MessageType extends AbstractType
                 ]
             ])
 
-            ->add("submit", SubmitType::class, [
+            ->add("envoyer", SubmitType::class, [
                 'attr' => [
                     'class' => 'full_button_black'
                     ]
