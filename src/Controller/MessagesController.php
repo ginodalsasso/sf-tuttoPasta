@@ -21,19 +21,6 @@ use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 #[IsGranted('ROLE_USER')]
 class MessagesController extends AbstractController
 {
-    #[Route('/messages', name: 'app_messages')]
-    public function index(Security $security): Response
-    {
-        // Récupère l'utilisateur actuellement connecté
-        $user = $security->getUser();
-
-        // Vérifie si l'utilisateur est valide
-        if (!$user instanceof UserInterface) {
-            throw new AccessDeniedException('Accès refusé');
-        }
-        return $this->render('messages/index.html.twig');
-    }
-
     //________________________________________________________________MESSAGE RECUS______________________________________________________________
     #[Route('/received', name: 'app_received')]
     public function received(Security $security): Response
@@ -106,7 +93,7 @@ class MessagesController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Message envoyé avec succès');
-            return $this->redirectToRoute('app_messages');
+            return $this->redirectToRoute('app_sent');
         }
 
         return $this->render('messages/send.html.twig', [
