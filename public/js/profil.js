@@ -19,7 +19,7 @@ $(document).ready(function () {
     var devisMenu = $('#devis_user');
     var messagesMenu = $('#messages_user');
 
-    // Variables des sections de contenu
+    // Variables des sections du contenu
     var infoSection = $('#user_content');
     var rdvSection = $('#appointments_container');
     var devisSection = $('#devis_section');
@@ -33,29 +33,43 @@ $(document).ready(function () {
         messagesSection.hide();
     }
 
+    // Fonction pour ajouter la classe 'active' à tous les menus sauf le cliqué
+    function addActiveClass(clickedMenu) {
+        infoMenu.addClass('active');
+        rdvMenu.addClass('active');
+        devisMenu.addClass('active');
+        messagesMenu.addClass('active');
+        clickedMenu.removeClass('active');
+    }
+
     // Par défaut, afficher la section des informations personnelles
     hideAllSections();
     infoSection.show();
+    addActiveClass(infoMenu); // Activer tous les éléments sauf celui cliqué
 
     // Gestion des clics sur les menus
     infoMenu.on('click', function () {
         hideAllSections();
         infoSection.show();
+        addActiveClass(infoMenu);
     });
 
     rdvMenu.on('click', function () {
         hideAllSections();
         rdvSection.show();
+        addActiveClass(rdvMenu);
     });
 
     devisMenu.on('click', function () {
         hideAllSections();
         devisSection.show();
+        addActiveClass(devisMenu);
     });
 
     messagesMenu.on('click', function () {
         hideAllSections();
         messagesSection.show();
+        addActiveClass(messagesMenu);
     });
 
     // Affiche la modale de modification des informations utilisateur

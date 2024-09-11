@@ -52,6 +52,7 @@ body {
 
 .wrapper,
 .wrapper_legal,
+.wrapper_profil,
 .wrapper_project_list,
 .wrapper_forms
 {
@@ -60,7 +61,8 @@ body {
 }
 
 .wrapper,
-.wrapper_legal{
+.wrapper_legal,
+.wrapper_profil{
     padding: 8%;
 }
 
@@ -281,7 +283,6 @@ a{
 .stickers_green,
 .stickers_pink {
     border-radius: 5px;
-
     padding: 8px 10px;
     font-weight: 600;
     display: inline-block;
@@ -802,14 +803,57 @@ summary {
     display: inline-block;
 }
 
-#user_content,
-.user_table,
-.messagerie {
-    border: 2px solid var(--black-color);
-    border-radius: 5px;
+.border_profile {
+    border-right: 2px solid var(--black-color);
+    border-left: 2px solid var(--black-color);
+    border-bottom: 2px solid var(--black-color);
+    border-radius: 0 0 5px 5px;
     max-width: 1280px;
     margin: 0 auto 40px auto;
-    padding: 40px;
+    padding: 0 40px 40px 40px;
+}
+
+.profil_menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-right: 2px solid var(--black-color);
+    border-left: 2px solid var(--black-color);
+    border-top: 2px solid var(--black-color);
+    border-radius: 5px 5px 0 0;
+    padding-bottom: 40px;
+}
+
+.profil_menu div {
+    width: 25%;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.profil_menu i {
+    padding-right: 5px;
+}
+
+#infos_user,
+#rdv_user,
+#devis_user {
+    border-right: 2px solid black;
+}
+
+
+#infos_user,
+#rdv_user,
+#devis_user,
+#messages_user {
+    display: flex;
+    justify-content: center;
+    padding: 20px 30px;
+}
+
+.active {
+    border-bottom: 2px solid black;
+    color: var(--black-color);
+    opacity: 0.7;
 }
 
 #user_content {
@@ -818,19 +862,13 @@ summary {
 }
 
 
-#user_action_buttons {
+.user_action_buttons {
     display: flex;
     justify-content: center;
     margin-top: 20px;
     flex-wrap: wrap;
-    gap: 50px;
+    gap: 20px;
 }
-
-/* .appointments_container {
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
-} */
 
 .appointments_table,
 .quotes_table {
@@ -897,6 +935,12 @@ summary {
     gap: 20px;
     padding-bottom: 40px;
 }
+
+.messagerie_infos {
+    text-align: end;  
+    margin-bottom: 40px;  
+}
+
 
 /*=============== MODAL ===============*/
 .modal_edit_data,
@@ -1660,7 +1704,8 @@ footer {
 
     /* HOME */
     #identite_service p:last-child,
-    #site_services p:last-child {
+    #site_services p:last-child,
+    .profil_menu p {
         display: none;
     }
 
@@ -1735,6 +1780,15 @@ footer {
         margin-top: 50px;
     }
 
+    .wrapper_profil {
+        padding: 0 0 8% 0;
+    }
+
+    .profil_menu,
+    .border_profile {
+        border-radius: unset;
+        border-bottom: unset;
+    }
 
     #introduction_section,
     .service,

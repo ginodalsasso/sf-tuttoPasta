@@ -6,145 +6,56 @@
 
 {% block body %}
     {{ parent() }}{# Inclus le "page_title" ainsi que les propriétés du header #}
-    <main class="wrapper">
-        <div class="header_profil">
-            {# Si l'utilisateur a des messages non lus #}
-            {% if app.user.received|filter(message => message.isRead == false)|length > 0 %}
-                <p>Vous avez {{ app.user.received|filter(message => message.isRead == false)|length }} 
-                    {% if app.user.received|length <= 1 %}
-                        message
-                    {% else %}
-                        messages
-                    {% endif %} 
-                </p>
-            {% endif %}
-            <a class="full_button_white" href="{{ path("app_messages") }}">Accéder à la Messagerie</a>
-        </div>
+    <main class="wrapper_profil">
+        {# ----------------------------Menu profil ------------------#}
         <div class="profil_menu">
-            <span id="infos_user">Inforations personnelles</span>
-            <span id="rdv_user">Rendez-vous</span>
-            <span id="devis_user">Devis</span>
-            <span id="messages_user">Messagerie</span>
+            <div id="infos_user"><i class="fa-solid fa-user"></i><p>Infos</p></div>
+            <div id="rdv_user"><i class="fa-solid fa-calendar"></i><p>Rendez-vous</p></div>
+            <div id="devis_user"><i class="fa-solid fa-file-invoice"></i><p>Devis</p></div>
+            <div id="messages_user"><i class="fa-solid fa-message"></i><p>Messagerie</p>({{ app.user.received|filter(message => message.isRead == false)|length }})</div>
         </div>
-        {# ----------------------------Informations personnelles ------------------#}
-        <section id="user_content" class="hidden">
-            <h3>Mes informations personnelles:</h3>
-            <p><b>Pseudo:</b> {{user.username|capitalize}} </p>
-            <p><b>Email:</b> {{user.email}} </p>
-            <p><b>Date de création du compte:</b> {{user.accountDate|date('d/m/Y')}}</p>
-            {# Boutton de modification et suppression #}
-            <div id="user_action_buttons">
-                <a class="show_modal_edit_data full_button_black">Modifier mes informations</a>
-                {% if app.user.isGoogleUser == false %}
-                <a class="show_modal_edit_password full_button_black">Modifier mon mot de passe</a>
-                {% endif %}
-                <form action="{{ path('app_delete_account') }}" method="post">
-                    <input type="hidden" name="csrf" value="">
-                    <button class="full_button_red" id="delete_account_link" href="{{ path('app_delete_account') }}" value="">Suprimer mon compte</button>
-                </form>
-            </div>
-        </section>
+        <div class="border_profile">
 
-        
-        {# ----------------------------Modale d'édition des information utilisateur ------------------#}
-        <dialog class="modal_edit_data">
-            {{ form_start(form, {'action': path('app_profil_update_info')}) }}
-                {{ form_row(form.username) }}
-                <div class="error_msg" id="pseudo_error"></div>
-                {% if app.user.isGoogleUser == false %}
-                    {{ form_row(form.email) }}
-                    <div class="error_msg" id="email_error"></div>
-                {% endif %}
-
-                <div class="center_button">
-                    <button class="full_button_black" id="save_edit_data" type="submit">Valider les informations</button>
-                </div>
-            {{ form_end(form) }}
-            <button class="closeModal">X</button>
-        </dialog>
-
-        {# Modal d'édition de mot de passe #}
-        <dialog class="modal_edit_password">
-            {{ form_start(passwordForm, {'action': path('app_profil_update_password')}) }}
-                {{ form_widget(passwordForm) }}
-                <div class="error_msg" id="password_error"></div>
-
-                <div class="center_button">
-                    <button class="full_button_black" id="save_edit_password" type="submit">Changer le mot de passe</button>
-                </div>
-            {{ form_end(form) }}
-            <button class="closeModal">X</button>
-        </dialog>
-        {# ----------------------------Devis ------------------#}
-        <section id="devis_section" class=" user_table hidden">
-            {% if quotes is not empty %}
-                <h3>Devis:</h3>
-                <table class="appointments_table">
-                    <thead>
-                        <tr>
-                            <th>Référence</th>
-                            <th>Date</th>
-                            <th>Prix</th>
-                            <th>Télécharger</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for quote in quotes %}
-                            {% if quote.status == 1 %}
-                                <tr id="quote-{{ quote.id }}">
-                                    <td data-label="Référence">{{ quote.reference }}</td>
-                                    <td data-label="Date">{{ quote.quoteDate|date('d/m/Y') }}</td>
-                                    <td data-label="Prix">{{ quote.totalTTC }}</td>
-                                    <td data-label="Télécharger">
-                                        <a href="{{ path('quote_pdf', { 'id': quote.id }) }}" download><i class="fa-solid fa-download"></i></a>
-                                    </td>
-                                </tr>
-                            {% endif %}
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
-        </section>
-
-        {# ----------------------------Rendez-vous ------------------#}
-        <section id="appointments_container" class="user_table hidden">
-            {% set now = "now"|date('Y-m-d H:i:s') %}  {# On crée une variable pour la date actuelle avec heure au format 'Y-m-d H:i:s' #}
-
-            {# On vérifie si l'utilisateur a des rendez-vous #}
-            {% if appointments is not empty %}
-                {% set hasUpcomingAppointments = false %}
-                {% set hasPastAppointments = false %}
-                {# On parcourt les rendez-vous pour les classer en rendez-vous à venir et passés #}
-                {% for appointment in appointments %}
-                    {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
-                    {# /Si la date de début du rendez-vous est supérieure ou égale à la date actuelle #}
-                    {% if appointmentDate >= now %}
-                        {% set hasUpcomingAppointments = true %}
-                    {% else %}
-                        {% set hasPastAppointments = true %}
+            {# ----------------------------Informations personnelles ------------------#}
+            <section id="user_content" class="hidden">
+                <h3>Mes informations personnelles:</h3>
+                <p><b>Pseudo:</b> {{user.username|capitalize}} </p>
+                <p><b>Email:</b> {{user.email}} </p>
+                <p><b>Date de création du compte:</b> {{user.accountDate|date('d/m/Y')}}</p>
+                {# Boutton de modification et suppression #}
+                <div class="user_action_buttons">
+                    <a class="show_modal_edit_data full_button_black">Modifier mes informations</a>
+                    {% if app.user.isGoogleUser == false %}
+                    <a class="show_modal_edit_password full_button_black">Modifier mon mot de passe</a>
                     {% endif %}
-                {% endfor %}
-                {% if hasUpcomingAppointments %}
-                    <h3>Rendez-vous à venir:</h3>
+                    <form action="{{ path('app_delete_account') }}" method="post">
+                        <input type="hidden" name="csrf" value="">
+                        <button class="full_button_red" id="delete_account_link" href="{{ path('app_delete_account') }}" value="">Suprimer mon compte</button>
+                    </form>
+                </div>
+            </section>
+            {# ----------------------------Devis ------------------#}
+            <section id="devis_section" class=" user_table hidden">
+                {% if quotes is not empty %}
+                    <h3>Devis:</h3>
                     <table class="appointments_table">
                         <thead>
                             <tr>
-                                <th scope="col">Date de début</th>
-                                <th>Date de fin</th>
-                                <th>Annulation</th>
+                                <th>Référence</th>
+                                <th>Date</th>
+                                <th>Prix</th>
+                                <th>Télécharger</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for appointment in appointments %}
-                                {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
-                                {% if appointmentDate >= now %}
-                                    <tr id="appointment-{{ appointment.id }}">
-                                        <td data-label="Date de début">{{ appointment.startDate|date('d/m/Y à H:i') }}</td>
-                                        <td data-label="Date de fin">{{ appointment.endDate|date('d/m/Y à H:i') }}</td>
-                                        <td data-label="Annulation">
-                                            <a href="#" class="cancel_appointment" data-id="{{ appointment.id }}">
-                                                <i class="fa-solid fa-x"></i>
-                                            </a>
+                            {% for quote in quotes %}
+                                {% if quote.status == 1 %}
+                                    <tr id="quote-{{ quote.id }}">
+                                        <td data-label="Référence">{{ quote.reference }}</td>
+                                        <td data-label="Date">{{ quote.quoteDate|date('d/m/Y') }}</td>
+                                        <td data-label="Prix">{{ quote.totalTTC }}</td>
+                                        <td data-label="Télécharger">
+                                            <a href="{{ path('quote_pdf', { 'id': quote.id }) }}" download><i class="fa-solid fa-download"></i></a>
                                         </td>
                                     </tr>
                                 {% endif %}
@@ -152,46 +63,143 @@
                         </tbody>
                     </table>
                 {% endif %}
-    
-                {% if hasPastAppointments %}
-                    <h3>Rendez-vous passés:</h3>
-                    <table class="appointments_table">
-                        <thead>
-                            <tr>
-                                <th>Date de début</th>
-                                <th>Date de fin</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for appointment in appointments %}
-                                {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
-                                {% if appointmentDate < now %}
-                                    <tr id="appointment-{{ appointment.id }}">
-                                        <td data-label="Date de début">{{ appointment.startDate|date('d/m/Y à H:i') }}</td>
-                                        <td data-label="Date de fin">{{ appointment.endDate|date('d/m/Y à H:i') }}</td>
-                                    </tr>
-                                {% endif %}
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                {% endif %}
             </section>
-        {% endif %}
 
-        {# ----------------------------Messagerie ------------------#}
-        <section class="messagerie user_table hidden">
-            <p>Non lus: {{ app.user.received|filter(message => message.isRead == false)|length }}</p>
-            <p>Reçus: {{ app.user.received|length }}</p>
-            <p>Envoyés: {{ app.user.sent|length }}</p>
-    
-            <a href="{{ path("app_received") }}">Boîte de réception</a>
-            <a href="{{ path("app_sent") }}">Boîte d'envoi</a>
-            <a href="{{ path("app_sendMessage") }}">Envoyer un message</a>
-        </section>
+            {# ----------------------------Rendez-vous ------------------#}
+            <section id="appointments_container" class="user_table hidden">
+                {% set now = "now"|date('Y-m-d H:i:s') %}  {# On crée une variable pour la date actuelle avec heure au format 'Y-m-d H:i:s' #}
 
+                {# On vérifie si l'utilisateur a des rendez-vous #}
+                {% if appointments is not empty %}
+                    {% set hasUpcomingAppointments = false %}
+                    {% set hasPastAppointments = false %}
+                    {# On parcourt les rendez-vous pour les classer en rendez-vous à venir et passés #}
+                    {% for appointment in appointments %}
+                        {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
+                        {# /Si la date de début du rendez-vous est supérieure ou égale à la date actuelle #}
+                        {% if appointmentDate >= now %}
+                            {% set hasUpcomingAppointments = true %}
+                        {% else %}
+                            {% set hasPastAppointments = true %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if hasUpcomingAppointments %}
+                        <h3>Rendez-vous à venir:</h3>
+                        <table class="appointments_table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Date de début</th>
+                                    <th>Date de fin</th>
+                                    <th>Annulation</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in appointments %}
+                                    {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
+                                    {% if appointmentDate >= now %}
+                                        <tr id="appointment-{{ appointment.id }}">
+                                            <td data-label="Date de début">{{ appointment.startDate|date('d/m/Y à H:i') }}</td>
+                                            <td data-label="Date de fin">{{ appointment.endDate|date('d/m/Y à H:i') }}</td>
+                                            <td data-label="Annulation">
+                                                <a href="#" class="cancel_appointment" data-id="{{ appointment.id }}">
+                                                    <i class="fa-solid fa-x"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+        
+                    {% if hasPastAppointments %}
+                        <h3>Rendez-vous passés:</h3>
+                        <table class="appointments_table">
+                            <thead>
+                                <tr>
+                                    <th>Date de début</th>
+                                    <th>Date de fin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in appointments %}
+                                    {% set appointmentDate = appointment.startDate|date('Y-m-d H:i:s') %}
+                                    {% if appointmentDate < now %}
+                                        <tr id="appointment-{{ appointment.id }}">
+                                            <td data-label="Date de début">{{ appointment.startDate|date('d/m/Y à H:i') }}</td>
+                                            <td data-label="Date de fin">{{ appointment.endDate|date('d/m/Y à H:i') }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </section>
+            {% endif %}
+
+            {# ----------------------------Messagerie ------------------#}
+            <section class="messagerie user_table hidden">
+                <div class="messagerie_infos">
+                    <p>
+                        <strong>
+                            Message{{ app.user.received|filter(message => message.isRead == false)|length > 1 ? 's' : '' }} non lu{{ app.user.received|filter(message => message.isRead == false)|length > 1 ? 's' : '' }} : 
+                        </strong>
+                        {{ app.user.received|filter(message => message.isRead == false)|length }}
+                    </p>
+                    <p>
+                        <strong>
+                            Message{{ app.user.received|length > 1 ? 's' : '' }} reçu{{ app.user.received|length > 1 ? 's' : '' }} : 
+                        </strong>
+                        {{ app.user.received|length }}
+                    </p>
+                    <p>
+                        <strong>
+                            Message{{ app.user.sent|length > 1 ? 's' : '' }} envoyé{{ app.user.sent|length > 1 ? 's' : '' }} : 
+                        </strong>
+                        {{ app.user.sent|length }}
+                    </p>
+                </div>
+                <div class="user_action_buttons">
+                    <a class="full_button_blue" href="{{ path("app_received") }}"><i class="fa-solid fa-envelope"></i> Boîte de réception</a>
+                    <a class="full_button_green" href="{{ path("app_sent") }}"><i class="fa-solid fa-paper-plane"></i> Boîte d'envoi</a>
+                    <a class="full_button_pink" href="{{ path("app_sendMessage") }}"><i class="fa-solid fa-message"></i></i> Envoyer un message</a>
+                </div>
+            </section>
+
+        </div>
+        {# ----------------------------Boutton retour ------------------#}
         <div class="back_to">
             <a class="full_button_white" href="{{path("app_home")}}">Retour à l'accueil</a>
         </div>
+    {# ----------------------------Modale d'édition des information utilisateur ------------------#}
+    <dialog class="modal_edit_data">
+        {{ form_start(form, {'action': path('app_profil_update_info')}) }}
+            {{ form_row(form.username) }}
+            <div class="error_msg" id="pseudo_error"></div>
+            {% if app.user.isGoogleUser == false %}
+                {{ form_row(form.email) }}
+                <div class="error_msg" id="email_error"></div>
+            {% endif %}
+
+            <div class="center_button">
+                <button class="full_button_black" id="save_edit_data" type="submit">Valider les informations</button>
+            </div>
+        {{ form_end(form) }}
+        <button class="closeModal">X</button>
+    </dialog>
+
+    {# Modal d'édition de mot de passe #}
+    <dialog class="modal_edit_password">
+        {{ form_start(passwordForm, {'action': path('app_profil_update_password')}) }}
+            {{ form_widget(passwordForm) }}
+            <div class="error_msg" id="password_error"></div>
+
+            <div class="center_button">
+                <button class="full_button_black" id="save_edit_password" type="submit">Changer le mot de passe</button>
+            </div>
+        {{ form_end(form) }}
+        <button class="closeModal">X</button>
+    </dialog>
     </main>
 {% endblock %}
 
