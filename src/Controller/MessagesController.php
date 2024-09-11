@@ -153,6 +153,11 @@ class MessagesController extends AbstractController
             throw new AccessDeniedException('Accès refusé');
         }
 
+        // Vérifie que l'utilisateur est autorisé à lire le message
+        if ($message->getRecipient() !== $user && !$this->isGranted('ROLE_ADMIN')) {
+            return new AccessDeniedException('Vous n\'êtes pas autorisé à accéder à cette section.');
+        }
+
         $message->setRead(true);
         $entityManager->persist($message);
         $entityManager->flush();

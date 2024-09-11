@@ -62,6 +62,8 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                {% else %}
+                    <p>Vous n'avez pas de devis</p>
                 {% endif %}
             </section>
 
@@ -134,8 +136,10 @@
                             </tbody>
                         </table>
                     {% endif %}
-                </section>
-            {% endif %}
+                {% else %}
+                    <p>Vous n'avez pas de rendez-vous</p>
+                {% endif %}
+            </section>
 
             {# ----------------------------Messagerie ------------------#}
             <section class="messagerie user_table hidden">
