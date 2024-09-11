@@ -36,13 +36,17 @@
                         <td class="{{ class }}" data-label="De">{{ message.sender.email }}</td>
                         <td class="{{ class }}" data-label="Sujet">
                             <a href="{{ path("app_read", {id:message.id} )}}">
+                                <i class="fa-solid fa-eye"></i>
                                 {{ message.title }}
                             </a></td>
                         <td class="{{ class }}" data-label="Date">{{ message.createdAt|date("d/m/Y à H:i") }}</td>
                         <td class="{{ class }}" data-label="Actions">
-                            <a href="{{ path('app_deleteMessage', {id: message.id}) }}" class="delete_message" data-id="{{ message.id }}" title="Supprimer"> 
-                                <i class="fa-solid fa-x"></i>
-                            </a>
+                            <form action="{{ path('app_deleteMessage', {id: message.id}) }}" method="post">
+                                <input type="hidden" name="csrf" value="">
+                                <button class="full_button_red" id="delete_message_link" href="{{ path('app_delete_account') }}" data-id="{{ message.id }}" title="Supprimer" value="">
+                                    <i class="fa-solid fa-x"></i>
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 {% endfor %}
@@ -53,4 +57,7 @@
         </div>
     </main>
 
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('/js/messages.js')}}"></script>
 {% endblock %}

@@ -10,8 +10,10 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 
@@ -173,8 +175,24 @@ class MessagesController extends AbstractController
 
     //________________________________________________________________SUPPRESSION D'UN MESSAGE______________________________________________________________
     #[Route('/delete/{id}', name: 'app_deleteMessage')]
-    public function deleteMessage(Message $message, EntityManagerInterface $entityManager): Response
-    {
+    public function deleteMessage(Message $message, EntityManagerInterface $entityManager, CsrfTokenManagerInterface $csrfTokenManager, Security $security, Request $request
+    ): Response
+    {        
+        // Récupère l'utilisateur actuellement connecté
+        $user = $security->getUser();
+
+        // Vérifie si l'utilisateur est valide
+        if (!$user instanceof UserInterface) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+
+        // Récupère le jeton CSRF depuis la requête
+        $csrfToken = $request->request->get('csrf');
+        // Vérifie la validité du jeton CSRF
+        if (!$csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
+            throw new AccessDeniedException('Accès refusé');
+        }
+
         $entityManager->remove($message);
         $entityManager->flush();
 
