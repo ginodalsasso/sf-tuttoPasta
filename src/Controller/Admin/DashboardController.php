@@ -67,12 +67,16 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Studio TuttoPasta')
-            ->setFaviconPath('img/logo_white.svg');       // Définit le chemin vers l'image du logo
+            ->setTitle('')
+            ->setFaviconPath('img/logo_white.svg');
         }
 
     public function configureMenuItems(): iterable
     {
+        yield MenuItem::linkToUrl('<img src="/img/logo_white.svg" alt="Logo TuttoPasta" style="width: 100px; height: auto; margin: auto;">', null, '#')
+        ->setLinkTarget('_self')
+        ->setCssClass('menu-logo');
+
         yield MenuItem::section('Portfolio');
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
 
