@@ -12,11 +12,11 @@
             <div class="form_container">
                 <div class="form-group">
                     {{ form_row(form.title) }}
-                    <div class="error_msg" id="name_error"></div>
+                    <div class="error_msg" id="title_error"></div>
                 </div>
                 <div class="form-group">
                     {{ form_row(form.content) }}
-                    <div class="error_msg" id="name_error"></div>
+                    <div class="error_msg" id="content_error"></div>
                 </div>
                     {{ form_row(form.envoyer) }}
                 </div>
@@ -27,4 +27,7 @@
         </div>
     </main>
 
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('/js/messages.js')}}"></script>
 {% endblock %}

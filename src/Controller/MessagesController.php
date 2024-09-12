@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
@@ -21,7 +22,7 @@ use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 #[IsGranted('ROLE_USER')]
 class MessagesController extends AbstractController
 {
-    //________________________________________________________________MESSAGE RECUS______________________________________________________________
+   //________________________________________________________________MESSAGE RECUS______________________________________________________________
     #[Route('/received', name: 'app_received')]
     public function received(Security $security): Response
     {
@@ -67,9 +68,10 @@ class MessagesController extends AbstractController
         $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
 
-
-
         if ($form->isSubmitted() && $form->isValid()) {
+            // Récupère les données du formulaire
+            $message = $form->getData();
+
             // Si l'utilisateur est un ROLE_USER, on assigne automatiquement le recipient à un admin
             if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
                 // Si c'est un admin qui envoie un message, le destinataire est celui choisi dans le formulaire
@@ -79,7 +81,7 @@ class MessagesController extends AbstractController
                 }
                 $message->setRecipient($recipient);
             } elseif (in_array('ROLE_USER', $user->getRoles(), true)) {
-                $admin = $entityManager->getRepository(User::class)->findOneByRole('ROLE_ADMIN');
+                $admin = $entityManager->getRepository(User::class)->findOneByRole('ROLE_ADMIN'); // Récupère le premier admin trouvé
                 if (!$admin) {
                     throw new \Exception('Aucun administrateur trouvé');
                 }

@@ -68,14 +68,11 @@ class QuoteController extends AbstractController
         // Récupérer le résultat de la recherche
         $searchName = $request->request->get('name');
 
-        // if (!filter_var($searchName, FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-        //     $this->addFlash('error', 'Recherche invalide.');
-        //     return $this->redirectToRoute('app_home');
-        // }
+        $searchNameSanitized = filter_var($searchName, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         // s'il y a une recherche
-        if($searchName) {
-            $quotes = $quoteRepository->findOneByNameOrEmail($searchName);
+        if($searchNameSanitized) {
+            $quotes = $quoteRepository->findOneByNameOrEmail($searchNameSanitized);
         } else {
             $quotes = $quoteRepository->findAll();
         }

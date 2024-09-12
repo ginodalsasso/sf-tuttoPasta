@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MessageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert; //use Assert pour les contraintes formulaire
 
 #[ORM\Entity(repositoryClass: MessageRepository::class)]
 class Message
@@ -15,9 +16,22 @@ class Message
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le sujet ne peut pas être vide')]
+    #[Assert\Length(
+        min: 5,
+        max: 255,
+        minMessage: 'Le sujet doit contenir au moins 5 caractères !',
+        maxMessage: 'Le sujet doit contenir au maximum 255 caractères !')]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+        //use Assert pour les contraintes formulaire
+    #[Assert\NotBlank(message: 'Le message ne peut pas être vide')]
+    #[Assert\Length(
+        min: 5,
+        max: 5000,
+        minMessage: 'Le message doit contenir au moins 5 caractères !',
+        maxMessage: 'Le message doit contenir au maximum 5000 caractères !')]
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
