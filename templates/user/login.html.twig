@@ -26,21 +26,11 @@
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" name="_password" id="password" class="form-control data" autocomplete="current-password" required>
+                    <input type="password" name="_password" class="pass_toggle" id="password" class="form-control data" autocomplete="current-password" required>
                     <div class="error_msg" id="password_error"></div>
+                    <input type="checkbox" id="toggle_password">Afficher le mot de passe
                 </div>
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-        
-                {#
-                    Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-                    See https://symfony.com/doc/current/security/remember_me.html
-        
-                    <div class="checkbox mb-3">
-                        <label>
-                            <input type="checkbox" name="_remember_me"> Remember me
-                        </label>
-                    </div>
-                #}
         
                 <button id="login_save" class="full_button_black" type="submit">
                     Se connecter
