@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Contact;
 use Twilio\TwiML\Voice\Sms;
 use App\Form\ContactFormType;
-use App\Services\SmsGenerator;
 use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -32,8 +31,7 @@ class ContactController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         Security $security, 
-        MailerInterface $mailer,
-        SmsGenerator $smsGenerator
+        MailerInterface $mailer
         ): Response
     {
         $contact = new Contact();
@@ -85,10 +83,6 @@ class ContactController extends AbstractController
             $this->sendConfirmationEmail($mailer, $emailAddress, $contact);
             // Envoie une notification à l'admin
             $this->sendAdminNotificationEmail($mailer, $contact);
-
-            // $recipientNumber = '+33785224486'; // Numéro du destinataire
-            $message = 'Nouveau message de ' . $contact->getName() . ' : ' . $contact->getMessage();
-            $smsGenerator->sendSms($message);
 
             $this->addFlash('success', 'Votre message a bien été envoyé !');
 

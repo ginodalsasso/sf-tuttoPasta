@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Appointment;
 use App\Form\AppointmentType;
 use App\Services\PdfGenerator;
+use App\Services\SmsGenerator;
 use Symfony\Component\Mime\Address;
 use App\Repository\DayOffRepository;
 use App\Repository\ServiceRepository;
@@ -48,7 +49,8 @@ class HomeController extends AbstractController
         ServiceRepository $serviceRepository, 
         DayOffRepository $dayOffRepository, 
         MailerInterface $mailer, 
-        PdfGenerator $pdfGenerator
+        PdfGenerator $pdfGenerator,
+        SmsGenerator $smsGenerator
         ): Response
     {
         $services = $serviceRepository->findAll();
@@ -131,6 +133,9 @@ class HomeController extends AbstractController
 
                     $this->sendConfirmationEmailTo($mailer, $emailAddress, $startDate);
                     $this->sendConfirmationEmailFrom($mailer, $emailAddress, $startDate);
+
+                    $message = 'Nouveau message de ' . $appointment->getName() . ' ' . $appointment->getFirstName() . ' : ' . $appointment->getMessage();
+                    $smsGenerator->sendSms($message);
 
                     // Ajoute un message de succès et redirige vers la page d'accueil
                     $this->addFlash('success', 'Votre rendez-vous a été enregistré avec succès. Un email de confirmation vous a été envoyé.');
