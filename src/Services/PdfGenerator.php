@@ -104,37 +104,38 @@ class PdfGenerator
     {
         $imagePath = $this->params->get('kernel.project_dir') . '/public/img/logo_black.svg';
         $imageData = base64_encode(file_get_contents($imagePath));
-
+    
         // Génère un fichier PDF à partir du template Twig
         $html = $this->twig->render('admin/quote.html.twig', [
             'quote' => $quote,
             'appointment' => $quote->getAppointments(),
             'logo' => $imageData,
         ]);
-
+    
         $pdfContent = $pdfGenerator->generatePDF($html);
-
+    
         // Utilisation d'un répertoire sécurisé non accessible publiquement
-        $pdfDirectory = $this->params->get('kernel.project_dir') . '/var/uploads/pdf/';
+        $pdfDirectory = $this->params->get('kernel.project_dir') . '/public/uploads/pdf/';
         // Si le répertoire n'existe pas
         if (!file_exists($pdfDirectory)) {
             mkdir($pdfDirectory, 0750, true); // Création du dossier avec des permissions sécurisées
         }
-        // Nettoyage du nom de fichier pour éviter path Injection
-        $safeReference = preg_replace('/[^a-zA-Z0-9_\-]/', '', $reference);
-        $pdfFilename = $safeReference . '.pdf'; // Nom du fichier PDF
+    
+        $pdfFilename = $reference . '.pdf'; // Utilisation directe de la référence comme nom de fichier
         $pdfFilepath = $pdfDirectory . $pdfFilename; // Chemin du fichier PDF
+    
         // Enregistre le PDF sur le système de fichiers avec des permissions sécurisées
         file_put_contents($pdfFilepath, $pdfContent);
+        
         // Enregistre le chemin relatif sécurisé
         $quote->setPdfContent('/uploads/pdf/' . $pdfFilename);
-
+    
         // retourne le chemin relatif du PDF
         return $quote->getPdfContent();
     }
 
 
-// ---------------------------------Archivage et stockage du PDF--------------------------------- //
+    // ---------------------------------Archivage et stockage du PDF--------------------------------- //
     public function generateAndArchivePdf(PdfGenerator $pdfGenerator, Quote $quote, string $reference): string
     {
         $imagePath = $this->params->get('kernel.project_dir') . '/public/img/logo_black.svg';
@@ -151,14 +152,13 @@ class PdfGenerator
         $pdfContent = $pdfGenerator->generatePDF($html);
 
         // Utilisation d'un répertoire sécurisé non accessible publiquement
-        $pdfDirectory = $this->params->get('kernel.project_dir') . '/var/uploads/pdf/archive/';
+        $pdfDirectory = $this->params->get('kernel.project_dir') . '/public/uploads/pdf/archive/';
         if (!file_exists($pdfDirectory)) {
             mkdir($pdfDirectory, 0750, true); // Crée le répertoire avec des permissions sécurisées
         }
 
-        // Nettoyage du nom de fichier pour éviter path Injection
-        $safeReference = preg_replace('/[^a-zA-Z0-9_\-]/', '', $reference);
-        $pdfFilename = $safeReference . '.pdf';
+        // Utilisation directe de la référence comme nom de fichier
+        $pdfFilename = $reference . '.pdf';
         $pdfFilepath = $pdfDirectory . $pdfFilename;
 
         // Sauvegarde le PDF sur le système de fichiers avec un contrôle de permission sécurisé
@@ -170,6 +170,7 @@ class PdfGenerator
         // Mets à jour l'entité Quote
         return $quote->getPdfContent();
     }
+
 
 
     // ---------------------------------Génération de l'offre de prix PDF--------------------------------- //

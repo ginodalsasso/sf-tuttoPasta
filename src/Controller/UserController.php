@@ -93,7 +93,7 @@ class UserController extends AbstractController
             $user->setPassword(
                 // Utilisation de l'interface UserPasswordHasherInterface pour hasher le mot de passe
                 // hashPassword prend en paramètre l'entité User et le mot de passe en clair
-                $userPasswordHasher->hashPassword( 
+                $userPasswordHasher->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
                 )
@@ -265,7 +265,7 @@ class UserController extends AbstractController
         $comments = $commentRepository->findBy(['user' => $user]);
         foreach ($comments as $comment) {
             $comment->setUser(null);
-             // Anonymise le nom de l'utilisateur
+            // Anonymise le nom de l'utilisateur
             $comment->setUsername('Utilisateur anonyme');
             $entityManager->persist($comment);
         }
@@ -283,10 +283,20 @@ class UserController extends AbstractController
             // Récupére les devis associés aux rendez-vous
             $quotes = $quoteRepository->findBy(['appointments' => $appointment]);
             foreach ($quotes as $quote) {
-                // Génére et stocke le PDF dans les archives
                 $reference = $quote->getReference();
+                // Supprime le fichier PDF associé au devis
+                $pdfPath = $this->getParameter('kernel.project_dir') . '/public' . $quote->getPdfContent();
+                // dd($quote->getPdfContent());
+                if (file_exists($pdfPath)) {
+                    unlink($pdfPath);
+                } else {
+                    error_log('File not found at path: ' . $pdfPath);
+                }
+                // Génére et stocke le PDF dans les archives
                 $pdfGenerator->generateAndArchivePdf($pdfGenerator, $quote, $reference);
-
+                // Supprime le devis de la base de données
+                $entityManager->remove($quote);
+                $entityManager->flush();
                 // Marque le devis comme archivé
                 $quote->setState(Quote::STATE_ARCHIVED);
                 $entityManager->persist($quote);

@@ -240,7 +240,14 @@ class QuoteController extends AbstractController
         // Supprime le fichier PDF associé
         $pdfPath = $this->getParameter('kernel.project_dir') . '/public' . $quote->getPdfContent();
         if (file_exists($pdfPath)) {
-            unlink($pdfPath);
+            if (unlink($pdfPath)) {
+                error_log('File deleted successfully at path: ' . $pdfPath);
+            } else {
+                error_log('Failed to delete file at path: ' . $pdfPath);
+                return new JsonResponse(['success' => false, 'message' => 'Échec de la suppression du fichier PDF.'], 500);
+            }
+        } else {
+            error_log('File not found at path: ' . $pdfPath);
         }
             // Supprime le devis de la base de données
         $entityManager->remove($quote);
