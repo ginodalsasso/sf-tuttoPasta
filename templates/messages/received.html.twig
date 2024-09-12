@@ -43,7 +43,7 @@
                         <td class="{{ class }}" data-label="Actions">
                             <form action="{{ path('app_deleteMessage', {id: message.id}) }}" method="post">
                                 <input type="hidden" name="csrf" value="">
-                                <div class="" id="delete_message_link" href="{{ path('app_delete_account') }}" data-id="{{ message.id }}" title="Supprimer" value="">
+                                <div type="submit" class="delete_message_button" data-id="{{ message.id }}" title="Supprimer">
                                     <i class="fa-solid fa-x"></i>
                                 </div>
                             </form>

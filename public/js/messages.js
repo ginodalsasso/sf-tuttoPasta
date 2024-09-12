@@ -7,11 +7,14 @@ $(document).ready(function () {
     // Met le token CSRF dans l'input caché du formulaire
     $('input[name="csrf"]').val(csrfToken);
     
-    // Suppression d'un message
-    $("#delete_message_link").on('click', function (event) {
-        if (!confirm("Êtes-vous sûr de vouloir supprimer ce message ? Cette action est irréversible.")) {
+    $('.delete_message_button').each(function() {
+        $(this).on('click', function(event) {
             event.preventDefault();
-        }    
+            if (confirm("Êtes-vous sûr de vouloir supprimer ce message ? Cette action est irréversible.")) {
+                // Récupérer le formulaire parent et le soumettre
+                $(this).closest('form').submit();
+            }
+        });
     });
 
     // Messages d'erreurs UI
