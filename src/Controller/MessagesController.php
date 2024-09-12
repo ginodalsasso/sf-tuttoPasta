@@ -5,9 +5,12 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Message;
 use App\Form\MessageType;
+use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -54,7 +57,8 @@ class MessagesController extends AbstractController
     
     //________________________________________________________________ENVOI D'UN MESSAGE______________________________________________________________
     #[Route('/sendMessage', name: 'app_sendMessage')]
-    public function sendMessage(Request $request, EntityManagerInterface $entityManager, Security $security): Response
+    public function sendMessage(Request $request, EntityManagerInterface $entityManager, Security $security, MailerInterface $mailer, 
+    ): Response
     {
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
@@ -93,6 +97,12 @@ class MessagesController extends AbstractController
             $message->setSender($user);
             $entityManager->persist($message);
             $entityManager->flush();
+            /**
+             * @var User|null $user
+             */
+            $emailAddress = $user->getEmail();
+            
+            $this->notificationEmailToRecipient($mailer, $emailAddress, $message);
 
             $this->addFlash('success', 'Message envoyé avec succès');
             return $this->redirectToRoute('app_sent');
@@ -101,6 +111,24 @@ class MessagesController extends AbstractController
         return $this->render('messages/send.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    // Gestion de l'envoi de notification de réception d'un nouveau message
+    private function notificationEmailToRecipient(MailerInterface $mailer, string $emailAddress, $message): void
+    {
+        $emailContent = $this->renderView('emails/message_notification.html.twig', [
+            'titleMessage' => $message->getTitle(),
+            'contentMessage' => $message->getContent(),
+            'dateMessage' => $message->getCreatedAt()->format('d/m/Y à H:i')
+        ]);
+
+        $email = (new TemplatedEmail())
+            ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
+            ->to($emailAddress)
+            ->subject('Nouveau message reçu')
+            ->html($emailContent);
+
+        $mailer->send($email);
     }
 
     //________________________________________________________________REPONSSE A UN MESSAGE______________________________________________________________

@@ -1,9 +1,19 @@
-<p>Bonjour,</p>
-<p>Une nouvelle demande de contact a été reçue avec les détails suivants :</p>
-<ul>
-    <li><strong>Nom :</strong> {{ contact.name }}</li>
-    <li><strong>Email :</strong> {{ contact.email }}</li>
-    <li><strong>Sujet :</strong> {{ contact.subject }}</li>
-    <li><strong>Message :</strong> {{ contact.message }}</li>
-</ul>
-<p>Cordialement,<br>Le système de notification TuttoPasta</p>
+<div class="container">
+    <h1>Nouvelle Demande de Contact</h1>
+
+    <p>Bonjour,</p>
+    <p>Une nouvelle demande de contact a été reçue avec les détails suivants :</p>
+    
+    <ul>
+        <li><strong>Nom :</strong> {{ contact.name }}</li>
+        <li><strong>Email :</strong> {{ contact.email }}</li>
+        <li><strong>Sujet :</strong> {{ contact.subject }}</li>
+        <li><strong>Message :</strong> {{ contact.message }}</li>
+    </ul>
+
+    <p>Cordialement,<br>Le système de notification TuttoPasta</p>
+
+    <div class="footer">
+        <p>Ce message a été envoyé automatiquement, merci de ne pas y répondre.</p>
+    </div>
+</div>
