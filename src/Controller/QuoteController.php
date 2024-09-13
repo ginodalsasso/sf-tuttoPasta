@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Quote;
 use App\Entity\Service;
 use App\Form\QuoteType;
+use App\Entity\Category;
 use App\Services\PdfGenerator;
 use App\Repository\UserRepository;
 use App\Repository\QuoteRepository;
@@ -161,20 +162,7 @@ class QuoteController extends AbstractController
                 ]);
             }
 
-            // Vérifier si un nouveau service a été ajouté
-            if ($newServiceName && $newServicePrice) {
-                // Créer et sauvegarder le nouveau service
-                $newService = new Service();
-                $newService->setServiceName($newServiceName);
-                $newService->setServicePrice($newServicePrice);
-                $newService->setCategory($newServiceCategory);
-
-                $entityManager->persist($newService);
-                $entityManager->flush();
-
-                // Ajouter le nouveau service aux services sélectionnés
-                $services[] = $newService;
-            }
+            $this->addNewService($newServiceName, $newServicePrice, $newServiceCategory, $services, $entityManager);
 
             // Mettre à jour les services de l'appointment lié
             foreach ($appointment->getServices() as $service) {
@@ -208,6 +196,21 @@ class QuoteController extends AbstractController
         ]);
     }
 
+    // Ajout d'un nouveau service dans l'édition de devis
+    private function addNewService(string $newServiceName, float $newServicePrice, Category $newServiceCategory, $services, EntityManagerInterface $entityManager
+    ): void {
+        // Créer et sauvegarder le nouveau service
+        $newService = new Service();
+        $newService->setServiceName($newServiceName);
+        $newService->setServicePrice($newServicePrice);
+        $newService->setCategory($newServiceCategory);
+
+        $entityManager->persist($newService);
+        $entityManager->flush();
+
+        // Ajouter le nouveau service aux services sélectionnés
+        $services[] = $newService;
+    }
 
     // ---------------------------------Suppression du devis PDF--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
@@ -283,7 +286,7 @@ class QuoteController extends AbstractController
 
         // Supprime le fichier PDF associé
         $pdfGenerator->unlinkPdfFile($quote);  
-        
+
         // Archive le PDF dans le dossier associé
         $pdfGenerator->generateAndArchivePdf($pdfGenerator, $quote, $reference);
 
@@ -334,49 +337,4 @@ class QuoteController extends AbstractController
 
         return new JsonResponse(['success' => true]);
     }
-
-
-    // ---------------------------------Barre de recherche--------------------------------- //
-    // #[IsGranted('ROLE_ADMIN')]
-    // #[Route('/admin/search_quote', name: 'get_search_name', methods: ['POST'])]
-    // public function searchQuote(Request $request, QuoteRepository $quoteRepository, Security $security): JsonResponse
-    // {
-    //     // // Récupère le jeton CSRF depuis les en-têtes
-    //     // $csrfToken = $request->headers->get('X-CSRF-TOKEN');
-
-    //     // // Vérifier la validité du jeton CSRF
-    //     // if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
-    //     //     return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
-    //     // }
-
-    //     // Récupère l'utilisateur actuellement connecté
-    //     $user = $security->getUser();
-
-    //     // Vérifie si l'utilisateur est valide
-    //     if (!$user instanceof UserInterface) {
-    //         throw new AccessDeniedException('Accès refusé');
-    //     }
-
-    //     // Récupère le nom de la requête
-    //     $name = $request->request->get('name');
-    //     // Recherche les devis par nom
-    //     $quotes = $quoteRepository->findOneByName($name);
-    //     // dd($quotes);
-    //     // Transformer les entités en données JSON
-    //     $data = [];
-    //     foreach ($quotes as $quote) {
-    //         $data[] = [
-    //             'id' => $quote->getId(),
-    //             'reference' => $quote->getReference(),
-    //             'quoteDate' => $quote->getQuoteDate()->format('d-m-Y'),
-    //             'customerName' => $quote->getCustomerName(),
-    //             'customerEmail' => $quote->getCustomerEmail(),
-    //             'totalTTC' => $quote->getTotalTTC(),
-    //             'state' => $quote->getState(),
-    //         ];
-    //     }
-
-    //     return new JsonResponse($data);
-    // }
-
 }
