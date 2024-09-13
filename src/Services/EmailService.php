@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
+use App\Entity\User;
 use App\Entity\Contact;
 use App\Entity\Appointment;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Mime\Address;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
@@ -110,4 +112,44 @@ class EmailService extends AbstractController
         $mailer->send($email);
     }
 
+    // _______________________________________________________MAILING DE USER___________________________________________________________________
+
+    // Gestion de l'envoi de notification d'annulation de RDV
+    public function sendCancellationEmail(MailerInterface $mailer, Appointment $appointment): void
+    {
+        $user = $appointment->getUser();
+        $emailContent = $this->renderView('emails/appointment_cancellation.html.twig', [
+            'appointmentDate' => $appointment->getStartDate()->format('d/m/Y à H:i'),
+            'username' => $user ? $user->getUsername() : 'Utilisateur anonyme',
+        ]);
+
+        $email = (new Email())
+            ->from(new Address('no-reply@tuttoPasta.com', 'TuttoPasta'))
+            ->to('admin@tuttoPasta.com')
+            ->subject('Annulation de rendez-vous')
+            ->html($emailContent);
+
+        $mailer->send($email);
+    }
+
+
+    // Gestion de l'envoi de notification de suppression de compte
+    public function sendAccountDeletionEmail(MailerInterface $mailer, UserInterface $user): void
+    {
+        /**
+         * @var User|null $user
+         */
+        $emailContent = $this->renderView('emails/account_deletion.html.twig', [
+            'username' => $user->getUsername(),
+            'email' => $user->getEmail(),
+        ]);
+
+        $email = (new Email())
+            ->from(new Address('no-reply@tuttoPasta.com', 'TuttoPasta'))
+            ->to('admin@tuttoPasta.com')
+            ->subject('Suppression de compte utilisateur')
+            ->html($emailContent);
+
+        $mailer->send($email);
+    }
 }

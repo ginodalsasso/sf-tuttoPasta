@@ -7,9 +7,9 @@ use App\Entity\Quote;
 use App\Form\UserFormType;
 use App\Entity\Appointment;
 use App\Form\EditPasswordType;
+use App\Services\EmailService;
 use App\Services\PdfGenerator;
 use App\Security\EmailVerifier;
-use Symfony\Component\Mime\Email;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Repository\QuoteRepository;
@@ -48,20 +48,25 @@ class UserController extends AbstractController
     private $htmlSanitizer;
     private $pdfGenerator;
     private $csrfTokenManager;
+    private $emailService;
 
-
-
-    public function __construct(HtmlSanitizerInterface $htmlSanitizer, private EmailVerifier $emailVerifier, PdfGenerator $pdfGenerator, CsrfTokenManagerInterface $csrfTokenManager)
+    public function __construct(HtmlSanitizerInterface $htmlSanitizer, private EmailVerifier $emailVerifier, PdfGenerator $pdfGenerator, CsrfTokenManagerInterface $csrfTokenManager, EmailService $emailService)
     {
         $this->htmlSanitizer = $htmlSanitizer;
         $this->pdfGenerator = $pdfGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
+        $this->emailService = $emailService;
     }
 
     //_____________________________________________________________REGISTER/LOGIN/LOGOUT_____________________________________________________________
     // ---------------------------------Méthode d'inscription--------------------------------- //
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, ChallengeInterface $challenge): Response
+    public function register(
+        Request $request, 
+        UserPasswordHasherInterface $userPasswordHasher, 
+        EntityManagerInterface $entityManager, 
+        ChallengeInterface $challenge,
+        ): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -116,7 +121,21 @@ class UserController extends AbstractController
             'challenge' => $challenge->generateKey()
         ]);
     }
-    #endregion
+
+
+    // Gestion de l'envoi de notification de creation de compte
+    private function sendEmailConfirmation(UserInterface $user): void
+    {
+        // Création de l'email de confirmation
+        $email = (new TemplatedEmail())
+            ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
+            ->to($user->getEmail())
+            ->subject('Merci de bien confirmer votre compte afin de pouvoir vous connecter.')
+            ->htmlTemplate('emails/confirmation_email.html.twig');
+
+        // Envoi de l'email de confirmation via le service emailVerifier
+        $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user, $email);
+    }
 
     // ---------------------------------Méthode de connexion--------------------------------- //
     #[Route(path: '/login', name: 'app_login')]
@@ -236,6 +255,7 @@ class UserController extends AbstractController
         QuoteRepository $quoteRepository,
         PdfGenerator $pdfGenerator,
         CsrfTokenManagerInterface $csrfTokenManager,
+        EmailService $emailService,
         Request $request
     ): RedirectResponse {
         // Récupère l'utilisateur actuellement connecté
@@ -265,7 +285,7 @@ class UserController extends AbstractController
         $tokenStorage->setToken(null);
 
         // Envoie un email de notification de suppression de compte à l'admin
-        $this->sendAccountDeletionEmail($mailer, $user);
+        $emailService->sendAccountDeletionEmail($mailer, $user);
 
         $this->addFlash('success', 'Votre compte a été supprimé avec succès.');
 
@@ -325,7 +345,14 @@ class UserController extends AbstractController
     // ---------------------------------Annulation d'un rendez vous sur le profil utilisateur--------------------------------- //
     #[Route('/profil/appointment/{id}/delete', name: 'app_cancel_appointment', methods: ['DELETE'], requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_USER')]
-    public function cancelAppointment(EntityManagerInterface $entityManager, int $id, Security $security, MailerInterface $mailer, Request $request, PdfGenerator $pdfGenerator): JsonResponse
+    public function cancelAppointment(
+        EntityManagerInterface $entityManager, 
+        int $id, Security $security, 
+        MailerInterface $mailer, 
+        Request $request, 
+        PdfGenerator $pdfGenerator,
+        EmailService $emailService,
+        ): JsonResponse
     {
         // Récupère le jeton CSRF depuis les en-têtes
         $csrfToken = $request->headers->get('X-CSRF-TOKEN');
@@ -363,14 +390,10 @@ class UserController extends AbstractController
         $entityManager->flush();
 
         // Envoie un email de notification d'annulation
-        $this->sendCancellationEmail($mailer, $appointment);
+        $emailService->sendCancellationEmail($mailer, $appointment);
 
         return new JsonResponse(['success' => true]);
     }
-    #endregion
-
-
-    #region EMAIL
 
     // ---------------------------------Méthode de vérification d'email--------------------------------- //
     #[Route('/verify/email', name: 'app_verify_email')]
@@ -403,61 +426,4 @@ class UserController extends AbstractController
 
         return $this->redirectToRoute('app_login');
     }
-
-
-
-    // Gestion de l'envoi de notification d'annulation de RDV
-    private function sendCancellationEmail(MailerInterface $mailer, Appointment $appointment): void
-    {
-        $user = $appointment->getUser();
-        $emailContent = $this->renderView('emails/appointment_cancellation.html.twig', [
-            'appointmentDate' => $appointment->getStartDate()->format('d/m/Y à H:i'),
-            'username' => $user ? $user->getUsername() : 'Utilisateur anonyme',
-        ]);
-
-        $email = (new Email())
-            ->from(new Address('no-reply@tuttoPasta.com', 'TuttoPasta'))
-            ->to('admin@tuttoPasta.com')
-            ->subject('Annulation de rendez-vous')
-            ->html($emailContent);
-
-        $mailer->send($email);
-    }
-
-
-    // Gestion de l'envoi de notification de suppression de compte
-    private function sendAccountDeletionEmail(MailerInterface $mailer, UserInterface $user): void
-    {
-        /**
-         * @var User|null $user
-         */
-        $emailContent = $this->renderView('emails/account_deletion.html.twig', [
-            'username' => $user->getUsername(),
-            'email' => $user->getEmail(),
-        ]);
-
-        $email = (new Email())
-            ->from(new Address('no-reply@tuttoPasta.com', 'TuttoPasta'))
-            ->to('admin@tuttoPasta.com')
-            ->subject('Suppression de compte utilisateur')
-            ->html($emailContent);
-
-        $mailer->send($email);
-    }
-
-    // Gestion de l'envoi de notification de creation de compte
-    private function sendEmailConfirmation(UserInterface $user): void
-    {
-        // Création de l'email de confirmation
-        $email = (new TemplatedEmail())
-            ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
-            ->to($user->getEmail())
-            ->subject('Merci de bien confirmer votre compte afin de pouvoir vous connecter.')
-            ->htmlTemplate('emails/confirmation_email.html.twig');
-
-        // Envoi de l'email de confirmation via le service emailVerifier
-        $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user, $email);
-    }
-    #endregion
-
 }
