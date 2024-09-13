@@ -253,47 +253,9 @@ class UserController extends AbstractController
             throw new AccessDeniedException('Accès refusé');
         }
 
-        // Récupére et anonymise les commentaires de l'utilisateur
-        $comments = $commentRepository->findBy(['user' => $user]);
-        foreach ($comments as $comment) {
-            $comment->setUser(null);
-            // Anonymise le nom de l'utilisateur
-            $comment->setUsername('Utilisateur anonyme');
-            $entityManager->persist($comment);
-        }
-
-        // Récupére et rends l'user associé au contact null
-        $contacts = $contactRepository->findBy(['user' => $user]);
-        foreach ($contacts as $contact) {
-            $contact->setUser(null);
-            $entityManager->persist($contact);
-        }
-
-        // Récupére et rends l'user associé au RDV null 
-        $appointments = $appointmentRepository->findBy(['user' => $user]);
-        foreach ($appointments as $appointment) {
-            // Récupére les devis associés aux rendez-vous
-            $quotes = $quoteRepository->findBy(['appointments' => $appointment]);
-            foreach ($quotes as $quote) {
-                $reference = $quote->getReference();
-
-                // Supprime le fichier PDF associé
-                $pdfGenerator->unlinkPdfFile($quote);
-
-                // Génére et stocke le PDF dans les archives
-                $pdfGenerator->generateAndArchivePdf($pdfGenerator, $quote, $reference);
-
-                // Supprime le devis de la base de données
-                $entityManager->remove($quote);
-                $entityManager->flush();
-
-                // Marque le devis comme archivé
-                $quote->setState(Quote::STATE_ARCHIVED);
-                $entityManager->persist($quote);
-            }
-            $appointment->setUser(null);
-            $entityManager->persist($appointment);
-        }
+        $this->anonymizeUserComments($user, $commentRepository, $entityManager);
+        $this->nullifyUserContacts($user, $contactRepository, $entityManager);
+        $this->deletionUserAppointmentsAndQuotes($user, $appointmentRepository, $quoteRepository, $pdfGenerator, $entityManager);
 
         // Supprime l'utilisateur de la base de données
         $entityManager->remove($user);
@@ -302,13 +264,61 @@ class UserController extends AbstractController
         // Déconnecte l'utilisateur après la suppression du compte
         $tokenStorage->setToken(null);
 
-        // Envoie un email de notification de suppression de compte
+        // Envoie un email de notification de suppression de compte à l'admin
         $this->sendAccountDeletionEmail($mailer, $user);
 
         $this->addFlash('success', 'Votre compte a été supprimé avec succès.');
 
         // Redirige vers la page d'accueil après la suppression du compte
         return $this->redirectToRoute('app_home');
+    }
+
+    // Anonymisaton des commentaires utilisateurs 
+    private function anonymizeUserComments(UserInterface $user, CommentRepository $commentRepository, EntityManagerInterface $entityManager): void
+    {
+        $comments = $commentRepository->findBy(['user' => $user]);
+        foreach ($comments as $comment) {
+            $comment->setUser(null);
+            $comment->setUsername('Utilisateur anonyme');
+            $entityManager->persist($comment);
+        }
+    }
+
+    // Rends l'utilisateur null
+    private function nullifyUserContacts(UserInterface $user, ContactRepository $contactRepository, EntityManagerInterface $entityManager): void
+    {
+        $contacts = $contactRepository->findBy(['user' => $user]);
+        foreach ($contacts as $contact) {
+            $contact->setUser(null);
+            $entityManager->persist($contact);
+        }
+    }
+
+    // Gestion des RDV et Devis suite à la suppression de compte
+    private function deletionUserAppointmentsAndQuotes(
+        UserInterface $user,
+        AppointmentRepository $appointmentRepository,
+        QuoteRepository $quoteRepository,
+        PdfGenerator $pdfGenerator,
+        EntityManagerInterface $entityManager
+    ): void {
+        $appointments = $appointmentRepository->findBy(['user' => $user]);
+        foreach ($appointments as $appointment) {
+            $quotes = $quoteRepository->findBy(['appointments' => $appointment]);
+            foreach ($quotes as $quote) {
+                $reference = $quote->getReference();
+
+                $pdfGenerator->unlinkPdfFile($quote); // Supprime le pdf associé 
+                $pdfGenerator->generateAndArchivePdf($pdfGenerator, $quote, $reference);
+
+                $quote->setState(Quote::STATE_ARCHIVED);
+                $entityManager->persist($quote);
+                // Supprime le devis de la base de donnée
+                $entityManager->remove($quote);
+            }
+            $appointment->setUser(null); 
+            $entityManager->persist($appointment);
+        }
     }
 
 
@@ -366,7 +376,6 @@ class UserController extends AbstractController
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, UserRepository $userRepository, TranslatorInterface $translator): Response
     {
-
         $id = $request->query->get('id'); // retrieve the user id from the url
 
         // Verify the user id exists and is not null
@@ -445,7 +454,7 @@ class UserController extends AbstractController
             ->to($user->getEmail())
             ->subject('Merci de bien confirmer votre compte afin de pouvoir vous connecter.')
             ->htmlTemplate('emails/confirmation_email.html.twig');
-    
+
         // Envoi de l'email de confirmation via le service emailVerifier
         $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user, $email);
     }
