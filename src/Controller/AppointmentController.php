@@ -32,29 +32,29 @@ class AppointmentController extends AbstractController
     private $emailService;
 
 
-    public function __construct(HtmlSanitizerInterface  $htmlSanitizer, PdfGenerator $pdfGenerator, CsrfTokenManagerInterface $csrfTokenManager, EmailService $emailService) {
+    public function __construct(HtmlSanitizerInterface  $htmlSanitizer, PdfGenerator $pdfGenerator, CsrfTokenManagerInterface $csrfTokenManager, EmailService $emailService)
+    {
         $this->htmlSanitizer = $htmlSanitizer;
         $this->pdfGenerator = $pdfGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->emailService = $emailService;
     }
 
-//________________________________________________________________APPOINTMENT______________________________________________________________
+    //________________________________________________________________APPOINTMENT______________________________________________________________
     // Vue et gestion du processus de création d'un rendez-vous
     #[Route('/home/appointment', name: 'app_appointment')]
     public function addAppointment(
-        Request $request, 
-        Security $security, 
-        EntityManagerInterface $entityManager, 
-        CategoryRepository $categoryRepository, 
-        ServiceRepository $serviceRepository, 
-        DayOffRepository $dayOffRepository, 
-        MailerInterface $mailer, 
+        Request $request,
+        Security $security,
+        EntityManagerInterface $entityManager,
+        CategoryRepository $categoryRepository,
+        ServiceRepository $serviceRepository,
+        DayOffRepository $dayOffRepository,
+        MailerInterface $mailer,
         PdfGenerator $pdfGenerator,
         EmailService $emailService,
         SmsGenerator $smsGenerator
-        ): Response
-    {
+    ): Response {
         $services = $serviceRepository->findAll();
         $categories = $categoryRepository->findAll();
 
@@ -81,7 +81,7 @@ class AppointmentController extends AbstractController
                 // Le champ a été rempli, probablement un bot
                 return $this->redirectToRoute('app_home');
             }
-            
+
             // Récupère les données du formulaire
             $appointment = $form->getData();
 
@@ -106,7 +106,7 @@ class AppointmentController extends AbstractController
                 $endDate->modify('+1 hour'); // Ajoute une heure à la date de fin
 
                 //si dans le tableau des jours de congé on trouve la date sélectionnée
-                if (in_array($startDate->format('Y-m-d'), $dayOffDates)) { 
+                if (in_array($startDate->format('Y-m-d'), $dayOffDates)) {
                     $this->addFlash('error', 'Vous ne pouvez pas prendre RDV durant nos congés.');
                 } else {
                     // Définit les dates de début et de fin du rendez-vous
@@ -123,7 +123,7 @@ class AppointmentController extends AbstractController
 
                     // Création du devis
                     $quote = $pdfGenerator->createQuote($appointment);
-                    
+
                     // Génération et stockage du PDF
                     $reference = $quote->getReference();
                     $pdfGenerator->generateAndStorePdf($pdfGenerator, $quote, $reference);
@@ -143,7 +143,6 @@ class AppointmentController extends AbstractController
                     $this->addFlash('success', 'Votre rendez-vous a été enregistré avec succès. Un email de confirmation vous a été envoyé.');
                     return $this->redirectToRoute('app_home');
                 }
-                
             } else {
                 // Si aucun créneau horaire n'est sélectionné, ajoute un message d'erreur
                 $this->addFlash('error', 'Veuillez sélectionner un créneau horaire.');
@@ -159,12 +158,12 @@ class AppointmentController extends AbstractController
     }
 
     // Récupère les créneaux horaires disponibles pour une date donnée
-    #[Route('/available_rdv', name:'available_rdv', methods:['POST'])]
+    #[Route('/available_rdv', name: 'available_rdv', methods: ['POST'])]
     public function getAvailableTimes(Request $request, AppointmentRepository $appointmentRepository): JsonResponse
-{       
+    {
         // Récupère le jeton CSRF depuis les en-têtes
         $csrfToken = $request->headers->get('X-CSRF-TOKEN');
-    
+
         // Vérifier la validité du jeton CSRF
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
             return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
@@ -184,7 +183,7 @@ class AppointmentController extends AbstractController
 
 
     // Récupère toutes les dates de congés
-    #[Route('/get_dayoff_dates', name:'get_dayoff_dates', methods:['POST'])]
+    #[Route('/get_dayoff_dates', name: 'get_dayoff_dates', methods: ['POST'])]
     public function getDayOffDates(DayOffRepository $dayOffRepository): JsonResponse
     {
         // Récupère tous les jours de congé depuis le repository
