@@ -834,6 +834,8 @@ summary {
     border-top: 2px solid var(--black-color);
     border-radius: 5px 5px 0 0;
     padding-bottom: 40px;
+    max-width: 1280px;
+    margin: 0 auto;
 }
 
 .profil_menu div {

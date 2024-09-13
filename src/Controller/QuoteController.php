@@ -30,7 +30,8 @@ class QuoteController extends AbstractController
     private $csrfTokenManager;
 
 
-    public function __construct(PdfGenerator $pdfGenerator, CsrfTokenManagerInterface $csrfTokenManager) {
+    public function __construct(PdfGenerator $pdfGenerator, CsrfTokenManagerInterface $csrfTokenManager)
+    {
         $this->pdfGenerator = $pdfGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
     }
@@ -59,11 +60,11 @@ class QuoteController extends AbstractController
         return $pdfGenerator->showPdfFile($html);
     }
 
-    
+
     // ---------------------------------Vue LISTE DES DEVIS--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quotes', name: 'app_quotes')]
-    public function listQuotesShow (Request $request, QuoteRepository $quoteRepository, UserRepository $userRepository): Response
+    public function listQuotesShow(Request $request, QuoteRepository $quoteRepository, UserRepository $userRepository): Response
     {
         // Récupérer le résultat de la recherche
         $searchName = $request->request->get('name');
@@ -71,7 +72,7 @@ class QuoteController extends AbstractController
         $searchNameSanitized = filter_var($searchName, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
         // s'il y a une recherche
-        if($searchNameSanitized) {
+        if ($searchNameSanitized) {
             $quotes = $quoteRepository->findOneByNameOrEmail($searchNameSanitized);
         } else {
             $quotes = $quoteRepository->findAll();
@@ -88,8 +89,8 @@ class QuoteController extends AbstractController
                 'user' => $user,
             ];
         }
-        
-         // Si la requête est AJAX, renvoyer le HTML des résultats seulement
+
+        // Si la requête est AJAX, renvoyer le HTML des résultats seulement
         if ($request->isXmlHttpRequest()) {
             return $this->render('admin/_quote_list.html.twig', [
                 'quoteWithUsers' => $quoteWithUsers,
@@ -100,8 +101,8 @@ class QuoteController extends AbstractController
             'quoteWithUsers' => $quoteWithUsers,
         ]);
     }
-        
-        
+
+
     // ---------------------------------Formulaire d'Edition du devis PDF--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quote/edit/{id}', name: 'quote_edit')]
@@ -111,18 +112,18 @@ class QuoteController extends AbstractController
         $quote = $entityManager->getRepository(Quote::class)->find($id);
         // Récupérer l'appointment lié
         $appointment = $quote ? $quote->getAppointments() : null;
-        
+
         if (!$quote) {
             throw $this->createNotFoundException('Ce devis n\'existe pas');
         }
         if (!$appointment) {
             throw $this->createNotFoundException('Ce RDV n\'existe pas');
         }
-    
+
         // Créer le formulaire d'édition du devis
         $form = $this->createForm(QuoteType::class, $quote);
         $form->handleRequest($request);
-    
+
         if ($form->isSubmitted() && $form->isValid()) {
             // Sanitize et valider les champs du formulaire
             $reference = $htmlSanitizer->sanitize($form->get('reference')->getData());
@@ -130,12 +131,12 @@ class QuoteController extends AbstractController
             $clientFirstName = $htmlSanitizer->sanitize($form->get('customerFirstName')->getData());
             $email = $form->get('customerEmail')->getData();
             $services = $form->get('services')->getData();
-    
+
             // Vérifier si un nouveau service est défini et le sanitize si nécessaire
             $newServiceCategory = $form->get('newServiceCategory')->getData();
             $newServiceName = $form->get('newService')->getData();
             $newServicePrice = $form->get('newServicePrice')->getData();
-    
+
             if ($newServiceName !== null) {
                 $newServiceName = $htmlSanitizer->sanitize($newServiceName);
             }
@@ -150,7 +151,7 @@ class QuoteController extends AbstractController
                 }
                 $newServicePrice = $htmlSanitizer->sanitize($newServicePrice);
             }
-    
+
             // Valider l'email
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $this->addFlash('error', 'Adresse email invalide.');
@@ -159,7 +160,7 @@ class QuoteController extends AbstractController
                     'form' => $form->createView(),
                 ]);
             }
-    
+
             // Vérifier si un nouveau service a été ajouté
             if ($newServiceName && $newServicePrice) {
                 // Créer et sauvegarder le nouveau service
@@ -167,14 +168,14 @@ class QuoteController extends AbstractController
                 $newService->setServiceName($newServiceName);
                 $newService->setServicePrice($newServicePrice);
                 $newService->setCategory($newServiceCategory);
-    
+
                 $entityManager->persist($newService);
                 $entityManager->flush();
-    
+
                 // Ajouter le nouveau service aux services sélectionnés
                 $services[] = $newService;
             }
-    
+
             // Mettre à jour les services de l'appointment lié
             foreach ($appointment->getServices() as $service) {
                 // Si le service n'est pas sélectionné, le retirer
@@ -184,23 +185,23 @@ class QuoteController extends AbstractController
             foreach ($services as $service) {
                 $appointment->addService($service);
             }
-    
+
             // Recalculer le total
             $totalPrice = $quote->calculateTotal($appointment->getServices());
             $quote->setTotalTTC($totalPrice);
-    
+
             // Transformer le status du devis afin de l'afficher dans le profil user
             $quote->setStatus(1);
             $quote->setState(Quote::STATE_IN_PROGRESS);
-    
+
             $entityManager->persist($appointment);
             $entityManager->persist($quote);
             $entityManager->flush();
-    
+
             // Rediriger vers la vue du devis mis à jour
             return $this->redirectToRoute('quote_pdf', ['id' => $quote->getId()]);
         }
-    
+
         return $this->render('admin/edit_quote.html.twig', [
             'quote' => $quote,
             'form' => $form->createView(),
@@ -211,7 +212,7 @@ class QuoteController extends AbstractController
     // ---------------------------------Suppression du devis PDF--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
     #[Route('/admin/quote/{id}/delete', name: 'app_delete_quote', methods: ['DELETE'], requirements: ['id' => '\d+'])]
-    public function deleteQuote(Request $request, EntityManagerInterface $entityManager, int $id, Security $security): JsonResponse
+    public function deleteQuote(Request $request, EntityManagerInterface $entityManager, int $id, Security $security, PdfGenerator $pdfGenerator): JsonResponse
     {
         // Récupère le jeton CSRF depuis les en-têtes
         $csrfToken = $request->headers->get('X-CSRF-TOKEN');
@@ -220,42 +221,33 @@ class QuoteController extends AbstractController
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
             return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
         }
-        
+
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
-    
+
         // Vérifie si l'utilisateur est valide
         if (!$user instanceof UserInterface) {
             throw new AccessDeniedException('Accès refusé');
         }
-    
+
         // Récupère le devis
         $quote = $entityManager->getRepository(Quote::class)->find($id);
-    
+
         // Vérifie si l'utilisateur est autorisé à le supprimer
         if (!$quote || !($this->isGranted('ROLE_ADMIN'))) {
-            return new JsonResponse(['success' => false, 'message' => 'Rendez-vous non trouvé ou vous n\'avez pas les droits pour le supprimer.'], 403);
+            return new JsonResponse(['success' => false, 'message' => 'Devis non trouvé ou vous n\'avez pas les droits pour le supprimer.'], 403);
         }
 
         // Supprime le fichier PDF associé
-        $pdfPath = $this->getParameter('kernel.project_dir') . '/public' . $quote->getPdfContent();
-        if (file_exists($pdfPath)) {
-            if (unlink($pdfPath)) {
-                error_log('File deleted successfully at path: ' . $pdfPath);
-            } else {
-                error_log('Failed to delete file at path: ' . $pdfPath);
-                return new JsonResponse(['success' => false, 'message' => 'Échec de la suppression du fichier PDF.'], 500);
-            }
-        } else {
-            error_log('File not found at path: ' . $pdfPath);
-        }
-            // Supprime le devis de la base de données
+        $pdfGenerator->unlinkPdfFile($quote);
+
+        // Supprime le devis de la base de données
         $entityManager->remove($quote);
         $entityManager->flush();
-    
+
         return new JsonResponse(['success' => true]);
     }
-    
+
 
     // ---------------------------------Archivage du devis(Etat) PDF--------------------------------- //
     #[IsGranted('ROLE_ADMIN')]
@@ -272,15 +264,15 @@ class QuoteController extends AbstractController
 
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
-    
+
         // Vérifie si l'utilisateur est valide
         if (!$user instanceof UserInterface) {
             throw new AccessDeniedException('Accès refusé');
         }
-    
+
         // Récupère le devis
         $quote = $entityManager->getRepository(Quote::class)->find($id);
-    
+
         // Vérifie si l'utilisateur est autorisé
         if (!$quote || !($this->isGranted('ROLE_ADMIN'))) {
             return new JsonResponse(['success' => false, 'message' => 'Rendez-vous non trouvé ou vous n\'avez pas les droits pour le supprimer.'], 403);
@@ -288,16 +280,18 @@ class QuoteController extends AbstractController
         // Archive le devis en changeant son état
         $quote->setState(Quote::STATE_ARCHIVED);
         $reference = $quote->getReference();
+
+        // Supprime le fichier PDF associé
+        $pdfGenerator->unlinkPdfFile($quote);  
+        
         // Archive le PDF dans le dossier associé
         $pdfGenerator->generateAndArchivePdf($pdfGenerator, $quote, $reference);
-        // Supprime le fichier PDF associé dans le dossier de stockage
-        $this->deleteQuote($request, $entityManager, $id, $security);
 
         // Persiste les modifications
         $entityManager->persist($quote);
         $entityManager->flush();
 
-    
+
         return new JsonResponse(['success' => true]);
     }
 
@@ -314,18 +308,18 @@ class QuoteController extends AbstractController
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
             return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
         }
-        
+
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
-    
+
         // Vérifie si l'utilisateur est valide
         if (!$user instanceof UserInterface) {
             throw new AccessDeniedException('Accès refusé');
         }
-    
+
         // Récupère le devis
         $quote = $entityManager->getRepository(Quote::class)->find($id);
-    
+
         // Vérifie si l'utilisateur est autorisé
         if (!$quote || !($this->isGranted('ROLE_ADMIN'))) {
             return new JsonResponse(['success' => false, 'message' => 'Rendez-vous non trouvé ou vous n\'avez pas les droits pour le supprimer.'], 403);
@@ -337,7 +331,7 @@ class QuoteController extends AbstractController
         $entityManager->persist($quote);
         $entityManager->flush();
 
-    
+
         return new JsonResponse(['success' => true]);
     }
 
@@ -354,10 +348,10 @@ class QuoteController extends AbstractController
     //     // if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('', $csrfToken))) {
     //     //     return new JsonResponse(['error' => 'Jeton CSRF invalide.'], 403);
     //     // }
-        
+
     //     // Récupère l'utilisateur actuellement connecté
     //     $user = $security->getUser();
-    
+
     //     // Vérifie si l'utilisateur est valide
     //     if (!$user instanceof UserInterface) {
     //         throw new AccessDeniedException('Accès refusé');

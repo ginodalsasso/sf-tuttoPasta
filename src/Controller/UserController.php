@@ -105,15 +105,7 @@ class UserController extends AbstractController
             $entityManager->flush();
 
             // Envoi d'un email de confirmation
-            $this->emailVerifier->sendEmailConfirmation(
-                'app_verify_email',
-                $user,
-                (new TemplatedEmail())
-                    ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
-                    ->to($user->getEmail())
-                    ->subject('Merci de bien confirmer votre compte afin de pouvoir vous connecter.')
-                    ->htmlTemplate('emails/confirmation_email.html.twig')
-            );
+            $this->sendEmailConfirmation($user);
 
             $this->addFlash('success', 'Un email de confirmation vous a été envoyé, pour confirmer votre compte');
             return  $this->redirectToRoute('app_login');
@@ -284,19 +276,17 @@ class UserController extends AbstractController
             $quotes = $quoteRepository->findBy(['appointments' => $appointment]);
             foreach ($quotes as $quote) {
                 $reference = $quote->getReference();
-                // Supprime le fichier PDF associé au devis
-                $pdfPath = $this->getParameter('kernel.project_dir') . '/public' . $quote->getPdfContent();
-                // dd($quote->getPdfContent());
-                if (file_exists($pdfPath)) {
-                    unlink($pdfPath);
-                } else {
-                    error_log('File not found at path: ' . $pdfPath);
-                }
+
+                // Supprime le fichier PDF associé
+                $pdfGenerator->unlinkPdfFile($quote);
+
                 // Génére et stocke le PDF dans les archives
                 $pdfGenerator->generateAndArchivePdf($pdfGenerator, $quote, $reference);
+
                 // Supprime le devis de la base de données
                 $entityManager->remove($quote);
                 $entityManager->flush();
+
                 // Marque le devis comme archivé
                 $quote->setState(Quote::STATE_ARCHIVED);
                 $entityManager->persist($quote);
@@ -325,7 +315,7 @@ class UserController extends AbstractController
     // ---------------------------------Annulation d'un rendez vous sur le profil utilisateur--------------------------------- //
     #[Route('/profil/appointment/{id}/delete', name: 'app_cancel_appointment', methods: ['DELETE'], requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_USER')]
-    public function cancelAppointment(EntityManagerInterface $entityManager, int $id, Security $security, MailerInterface $mailer, Request $request,): JsonResponse
+    public function cancelAppointment(EntityManagerInterface $entityManager, int $id, Security $security, MailerInterface $mailer, Request $request, PdfGenerator $pdfGenerator): JsonResponse
     {
         // Récupère le jeton CSRF depuis les en-têtes
         $csrfToken = $request->headers->get('X-CSRF-TOKEN');
@@ -352,15 +342,9 @@ class UserController extends AbstractController
         $quote = $appointment->getQuote();
         // Vérifie si le devis existe et si le fichier PDF est présent
         if ($quote) {
-            // Récupère le chemin absolu du fichier PDF
-            $pdfPath = realpath($this->getParameter('kernel.project_dir') . '/var/uploads/pdf/' . $quote->getPdfContent());
-            $expectedDirectory = realpath($this->getParameter('kernel.project_dir') . '/var/uploads/pdf/');
-            // realpath:  obtenir le chemin absolu et vérifier que le fichier est dans le répertoire sécurisé prévu
-
-            // Si le fichier PDF existe et est dans le répertoire sécurisé, le supprime
-            if ($pdfPath && str_starts_with($pdfPath, $expectedDirectory) && file_exists($pdfPath)) {
-                unlink($pdfPath);
-            }
+            // Supprime le fichier PDF associé
+            $pdfGenerator->unlinkPdfFile($quote);
+            // Supprime le devis de la base de données
             $entityManager->remove($quote);
         }
 
@@ -450,6 +434,20 @@ class UserController extends AbstractController
             ->html($emailContent);
 
         $mailer->send($email);
+    }
+
+    // Gestion de l'envoi de notification de creation de compte
+    private function sendEmailConfirmation(UserInterface $user): void
+    {
+        // Création de l'email de confirmation
+        $email = (new TemplatedEmail())
+            ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
+            ->to($user->getEmail())
+            ->subject('Merci de bien confirmer votre compte afin de pouvoir vous connecter.')
+            ->htmlTemplate('emails/confirmation_email.html.twig');
+    
+        // Envoi de l'email de confirmation via le service emailVerifier
+        $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user, $email);
     }
     #endregion
 

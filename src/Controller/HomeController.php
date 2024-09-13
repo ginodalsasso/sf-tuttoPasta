@@ -124,7 +124,7 @@ class HomeController extends AbstractController
                     
                     // Génération et stockage du PDF
                     $reference = $quote->getReference();
-                    $pdfLink  = $pdfGenerator->generateAndStorePdf($pdfGenerator, $quote, $reference);
+                    $pdfGenerator->generateAndStorePdf($pdfGenerator, $quote, $reference);
 
                     // Persiste le rendez-vous dans la base de données
                     $entityManager->persist($appointment);

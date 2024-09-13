@@ -9,8 +9,10 @@ use App\Entity\Appointment;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class PdfGenerator
+
+class PdfGenerator extends AbstractController
 {
     private $domPdf;
     private $twig;
@@ -198,5 +200,18 @@ class PdfGenerator
                 'Content-Disposition' => 'inline; filename="devis_services.pdf"'
             ]
         );
+    }
+
+    public function unlinkPdfFile($quote)
+    {
+        // Supprime le fichier PDF associé au devis
+        $pdfPath = $this->getParameter('kernel.project_dir') . '/public' . $quote->getPdfContent();
+        // dd($pdfPath);
+
+        if (file_exists($pdfPath)) {
+            unlink($pdfPath);
+        } else {
+            error_log('Fichier non trouvé: ' . $pdfPath);
+        } 
     }
 }
