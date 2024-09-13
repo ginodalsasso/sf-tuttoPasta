@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Message;
 use App\Form\MessageType;
+use App\Services\EmailService;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Mime\Address;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -16,7 +18,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
@@ -25,7 +26,14 @@ use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 #[IsGranted('ROLE_USER')]
 class MessagesController extends AbstractController
 {
-   //________________________________________________________________MESSAGE RECUS______________________________________________________________
+    private $emailService;
+
+    public function __construct(EmailService $emailService)
+    {
+        $this->emailService = $emailService;
+    }
+
+    //________________________________________________________________MESSAGE RECUS______________________________________________________________
     #[Route('/received', name: 'app_received')]
     public function received(Security $security): Response
     {
@@ -39,7 +47,7 @@ class MessagesController extends AbstractController
 
         return $this->render('messages/received.html.twig');
     }
-    
+
     //________________________________________________________________MESSAGES ENVOYES______________________________________________________________
     #[Route('/sent', name: 'app_sent')]
     public function sent(Security $security): Response
@@ -54,12 +62,16 @@ class MessagesController extends AbstractController
 
         return $this->render('messages/sent.html.twig');
     }
-    
+
     //________________________________________________________________ENVOI D'UN MESSAGE______________________________________________________________
     #[Route('/sendMessage', name: 'app_sendMessage')]
-    public function sendMessage(Request $request, EntityManagerInterface $entityManager, Security $security, MailerInterface $mailer, 
-    ): Response
-    {
+    public function sendMessage(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        Security $security,
+        MailerInterface $mailer,
+        EmailService $emailService
+    ): Response {
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
 
@@ -76,23 +88,7 @@ class MessagesController extends AbstractController
             // Récupère les données du formulaire
             $message = $form->getData();
 
-            // Si l'utilisateur est un ROLE_USER, on assigne automatiquement le recipient à un admin
-            if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
-                // Si c'est un admin qui envoie un message, le destinataire est celui choisi dans le formulaire
-                $recipient = $form->get('recipient')->getData();
-                if (!$recipient) {
-                    throw new \Exception('Aucun destinataire sélectionné');
-                }
-                $message->setRecipient($recipient);
-            } elseif (in_array('ROLE_USER', $user->getRoles(), true)) {
-                $admin = $entityManager->getRepository(User::class)->findOneByRole('ROLE_ADMIN'); // Récupère le premier admin trouvé
-                if (!$admin) {
-                    throw new \Exception('Aucun administrateur trouvé');
-                }
-                $message->setRecipient($admin);
-            } else {
-                throw new \Exception('Rôle utilisateur non pris en charge');
-            }
+            $this->handleRecipient($user, $form, $message, $entityManager);
 
             $message->setSender($user);
             $entityManager->persist($message);
@@ -101,8 +97,8 @@ class MessagesController extends AbstractController
              * @var User|null $user
              */
             $emailAddress = $user->getEmail();
-            
-            $this->notificationEmailToRecipient($mailer, $emailAddress, $message);
+
+            $emailService->notificationEmailToRecipient($mailer, $emailAddress, $message);
 
             $this->addFlash('success', 'Message envoyé avec succès');
             return $this->redirectToRoute('app_sent');
@@ -113,23 +109,29 @@ class MessagesController extends AbstractController
         ]);
     }
 
-    // Gestion de l'envoi de notification de réception d'un nouveau message
-    private function notificationEmailToRecipient(MailerInterface $mailer, string $emailAddress, $message): void
+    // Gère le destinataire du message
+    public function handleRecipient(UserInterface $user, $form, Message $message, EntityManagerInterface $entityManager): void
     {
-        $emailContent = $this->renderView('emails/message_notification.html.twig', [
-            'titleMessage' => $message->getTitle(),
-            'contentMessage' => $message->getContent(),
-            'dateMessage' => $message->getCreatedAt()->format('d/m/Y à H:i')
-        ]);
-
-        $email = (new TemplatedEmail())
-            ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
-            ->to($emailAddress)
-            ->subject('Nouveau message reçu')
-            ->html($emailContent);
-
-        $mailer->send($email);
+        // Si l'utilisateur est un ROLE_USER, on assigne automatiquement le recipient à un admin
+        if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+            // Si c'est un admin qui envoie un message, le destinataire est celui choisi dans le formulaire
+            $recipient = $form->get('recipient')->getData();
+            if (!$recipient) {
+                throw new \Exception('Aucun destinataire sélectionné');
+            }
+            $message->setRecipient($recipient);
+        } elseif (in_array('ROLE_USER', $user->getRoles(), true)) {
+            $admin = $entityManager->getRepository(User::class)->findOneByRole('ROLE_ADMIN'); // Récupère le premier admin trouvé
+            if (!$admin) {
+                throw new \Exception('Aucun administrateur trouvé');
+            }
+            $message->setRecipient($admin);
+        } else {
+            throw new \Exception('Rôle utilisateur non pris en charge');
+        }
     }
+
+
 
     //________________________________________________________________REPONSSE A UN MESSAGE______________________________________________________________
     #[Route('/reply/{id}', name: 'app_reply')]
@@ -197,9 +199,13 @@ class MessagesController extends AbstractController
 
     //________________________________________________________________SUPPRESSION D'UN MESSAGE______________________________________________________________
     #[Route('/delete/{id}', name: 'app_deleteMessage')]
-    public function deleteMessage(Message $message, EntityManagerInterface $entityManager, CsrfTokenManagerInterface $csrfTokenManager, Security $security, Request $request
-    ): Response
-    {        
+    public function deleteMessage(
+        Message $message,
+        EntityManagerInterface $entityManager,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        Security $security,
+        Request $request
+    ): Response {
         // Récupère l'utilisateur actuellement connecté
         $user = $security->getUser();
 

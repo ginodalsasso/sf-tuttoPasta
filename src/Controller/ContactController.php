@@ -3,12 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
-use Twilio\TwiML\Voice\Sms;
 use App\Form\ContactFormType;
-use Symfony\Component\Mime\Address;
+use App\Services\EmailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,9 +18,11 @@ class ContactController extends AbstractController
 {
 
     private $htmlSanitizer;
+    private $emailService;
 
-    public function __construct(HtmlSanitizerInterface  $htmlSanitizer) {
+    public function __construct(HtmlSanitizerInterface  $htmlSanitizer, EmailService $emailService) {
         $this->htmlSanitizer = $htmlSanitizer;
+        $this->emailService = $emailService;
     }
 
 
@@ -31,7 +31,8 @@ class ContactController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         Security $security, 
-        MailerInterface $mailer
+        MailerInterface $mailer,
+        EmailService $emailService,
         ): Response
     {
         $contact = new Contact();
@@ -80,9 +81,9 @@ class ContactController extends AbstractController
             $entityManager->flush();
 
             // Envoie un email de confirmation à l'utilisateur
-            $this->sendConfirmationEmail($mailer, $emailAddress, $contact);
+            $emailService->sendConfirmationEmail($mailer, $emailAddress, $contact);
             // Envoie une notification à l'admin
-            $this->sendAdminNotificationEmail($mailer, $contact);
+            $emailService->sendAdminNotificationEmail($mailer, $contact);
 
             $this->addFlash('success', 'Votre message a bien été envoyé !');
 
@@ -93,36 +94,4 @@ class ContactController extends AbstractController
         ]);
     }
 
-
-    // Gestion de l'envoi de confirmation du contact à l'utilisateur
-    private function sendConfirmationEmail(MailerInterface $mailer, string $emailAddress, Contact $contact): void
-    {
-        $emailContent = $this->renderView('emails/contact_confirmation.html.twig');
-
-        $email = (new TemplatedEmail())
-            ->from(new Address('no-reply@tuttoPasta.com', 'TuttoPasta'))
-            ->to($emailAddress)
-            ->subject('Confirmation de prise de contact')
-            ->html($emailContent);
-
-        $mailer->send($email);
-    }
-
-
-    // Gestion de l'envoi de notification à l'admin
-    private function sendAdminNotificationEmail(MailerInterface $mailer, Contact $contact): void
-    {
-        $adminEmail = 'admin@tuttoPasta.com';
-        $emailContent = $this->renderView('emails/admin_contact_notification.html.twig', [
-            'contact' => $contact
-        ]);
-
-        $email = (new TemplatedEmail())
-            ->from(new Address('no-reply@tuttoPasta.com', 'TuttoPasta'))
-            ->to($adminEmail)
-            ->subject('Nouvelle demande de contact')
-            ->html($emailContent);
-
-        $mailer->send($email);
-    }
 }

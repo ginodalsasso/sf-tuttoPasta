@@ -4,16 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Appointment;
 use App\Form\AppointmentType;
+use App\Services\EmailService;
 use App\Services\PdfGenerator;
 use App\Services\SmsGenerator;
-use Symfony\Component\Mime\Address;
 use App\Repository\DayOffRepository;
 use App\Repository\ServiceRepository;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\AppointmentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,17 +24,19 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
-class HomeController extends AbstractController
+class AppointmentController extends AbstractController
 {
     private $htmlSanitizer;
     private $pdfGenerator;
     private $csrfTokenManager;
+    private $emailService;
 
 
-    public function __construct(HtmlSanitizerInterface  $htmlSanitizer, PdfGenerator $pdfGenerator, CsrfTokenManagerInterface $csrfTokenManager) {
+    public function __construct(HtmlSanitizerInterface  $htmlSanitizer, PdfGenerator $pdfGenerator, CsrfTokenManagerInterface $csrfTokenManager, EmailService $emailService) {
         $this->htmlSanitizer = $htmlSanitizer;
         $this->pdfGenerator = $pdfGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
+        $this->emailService = $emailService;
     }
 
 //________________________________________________________________APPOINTMENT______________________________________________________________
@@ -50,6 +51,7 @@ class HomeController extends AbstractController
         DayOffRepository $dayOffRepository, 
         MailerInterface $mailer, 
         PdfGenerator $pdfGenerator,
+        EmailService $emailService,
         SmsGenerator $smsGenerator
         ): Response
     {
@@ -131,8 +133,8 @@ class HomeController extends AbstractController
                     $entityManager->persist($quote);
                     $entityManager->flush();
 
-                    $this->sendConfirmationEmailTo($mailer, $emailAddress, $startDate);
-                    $this->sendConfirmationEmailFrom($mailer, $emailAddress, $startDate);
+                    $emailService->sendConfirmationEmailTo($mailer, $emailAddress, $startDate);
+                    $emailService->sendConfirmationEmailFrom($mailer, $emailAddress, $startDate);
 
                     $message = 'Nouveau message de ' . $appointment->getName() . ' ' . $appointment->getFirstName() . ' : ' . $appointment->getMessage();
                     $smsGenerator->sendSms($message);
@@ -155,40 +157,6 @@ class HomeController extends AbstractController
             'categories' => $categories,
         ]);
     }
-
-
-    // Gestion de l'envoi de confiration de prise de RDV pour le client
-    private function sendConfirmationEmailTo(MailerInterface $mailer, string $emailAddress, \DateTime $startDate): void
-    {
-        $emailContent = $this->renderView('emails/appointment_confirmation.html.twig', [
-            'appointmentDate' => $startDate->format('d/m/Y à H:i')
-        ]);
-
-        $email = (new TemplatedEmail())
-            ->from(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
-            ->to($emailAddress)
-            ->subject('Confirmation de votre rendez-vous')
-            ->html($emailContent);
-
-        $mailer->send($email);
-    }
-
-    // Gestion de l'envoi de confiration de prise de RDV pour tuttoPasta
-    private function sendConfirmationEmailFrom(MailerInterface $mailer, string $emailAddress, \DateTime $startDate): void
-    {
-        $emailContent = $this->renderView('emails/appointment_confirmation.html.twig', [
-            'appointmentDate' => $startDate->format('d/m/Y à H:i')
-        ]);
-
-        $email = (new TemplatedEmail())
-            ->from(new Address($emailAddress))
-            ->to(new Address('admin@tuttoPasta.com', 'TuttoPasta'))
-            ->subject('Nouveau Rendez vous')
-            ->html($emailContent);
-
-        $mailer->send($email);
-    }
-
 
     // Récupère les créneaux horaires disponibles pour une date donnée
     #[Route('/available_rdv', name:'available_rdv', methods:['POST'])]
@@ -215,7 +183,7 @@ class HomeController extends AbstractController
     }
 
 
-    // Récupère toutes les dates de congé
+    // Récupère toutes les dates de congés
     #[Route('/get_dayoff_dates', name:'get_dayoff_dates', methods:['POST'])]
     public function getDayOffDates(DayOffRepository $dayOffRepository): JsonResponse
     {
@@ -234,5 +202,4 @@ class HomeController extends AbstractController
             'dayoffDates' => $dayoffDates,
         ]);
     }
-#endregion
 }
