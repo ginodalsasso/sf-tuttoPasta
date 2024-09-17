@@ -206,7 +206,6 @@ class PdfGenerator extends AbstractController
     {
         // Supprime le fichier PDF associé au devis
         $pdfPath = $this->getParameter('kernel.project_dir') . '/public' . $quote->getPdfContent();
-        // dd($pdfPath);
 
         if (file_exists($pdfPath)) {
             unlink($pdfPath);

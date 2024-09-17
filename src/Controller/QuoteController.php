@@ -168,20 +168,6 @@ class QuoteController extends AbstractController
                 // Ajouter le nouveau service
                 $this->addNewService($newServiceName, $newServicePrice, $newServiceCategory, $services, $entityManager);
             }
-            // // Vérifier si un nouveau service a été ajouté
-            // if ($newServiceName && $newServicePrice) {
-            //     // Créer et sauvegarder le nouveau service
-            //     $newService = new Service();
-            //     $newService->setServiceName($newServiceName);
-            //     $newService->setServicePrice($newServicePrice);
-            //     $newService->setCategory($newServiceCategory);
-
-            //     $entityManager->persist($newService);
-            //     $entityManager->flush();
-
-            //     // Ajouter le nouveau service aux services sélectionnés
-            //     $services[] = $newService;
-            // }
 
             // Mettre à jour les services de l'appointment lié
             foreach ($appointment->getServices() as $service) {

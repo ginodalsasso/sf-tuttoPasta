@@ -55,7 +55,8 @@ body {
 .wrapper_profil,
 .wrapper_project_list,
 .wrapper_article,
-.wrapper_forms
+.wrapper_forms,
+.wrapper_messages
 {
     color: var(--black-color);
     background-color: var(--white-color);
@@ -64,7 +65,7 @@ body {
 .wrapper,
 .wrapper_legal,
 .wrapper_article,
-.wrapper_profil{
+.wrapper_profil {
     padding: 8%;
 }
 
@@ -83,6 +84,12 @@ body {
 }
 .wrapper_legal section h2 {
     margin-bottom: 20px;
+}
+
+.wrapper_messages {
+    margin: 0 auto;
+    padding: 8% 0;
+    max-width: 800px;
 }
 
 
@@ -946,8 +953,15 @@ summary {
 .message_container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
     padding-bottom: 40px;
+}
+
+.message_container p:nth-child(2+1) {
+    margin-top: 20px;
+}
+
+.message_container p:nth-child(4) {
+    margin-top: 20px;
 }
 
 .messagerie_infos {
