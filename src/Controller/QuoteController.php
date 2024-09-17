@@ -134,6 +134,7 @@ class QuoteController extends AbstractController
             $services = $form->get('services')->getData();
 
             // Vérifier si un nouveau service est défini et le sanitize si nécessaire
+            
             $newServiceCategory = $form->get('newServiceCategory')->getData();
             $newServiceName = $form->get('newService')->getData();
             $newServicePrice = $form->get('newServicePrice')->getData();
@@ -162,7 +163,25 @@ class QuoteController extends AbstractController
                 ]);
             }
 
-            $this->addNewService($newServiceName, $newServicePrice, $newServiceCategory, $services, $entityManager);
+            // Vérifier si un nouveau service est défini
+            if ($newServiceName && $newServicePrice) {
+                // Ajouter le nouveau service
+                $this->addNewService($newServiceName, $newServicePrice, $newServiceCategory, $services, $entityManager);
+            }
+            // // Vérifier si un nouveau service a été ajouté
+            // if ($newServiceName && $newServicePrice) {
+            //     // Créer et sauvegarder le nouveau service
+            //     $newService = new Service();
+            //     $newService->setServiceName($newServiceName);
+            //     $newService->setServicePrice($newServicePrice);
+            //     $newService->setCategory($newServiceCategory);
+
+            //     $entityManager->persist($newService);
+            //     $entityManager->flush();
+
+            //     // Ajouter le nouveau service aux services sélectionnés
+            //     $services[] = $newService;
+            // }
 
             // Mettre à jour les services de l'appointment lié
             foreach ($appointment->getServices() as $service) {
@@ -197,7 +216,7 @@ class QuoteController extends AbstractController
     }
 
     // Ajout d'un nouveau service dans l'édition de devis
-    private function addNewService(string $newServiceName, float $newServicePrice, Category $newServiceCategory, $services, EntityManagerInterface $entityManager
+    private function addNewService(string $newServiceName, float $newServicePrice, $newServiceCategory, $services, EntityManagerInterface $entityManager
     ): void {
         // Créer et sauvegarder le nouveau service
         $newService = new Service();

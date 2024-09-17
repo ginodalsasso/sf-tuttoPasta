@@ -68,4 +68,13 @@ $(document).ready(function () {
             event.preventDefault();
         }
     });
+    
+    $('#toggle_password').on('change', function () {
+        var inputPassword = $('#registration_form_plainPassword_first, #registration_form_plainPassword_second');
+        if (inputPassword.attr('type') === "password") {
+            inputPassword.attr('type', 'text');
+        } else {
+            inputPassword.attr('type', 'password');
+        }
+    });
 });

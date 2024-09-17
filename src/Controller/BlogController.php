@@ -15,7 +15,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\HtmlSanitizer\HtmlSanitizerInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
@@ -23,12 +22,10 @@ use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 class BlogController extends AbstractController
 {
 
-    private $htmlSanitizer;
     private $csrfTokenManager;
 
 
-    public function __construct(HtmlSanitizerInterface  $htmlSanitizer, CsrfTokenManagerInterface $csrfTokenManager) {
-        $this->htmlSanitizer = $htmlSanitizer;
+    public function __construct(CsrfTokenManagerInterface $csrfTokenManager) {
         $this->csrfTokenManager = $csrfTokenManager;
     }
 

@@ -198,6 +198,7 @@ function handleSlotSelection() {
 
 // Fonction pour gérer la sélection des services
 function handleServiceSelection() {
+    
     $("#appointment_services").on("change","input[type='checkbox']", function (e) {
         const $input = $(this);
         const $label = $input.next('label');

@@ -133,11 +133,10 @@ class AppointmentController extends AbstractController
                     $entityManager->persist($quote);
                     $entityManager->flush();
 
-                    $emailService->sendConfirmationEmailTo($mailer, $emailAddress, $startDate);
-                    $emailService->sendConfirmationEmailFrom($mailer, $emailAddress, $startDate);
-
+                    $emailService->sendConfirmationEmailTo($mailer, $emailAddress, $startDate); // Envoie un email de confirmation au client
+                    $emailService->sendConfirmationEmailFrom($mailer, $emailAddress, $startDate); // Envoie un email de confirmation à tuttoPasta
                     $message = 'Nouveau message de ' . $appointment->getName() . ' ' . $appointment->getFirstName() . ' : ' . $appointment->getMessage();
-                    $smsGenerator->sendSms($message);
+                    $smsGenerator->sendSms($message); // Envoie un SMS à tuttoPasta
 
                     // Ajoute un message de succès et redirige vers la page d'accueil
                     $this->addFlash('success', 'Votre rendez-vous a été enregistré avec succès. Un email de confirmation vous a été envoyé.');
