@@ -121,7 +121,7 @@
                 <div class="service">
                     <div class="services_categories">
                         <h3>
-                            <i class="fa-sharp fa-solid fa-arrow-right"></i> {{categories[0].categoryName|raw}} <br>
+                            <i class="fa-sharp fa-solid fa-arrow-right"></i> {{categories[1].categoryName|raw}} <br>
                         </h3>
                         {{categories[0].categoryContent|raw}}
                     </div>
@@ -142,7 +142,7 @@
 
                     <div class="services_categories">
                         <h3>
-                            <i class="fa-sharp fa-solid fa-arrow-right"></i> {{categories[1].categoryName|raw}} <br>
+                            <i class="fa-sharp fa-solid fa-arrow-right"></i> {{categories[0].categoryName|raw}} <br>
                         </h3>
                         {{categories[1].categoryContent|raw}}
                     </div>
@@ -175,7 +175,7 @@
                         <p id="step3">03. Choisis tes prestations supplémentaires*</p>
                     </div>
 
-                    {{ form_start(offerPriceForm) }}
+                    {{ form_start(offerPriceForm, {'attr': {'target': '_blank'}}) }}
                         <div id="identite_service">
                             <div class="service_form_categoryContent">
                                 <div id="identite_visuelle">
