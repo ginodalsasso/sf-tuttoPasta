@@ -33,8 +33,8 @@ class GoogleController extends AbstractController
         try {
             // On récupère les informations de l'utilisateur
             $client = $clientRegistry->getClient('google');
-            $googleUser = $client->fetchUser();
-
+            $googleUser = $client->fetchUser(); // On récupère les informations de l'utilisateur
+            // On vérifie si l'utilisateur existe déjà
             $existingUser = $entityManager->getRepository(User::class)->findOneBy(['email' => $googleUser->getEmail()]);
 
             if (!$existingUser) {
@@ -54,15 +54,15 @@ class GoogleController extends AbstractController
                 $entityManager->flush();
 
             } else {
-                $user = $existingUser;
+                $user = $existingUser; // On récupère l'utilisateur existant
             }
-            
+            // On connecte l'utilisateur
             $token = new UsernamePasswordToken($user, 'main', $user->getRoles()); // 'main' est le nom du firewall
             // On déclenche l'événement de connexion
             $event = new InteractiveLoginEvent($request, $token);
             // On déclenche l'événement
             $eventDispatcher->dispatch($event); 
-            
+            // On redirige l'utilisateur
             $_SESSION['user'] = $existingUser;
             return $this->redirectToRoute('app_home');
 
