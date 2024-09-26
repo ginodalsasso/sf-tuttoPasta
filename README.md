@@ -33,3 +33,18 @@ TuttoPasta is a professional web application designed for Romane, a freelance ar
 
 ## Conclusion
 TuttoPasta is a versatile platform that combines a professional showcase with essential tools for client interaction and business management, offering Romane the flexibility to update and maintain her site independently.
+
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/2e0f1b83-afb2-4841-ad32-6dcf49a09947" alt="Enregistrement 2024-09-26" width="600">
+</div>
+
+<div align="center" style="display: flex; justify-content: center; gap: 20px;">
+    <img src="https://github.com/user-attachments/assets/2576232d-4895-4b3d-8e37-7b7d183644e1" alt="Enregistrement 2024-09-26" width="500">
+    <img src="https://github.com/user-attachments/assets/d2b953be-ca80-413a-83c4-0cfcc25a4b69" alt="Enregistrement 2024-09-26" width="500">
+</div>
+
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/50ac8d90-47f1-41e4-a91f-43948910a24d" alt="Capture d'écran 2024-09-26 081614">
+    <img src="https://github.com/user-attachments/assets/4b70732c-d51e-48b8-856e-ee33aa4a15e1" alt="Capture d'écran 2024-09-26 081557">
+    <img src="https://github.com/user-attachments/assets/4329f09b-fba3-4c33-bf79-ef3cec7af1eb" alt="Sans titre-1">
+</div>
