@@ -21,6 +21,7 @@ TuttoPasta is a professional web application designed for Romane, a freelance ar
 - **Framework:** Symfony.
 - **Database:** MySQL.
 - **Libraries:** JQuery, ChartJS, Gsap.
+- **API**: Twillio for SMS notifications
 - **Tools:** HeidiSQL, Trello.
 - **Looping for MCD/MLD.**
 - **Trello for Work Organization.**
